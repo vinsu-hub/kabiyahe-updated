@@ -159,3 +159,9 @@
 ## Generated-result persisted-boundary coverage
 - [blocked] Exercise remove and reorder against real persisted trip/stop ownership boundaries without mutating durable test data; the current database has zero generatedTripStops rows and test-data insertion is prohibited.
 - [blocked] Exercise duplicate verified-destination add conflicts and foreign stop ids in persisted mutation tests; the current database has zero generatedTripStops rows and test-data insertion is prohibited.
+
+## OAuth callback failure remediation
+- [x] Trace the `/plan/new` login redirect and identify the callback failure stage from runtime evidence.
+- [x] Handle the transient database timeout during OAuth callback user sync with bounded retry and a safe 503 response while preserving nonce/state security.
+- [x] Add regression coverage for callback failure responses and `/plan/new` unauthenticated entry behavior.
+- [blocked] Validate the corrected login path end-to-end; the callback now fail-closes and classifies DB outages, but a live account flow remains dependent on the external OAuth portal and database availability.

@@ -15,8 +15,12 @@ const results = [];
 for (const viewport of cases) {
   const page = await browser.newPage({ viewport: { width: viewport.width, height: viewport.height } });
   const consoleErrors = [];
+  let loginRedirectStarted = false;
+  page.on("request", request => {
+    if (request.url().includes("/app-auth")) loginRedirectStarted = true;
+  });
   page.on("console", message => {
-    if (message.type() === "error") consoleErrors.push(message.text());
+    if (message.type() === "error" && !message.text().includes("Please login (10001)") && !message.text().includes("401 (Unauthorized)")) consoleErrors.push(message.text());
   });
   page.on("pageerror", error => consoleErrors.push(error.message));
 
@@ -36,7 +40,9 @@ for (const viewport of cases) {
   await page.getByText("Your Trip Summary").waitFor();
   await page.screenshot({ path: `${outputDir}/${viewport.name}-step-3.png`, fullPage: true });
 
-  results.push({ viewport: viewport.name, url: page.url(), consoleErrors });
+  await page.getByRole("button", { name: /Generate My Itinerary/ }).click();
+  await page.waitForTimeout(1500);
+  results.push({ viewport: viewport.name, url: page.url(), loginRedirectStarted, consoleErrors });
   await page.close();
 }
 

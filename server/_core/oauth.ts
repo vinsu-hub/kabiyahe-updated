@@ -59,6 +59,10 @@ export function registerOAuthRoutes(app: Express) {
       res.redirect(302, "/");
     } catch (error) {
       console.error("[OAuth] Callback failed", error);
+      if (db.isTransientDbError(error)) {
+        res.status(503).json({ error: "Authentication is temporarily unavailable. Please try again." });
+        return;
+      }
       res.status(500).json({ error: "OAuth callback failed" });
     }
   });
