@@ -165,3 +165,9 @@
 - [x] Handle the transient database timeout during OAuth callback user sync with bounded retry and a safe 503 response while preserving nonce/state security.
 - [x] Add regression coverage for callback failure responses and `/plan/new` unauthenticated entry behavior.
 - [blocked] Validate the corrected login path end-to-end; the callback now fail-closes and classifies DB outages, but a live account flow remains dependent on the external OAuth portal and database availability.
+
+## Bundle discovery enrichment
+- [x] Add a featured bundle spotlight with route highlights and a clearer primary action.
+- [x] Add richer bundle metadata such as pace, ideal group, and stop count using truthful local content.
+- [x] Add a curated collection rail and improve bundle filtering/empty-state feedback.
+- [x] Validate bundle interactions and responsive density on desktop and mobile.
