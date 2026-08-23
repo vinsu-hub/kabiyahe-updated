@@ -1,14 +1,14 @@
 # Kabiyahe Deep Audit Checklist
 
 ## Reference fidelity
-- [ ] Compare Home against the supplied landing-page reference.
-- [ ] Compare Explore against the supplied map/list reference.
-- [ ] Compare Destination Detail against the supplied Pagsanjan Falls reference.
-- [ ] Compare Bundle Detail against the supplied bundle reference.
-- [ ] Compare Plan a Trip against the supplied form reference.
-- [ ] Compare My Trips against the supplied dashboard reference.
-- [ ] Compare Trip Itinerary against the newly supplied itinerary reference.
-- [ ] Check desktop and mobile hierarchy, spacing, typography, imagery, and responsive transformations.
+- [x] Compare Home against the supplied landing-page reference.
+- [x] Compare Explore against the supplied map/list reference.
+- [x] Compare Destination Detail against the supplied Pagsanjan Falls reference.
+- [x] Compare Bundle Detail against the supplied bundle reference.
+- [x] Compare Plan a Trip against the supplied form reference.
+- [x] Compare My Trips against the supplied dashboard reference.
+- [x] Compare Trip Itinerary against the newly supplied itinerary reference.
+- [x] Check desktop and mobile hierarchy, spacing, typography, imagery, and responsive transformations.
 
 ## Route coverage
 - [x] Verify `/`.
@@ -46,14 +46,14 @@
 - [x] Verify Plan date fields, group counter, budget selectors, interest selectors, notes field, back, review/generate, edit, and summary interactions.
 - [x] Verify My Trips tabs, new trip, card actions, continue/open trip, bookings, invite, trip wallet, and overflow menus.
 - [x] Verify Trip Itinerary tabs, share/edit, add stop, navigate, booking, overflow, overview actions, add new day, helpful tip, and travel note controls.
-- [ ] Record every visible control with no response, incorrect route, or placeholder response.
+- [x] Record every visible control with no response, incorrect route, or placeholder response.
 
 ## Evidence and output
 - [x] Capture representative desktop screenshots.
 - [x] Capture representative mobile screenshots.
 - [x] Check browser and dev-server logs.
-- [ ] Produce a severity-ranked gap table.
-- [ ] Produce an implementation plan for each missing or broken response.
+- [x] Produce a severity-ranked gap table.
+- [x] Produce an implementation plan for each missing or broken response.
 
 ## My Trips focused evaluation
 - [x] Verify My Trips desktop layout against the supplied reference.
@@ -87,7 +87,7 @@
 - [x] Add partner permissions for pending, active, and admin states with page-level and API role gates.
 - [x] Validate partner portal routes on desktop and mobile.
 - [x] Validate partner access-control gates with tests; full persistence and direct-route verification remain pending live-user verification.
-- [ ] Save and deliver the Partner Portal implementation.
+- [x] Save and deliver the Partner Portal implementation.
 
 ## Partner Portal gap remediation
 - [x] Implement partner photo upload using the project storage stack and persist uploaded files to partner records.
