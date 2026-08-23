@@ -76,3 +76,24 @@
 - [x] Validate all implemented routes at desktop and mobile breakpoints.
 - [x] Validate prefers-reduced-motion behavior.
 - [x] Check animation-related console errors and production build.
+
+## Partner Portal implementation
+- [x] Define separate `/partners` information architecture, visual treatment, roles, and access states.
+- [ ] Enable full-stack auth, database, backend procedures, and file storage foundation. Schema, API, and storage helper are present; partner realm wiring remains.
+- [ ] Add partner join landing page and pending-verification registration flow. UI and pending API foundation are present; account linking, photo upload, and map interaction remain.
+- [ ] Add partner dashboard listing management, preview, metrics, visibility tier, and account settings. UI is present; live queries and persistence remain.
+- [ ] Add admin partner queue, filters, approve/reject/info-request/suspend actions, and audit log surface. UI is present; live admin queries remain.
+- [ ] Add unclaimed-listing claim flow and duplicate-prevention messaging. UI and claim procedure are present; record linkage remains.
+- [ ] Add partner permissions for pending, active, and admin states. API gates exist; page-level guards and full matrix tests remain.
+- [x] Validate partner portal routes on desktop and mobile.
+- [x] Validate partner access-control gates with tests; full persistence and direct-route verification remain pending live-user verification.
+- [ ] Save and deliver the Partner Portal implementation.
+
+## Partner Portal gap remediation
+- [ ] Implement partner photo upload using the project storage stack and persist uploaded files to partner records.
+- [ ] Add map pin placement/geolocation fields to partner registration and persist listing coordinates.
+- [ ] Wire Partner Dashboard sections to tRPC queries/mutations for listing edits, contact settings, metrics ranges, and visibility requests.
+- [ ] Connect Admin Queue and Audit Log UI to persisted tRPC data instead of local mock state.
+- [ ] Wire the claim screen to the server-side claim mutation and real unclaimed destination records.
+- [ ] Protect Partner Portal private routes by authenticated partner/admin role checks.
+- [ ] Add route/API tests for pending, active, admin, and direct-access permission behavior.
