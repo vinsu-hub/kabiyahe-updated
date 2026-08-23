@@ -54,3 +54,15 @@
 - [ ] Check browser and dev-server logs.
 - [ ] Produce a severity-ranked gap table.
 - [ ] Produce an implementation plan for each missing or broken response.
+
+## My Trips focused evaluation
+- [x] Verify My Trips desktop layout against the supplied reference.
+- [x] Verify My Trips mobile layout and bottom navigation.
+- [x] Verify All Trips, Upcoming, Active, Completed, and Archived filters.
+- [x] Verify New Trip navigation.
+- [x] Verify each trip card title/edit affordance.
+- [x] Verify View Itinerary for each trip card.
+- [x] Verify Bookings for each trip card.
+- [x] Verify Continue Planning / Open Trip responses.
+- [x] Check for missing quick actions, invite action, wallet summary, and overflow menu.
+- [x] Record remaining gaps and apply targeted fixes.
