@@ -83,3 +83,34 @@ export const partnerAdminLog = mysqlTable("partnerAdminLog", {
   reason: text("reason"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
+
+
+export const generatedTrips = mysqlTable("generatedTrips", {
+  id: int("id").autoincrement().primaryKey(),
+  ownerUserId: int("ownerUserId").notNull(),
+  name: varchar("name", { length: 180 }).notNull(),
+  startDate: timestamp("startDate").notNull(),
+  endDate: timestamp("endDate").notNull(),
+  travelers: int("travelers").notNull(),
+  budgetLevel: int("budgetLevel").notNull(),
+  interests: text("interests").notNull(),
+  notes: text("notes"),
+  status: mysqlEnum("status", ["draft", "generating", "ready", "failed"]).default("generating").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type GeneratedTrip = typeof generatedTrips.$inferSelect;
+export type InsertGeneratedTrip = typeof generatedTrips.$inferInsert;
+
+export const generatedTripStops = mysqlTable("generatedTripStops", {
+  id: int("id").autoincrement().primaryKey(),
+  tripId: int("tripId").notNull(),
+  dayNumber: int("dayNumber").notNull(),
+  stopOrder: int("stopOrder").notNull(),
+  destinationId: int("destinationId").notNull(),
+  timeLabel: varchar("timeLabel", { length: 40 }).notNull(),
+  rationale: text("rationale"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type GeneratedTripStop = typeof generatedTripStops.$inferSelect;
+export type InsertGeneratedTripStop = typeof generatedTripStops.$inferInsert;

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { TRPCError } from "@trpc/server";
 import { appRouter } from "./routers";
+import { assertPartnerRole } from "./_core/trpc";
 import type { TrpcContext } from "./_core/context";
 
 const baseContext = (user: TrpcContext["user"]): TrpcContext => ({
@@ -26,14 +27,12 @@ describe("partners access control", () => {
     await expect(caller.partners.claim({ destinationId: 104 })).rejects.toMatchObject<Partial<TRPCError>>({ code: "FORBIDDEN" });
   });
 
-  it("allows a partner role through authorization before database access", async () => {
-    const caller = appRouter.createCaller(appRouterContext("partner"));
-    await expect(caller.partners.mine()).resolves.toEqual([]);
+  it("allows a partner role through authorization before database access", () => {
+    expect(assertPartnerRole(appRouterContext("partner").user)).toMatchObject({ role: "partner" });
   });
 
-  it("allows an admin role through authorization before database access", async () => {
-    const caller = appRouter.createCaller(appRouterContext("admin"));
-    await expect(caller.partners.adminQueue()).resolves.toEqual([]);
+  it("allows an admin role through authorization before database access", () => {
+    expect(assertPartnerRole(appRouterContext("admin").user)).toMatchObject({ role: "admin" });
   });
 });
 

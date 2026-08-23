@@ -113,3 +113,23 @@
 ## Final final verification gaps
 - [x] Bind dashboard chart labels and filled area to real metrics rows and show an explicit metrics loading/error/empty state.
 - [x] Block pending partner accounts in the dashboard render before showing active workspace content.
+
+## AI trip planner generation flow
+- [x] Define Step 3 Review as a final confirmation screen with dates, travelers, budget, interests, notes, and trust disclaimer.
+- [x] Add a server-side structured itinerary-generation procedure using only verified Laguna destinations as retrieval context.
+- [x] Add persisted draft/generated trip storage and a `/plan/new/result` route.
+- [x] Add generation loading, progress messaging, timeout, empty-result, and error states.
+- [x] Render generated results through the existing editable day-by-day itinerary experience.
+- [x] Add generated-stop verification labels and save/edit/invite/poll continuation actions.
+- [x] Add Vitest coverage for generation input validation, verified-destination grounding, and permissions.
+- [x] Validate planner review, loading, generated result, and failure states on desktop and mobile.
+- [x] Style the new planner review, generation progress, trust labels, and generated itinerary result states for responsive fidelity.
+- [x] Keep the planner form before the summary card on mobile so the primary input flow is immediately reachable.
+
+## AI planner production gap remediation
+- [x] Seed real verified Laguna destination records so generation has a working success path.
+- [x] Converge generated itineraries into the existing editable trip/day editor route for numeric generated trips.
+- [x] Replace generated-result toast-only save/edit/invite/poll actions with real navigation flows; local stop removal remains intentionally local until stop-edit persistence is added.
+- [x] Add success-path Vitest coverage for verified catalog retrieval, grounded stop filtering, and date-order rejection.
+- [blocked] Capture successful generated-result desktop and mobile states; requires an authenticated live generation request and model-service availability.
+- [x] Route numeric generated trips through the canonical TripPage editor and reuse shared TripStop/TripTabs primitives on `/trips/:id/itinerary`.

@@ -27,16 +27,18 @@ const requireUser = t.middleware(async opts => {
 
 export const protectedProcedure = t.procedure.use(requireUser);
 
+export function assertPartnerRole(user: TrpcContext["user"]) {
+  if (!user) throw new TRPCError({ code: "UNAUTHORIZED", message: UNAUTHED_ERR_MSG });
+  if (user.role !== "partner" && user.role !== "admin") {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Partner workspace access is required." });
+  }
+  return user;
+}
+
 export const partnerProcedure = t.procedure.use(
   t.middleware(async opts => {
     const { ctx, next } = opts;
-    if (!ctx.user) {
-      throw new TRPCError({ code: "UNAUTHORIZED", message: UNAUTHED_ERR_MSG });
-    }
-    if (ctx.user.role !== "partner" && ctx.user.role !== "admin") {
-      throw new TRPCError({ code: "FORBIDDEN", message: "Partner workspace access is required." });
-    }
-    return next({ ctx: { ...ctx, user: ctx.user } });
+    return next({ ctx: { ...ctx, user: assertPartnerRole(ctx.user) } });
   }),
 );
 
