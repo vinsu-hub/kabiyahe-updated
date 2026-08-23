@@ -171,3 +171,18 @@
 - [x] Add richer bundle metadata such as pace, ideal group, and stop count using truthful local content.
 - [x] Add a curated collection rail and improve bundle filtering/empty-state feedback.
 - [x] Validate bundle interactions and responsive density on desktop and mobile.
+
+## My Wallet ticket screenshot attachments
+- [x] Add S3-backed ticket attachment metadata without storing image bytes in the database.
+- [x] Add owner-scoped upload and removal procedures with image type and size validation.
+- [x] Add wallet UI for upload, preview, replacement, removal, and ticket-reference adjacency.
+- [x] Validate ticket attachment behavior on desktop and mobile with regression tests; live authenticated S3 persistence remains environment-dependent because the sandbox session is unauthenticated and the database is timing out.
+
+## My Wallet attachment verification hardening
+- [blocked] Apply and confirm the walletTicketAttachments migration in the live database; migration commands and read-only verification timed out against the unavailable database.
+- [x] Add explicit loading, error, and unauthorized states for wallet attachment queries and mutations.
+- [blocked] Run an authenticated end-to-end upload, preview, replacement, and removal flow when OAuth and database availability permit; the sandbox session is unauthenticated and database access is timing out.
+
+## My Wallet unauthorized recovery
+- [x] Add a distinct login-required wallet attachment state with a clear login CTA for 401 responses.
+- [x] Verify the unauthorized wallet state in the browser without completing OAuth.

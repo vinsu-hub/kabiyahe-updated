@@ -114,3 +114,18 @@ export const generatedTripStops = mysqlTable("generatedTripStops", {
 });
 export type GeneratedTripStop = typeof generatedTripStops.$inferSelect;
 export type InsertGeneratedTripStop = typeof generatedTripStops.$inferInsert;
+
+export const walletTicketAttachments = mysqlTable("walletTicketAttachments", {
+  id: int("id").autoincrement().primaryKey(),
+  ownerUserId: int("ownerUserId").notNull(),
+  tripId: varchar("tripId", { length: 180 }).notNull(),
+  entryName: varchar("entryName", { length: 180 }).notNull(),
+  storageKey: varchar("storageKey", { length: 500 }).notNull(),
+  url: varchar("url", { length: 800 }).notNull(),
+  mimeType: varchar("mimeType", { length: 80 }).notNull(),
+  fileName: varchar("fileName", { length: 240 }).notNull(),
+  fileSize: int("fileSize").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type WalletTicketAttachment = typeof walletTicketAttachments.$inferSelect;
+export type InsertWalletTicketAttachment = typeof walletTicketAttachments.$inferInsert;
