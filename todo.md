@@ -66,3 +66,13 @@
 - [x] Verify Continue Planning / Open Trip responses.
 - [x] Check for missing quick actions, invite action, wallet summary, and overflow menu.
 - [x] Record remaining gaps and apply targeted fixes.
+
+## Full animation implementation and validation
+- [x] Define shared motion tokens, easing, duration, and reduced-motion rules.
+- [x] Add page entrance transitions across every route.
+- [x] Add card hover, press, stagger, image, and progress animations.
+- [x] Add nav, tab, filter, view-toggle, map-pin, and bottom-nav transitions.
+- [x] Add drawer, modal, toast, menu, form-step, poll, wallet, and itinerary action transitions.
+- [x] Validate all implemented routes at desktop and mobile breakpoints.
+- [x] Validate prefers-reduced-motion behavior.
+- [x] Check animation-related console errors and production build.
