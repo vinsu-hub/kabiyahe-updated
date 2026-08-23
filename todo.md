@@ -179,10 +179,16 @@
 - [x] Validate ticket attachment behavior on desktop and mobile with regression tests; live authenticated S3 persistence remains environment-dependent because the sandbox session is unauthenticated and the database is timing out.
 
 ## My Wallet attachment verification hardening
-- [blocked] Apply and confirm the walletTicketAttachments migration in the live database; migration commands and read-only verification timed out against the unavailable database.
+- [blocked] Apply and confirm the walletTicketAttachments migration in the live database; the table exists with the expected columns and zero rows, but `__drizzle_migrations` is empty and the CLI migration connection times out.
 - [x] Add explicit loading, error, and unauthorized states for wallet attachment queries and mutations.
 - [blocked] Run an authenticated end-to-end upload, preview, replacement, and removal flow when OAuth and database availability permit; the sandbox session is unauthenticated and database access is timing out.
 
 ## My Wallet unauthorized recovery
 - [x] Add a distinct login-required wallet attachment state with a clear login CTA for 401 responses.
 - [x] Verify the unauthorized wallet state in the browser without completing OAuth.
+
+## Wallet attachment query failure remediation
+- [x] Confirm whether walletTicketAttachments exists in the live database and identify migration drift.
+- [blocked] Apply the additive wallet attachment migration safely without destructive changes; the additive table was applied manually through the connected database channel, while Drizzle CLI migration recording remains unavailable due to timeout.
+- [x] Ensure the planner page is not destabilized by the wallet attachment query failure.
+- [blocked] Validate the authenticated planner and wallet query paths after schema synchronization; the live page loads and no missing-table error remains, but the current browser session was redirected to OAuth sign-in before authenticated verification.
