@@ -133,3 +133,29 @@
 - [x] Add success-path Vitest coverage for verified catalog retrieval, grounded stop filtering, and date-order rejection.
 - [blocked] Capture successful generated-result desktop and mobile states; requires an authenticated live generation request and model-service availability.
 - [x] Route numeric generated trips through the canonical TripPage editor and reuse shared TripStop/TripTabs primitives on `/trips/:id/itinerary`.
+
+## Planner wizard specification alignment
+- [x] Keep Step 1 limited to dates, group size, and budget.
+- [x] Keep Step 2 limited to interests and optional notes.
+- [x] Promote the trip summary into the main full-width Step 3 review content.
+- [x] Keep Generate My Itinerary as the Step 3 API trigger with edit-back navigation.
+- [x] Preserve the loading message rotation and generated-result continuity.
+- [x] Validate the corrected three-screen flow on desktop and mobile.
+
+## Planner interaction evidence follow-up
+- [x] Interactively verify Step 2 Preferences and Step 3 Review/Generate transitions on desktop and mobile.
+- [x] Capture desktop and mobile evidence for Step 1 → Step 2 → Step 3 and document the generated-result or authentication-blocked state.
+
+## Generated-result editing completion
+- [x] Persist generated-stop removal and drag reorder through owner-scoped planner mutations.
+- [x] Add a verified-destination picker from the generated result and persist new stops.
+- [x] Show a lightweight auto-saved status after generated-result edits.
+- [x] Add authorization/input regression coverage for generated-stop remove, reorder, and add mutations.
+
+## Generated-result persistence hardening
+- [x] Roll back optimistic stop removal and reorder state when persistence fails.
+- [x] Add invalid-payload and ownership regression coverage for stop editing mutations.
+
+## Generated-result persisted-boundary coverage
+- [blocked] Exercise remove and reorder against real persisted trip/stop ownership boundaries without mutating durable test data; the current database has zero generatedTripStops rows and test-data insertion is prohibited.
+- [blocked] Exercise duplicate verified-destination add conflicts and foreign stop ids in persisted mutation tests; the current database has zero generatedTripStops rows and test-data insertion is prohibited.

@@ -1,9 +1,10 @@
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, max } from "drizzle-orm";
 import { z } from "zod";
 import { invokeLLM } from "./_core/llm";
 import { getDb } from "./db";
 import { destinations, generatedTripStops, generatedTrips } from "../drizzle/schema";
 import { protectedProcedure, router } from "./_core/trpc";
+import { TRPCError } from "@trpc/server";
 
 const plannerInput = z.object({
   startDate: z.string().date(),
@@ -16,6 +17,25 @@ const plannerInput = z.object({
   message: "End date must be on or after the start date.",
   path: ["endDate"],
 });
+
+const reorderStopItem = z.object({ id: z.number().int().positive(), dayNumber: z.number().int().min(1), stopOrder: z.number().int().min(1) });
+export const reorderStopsInput = z.object({ tripId: z.number().int().positive(), stops: z.array(reorderStopItem).min(1).max(50) }).superRefine((value, ctx) => {
+  if (new Set(value.stops.map(stop => stop.id)).size !== value.stops.length) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Each itinerary stop can only appear once.", path: ["stops"] });
+});
+export const addStopInput = z.object({ tripId: z.number().int().positive(), destinationId: z.number().int().positive(), dayNumber: z.number().int().min(1), timeLabel: z.string().trim().min(1).max(40), rationale: z.string().trim().max(1000).optional().default("Added from the verified Laguna destination catalog.") });
+
+export function hasForeignStopIds(requestedIds: number[], ownedIds: number[]) {
+  const owned = new Set(ownedIds);
+  return requestedIds.some(id => !owned.has(id));
+}
+
+export function isDuplicateDestination(existingDestinationIds: number[], destinationId: number) {
+  return existingDestinationIds.includes(destinationId);
+}
+
+export function isStopOwned(ownedIds: number[], stopId: number) {
+  return ownedIds.includes(stopId);
+}
 
 const generatedShape = {
   days: {
@@ -121,5 +141,44 @@ export const plannerRouter = router({
     const placeRows = ids.length ? await db.select().from(destinations).where(inArray(destinations.id, ids)) : [];
     const places = new Map(placeRows.map(place => [place.id, place]));
     return { trip, stops: stops.map(stop => ({ ...stop, destination: places.get(stop.destinationId) })) };
+  }),
+
+  removeStop: protectedProcedure.input(z.object({ tripId: z.number().int().positive(), stopId: z.number().int().positive() })).mutation(async ({ ctx, input }) => {
+    const db = await getDb();
+    if (!db) throw new Error("Planner persistence is unavailable right now.");
+    const trip = await db.select({ id: generatedTrips.id }).from(generatedTrips).where(and(eq(generatedTrips.id, input.tripId), eq(generatedTrips.ownerUserId, ctx.user.id))).limit(1);
+    if (!trip[0]) throw new TRPCError({ code: "NOT_FOUND", message: "Generated trip not found." });
+    const stop = await db.select({ id: generatedTripStops.id }).from(generatedTripStops).where(and(eq(generatedTripStops.id, input.stopId), eq(generatedTripStops.tripId, input.tripId))).limit(1);
+    if (!isStopOwned(stop.map(item => item.id), input.stopId)) throw new TRPCError({ code: "NOT_FOUND", message: "That itinerary stop could not be found." });
+    await db.delete(generatedTripStops).where(and(eq(generatedTripStops.id, input.stopId), eq(generatedTripStops.tripId, input.tripId)));
+    return { success: true as const };
+  }),
+
+  reorderStops: protectedProcedure.input(reorderStopsInput).mutation(async ({ ctx, input }) => {
+    const db = await getDb();
+    if (!db) throw new Error("Planner persistence is unavailable right now.");
+    const trip = await db.select({ id: generatedTrips.id }).from(generatedTrips).where(and(eq(generatedTrips.id, input.tripId), eq(generatedTrips.ownerUserId, ctx.user.id))).limit(1);
+    if (!trip[0]) throw new TRPCError({ code: "NOT_FOUND", message: "Generated trip not found." });
+    const ids = input.stops.map(stop => stop.id);
+    const ownedStops = await db.select({ id: generatedTripStops.id }).from(generatedTripStops).where(and(eq(generatedTripStops.tripId, input.tripId), inArray(generatedTripStops.id, ids)));
+    if (hasForeignStopIds(ids, ownedStops.map(stop => stop.id))) throw new TRPCError({ code: "BAD_REQUEST", message: "The reorder included a stop outside this trip." });
+    for (const stop of input.stops) {
+      await db.update(generatedTripStops).set({ dayNumber: stop.dayNumber, stopOrder: stop.stopOrder }).where(and(eq(generatedTripStops.id, stop.id), eq(generatedTripStops.tripId, input.tripId)));
+    }
+    return { success: true as const };
+  }),
+
+  addStop: protectedProcedure.input(addStopInput).mutation(async ({ ctx, input }) => {
+    const db = await getDb();
+    if (!db) throw new Error("Planner persistence is unavailable right now.");
+    const trip = await db.select({ id: generatedTrips.id }).from(generatedTrips).where(and(eq(generatedTrips.id, input.tripId), eq(generatedTrips.ownerUserId, ctx.user.id))).limit(1);
+    if (!trip[0]) throw new TRPCError({ code: "NOT_FOUND", message: "Generated trip not found." });
+    const destination = await db.select({ id: destinations.id }).from(destinations).where(and(eq(destinations.id, input.destinationId), eq(destinations.status, "active"))).limit(1);
+    if (!destination[0]) throw new TRPCError({ code: "NOT_FOUND", message: "That destination is not in the verified Laguna catalog." });
+    const existingDestination = await db.select({ destinationId: generatedTripStops.destinationId }).from(generatedTripStops).where(and(eq(generatedTripStops.tripId, input.tripId), eq(generatedTripStops.destinationId, input.destinationId))).limit(1);
+    if (isDuplicateDestination(existingDestination.map(stop => stop.destinationId), input.destinationId)) throw new TRPCError({ code: "CONFLICT", message: "That verified destination is already in this itinerary." });
+    const [last] = await db.select({ maxOrder: max(generatedTripStops.stopOrder) }).from(generatedTripStops).where(and(eq(generatedTripStops.tripId, input.tripId), eq(generatedTripStops.dayNumber, input.dayNumber)));
+    const inserted = await db.insert(generatedTripStops).values({ tripId: input.tripId, dayNumber: input.dayNumber, stopOrder: Number(last?.maxOrder || 0) + 1, destinationId: input.destinationId, timeLabel: input.timeLabel, rationale: input.rationale });
+    return { success: true as const, stopId: Number((inserted as { insertId?: number }).insertId) };
   }),
 });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { appRouter } from "./routers";
-import { buildVerifiedStops, parseContent } from "./plannerRouter";
+import { addStopInput, buildVerifiedStops, hasForeignStopIds, isDuplicateDestination, isStopOwned, parseContent, reorderStopsInput } from "./plannerRouter";
 import type { TrpcContext } from "./_core/context";
 
 const context = (user: TrpcContext["user"]): TrpcContext => ({
@@ -56,5 +56,56 @@ describe("planner generation", () => {
     const verified = await caller.planner.verified();
     expect(verified.length).toBeGreaterThanOrEqual(4);
     expect(verified.every(destination => destination.name && destination.address)).toBe(true);
+  }, 15_000);
+});
+
+describe("generated stop editing authorization", () => {
+  it("rejects duplicate stop ids before reorder persistence", () => {
+    expect(reorderStopsInput.safeParse({ tripId: 1, stops: [{ id: 2, dayNumber: 1, stopOrder: 1 }, { id: 2, dayNumber: 1, stopOrder: 2 }] }).success).toBe(false);
+  });
+
+  it("rejects invalid add-stop day and blank time payloads", () => {
+    expect(addStopInput.safeParse({ tripId: 1, destinationId: 1, dayNumber: 0, timeLabel: "" }).success).toBe(false);
+  });
+
+  it("detects foreign and missing stop ownership before mutation", () => {
+    expect(hasForeignStopIds([11, 12], [11])).toBe(true);
+    expect(isStopOwned([11, 12], 13)).toBe(false);
+  });
+
+  it("detects duplicate destinations before add-stop insertion", () => {
+    expect(isDuplicateDestination([3, 7], 7)).toBe(true);
+    expect(isDuplicateDestination([3, 7], 8)).toBe(false);
+  });
+
+  it("rejects an authenticated reorder for a missing or foreign trip", async () => {
+    const caller = appRouter.createCaller(context(traveler));
+    await expect(caller.planner.reorderStops({ tripId: 999999, stops: [{ id: 999999, dayNumber: 1, stopOrder: 1 }] })).rejects.toMatchObject({ code: "NOT_FOUND" });
+  });
+
+  it("rejects a stop outside the caller-owned persisted trip", async () => {
+    const caller = appRouter.createCaller(context(traveler));
+    await expect(caller.planner.removeStop({ tripId: 1, stopId: 999999 })).rejects.toMatchObject({ code: "NOT_FOUND" });
+    await expect(caller.planner.reorderStops({ tripId: 1, stops: [{ id: 999999, dayNumber: 1, stopOrder: 1 }] })).rejects.toMatchObject({ code: "BAD_REQUEST" });
+  });
+
+  it("rejects a new stop when the destination is not in the verified catalog", async () => {
+    const caller = appRouter.createCaller(context(traveler));
+    await expect(caller.planner.addStop({ tripId: 1, destinationId: 999999, dayNumber: 1, timeLabel: "09:00 AM" })).rejects.toMatchObject({ code: "NOT_FOUND" });
+  });
+
+  it("rejects anonymous stop removal", async () => {
+    const caller = appRouter.createCaller(context(null));
+    await expect(caller.planner.removeStop({ tripId: 1, stopId: 1 })).rejects.toMatchObject({ code: "UNAUTHORIZED" });
+  });
+
+  it("rejects anonymous stop reorder", async () => {
+    const caller = appRouter.createCaller(context(null));
+    await expect(caller.planner.reorderStops({ tripId: 1, stops: [{ id: 1, dayNumber: 1, stopOrder: 1 }] })).rejects.toMatchObject({ code: "UNAUTHORIZED" });
+  });
+
+  it("rejects anonymous verified-stop creation", async () => {
+    const caller = appRouter.createCaller(context(null));
+    await expect(caller.planner.addStop({ tripId: 1, destinationId: 1, dayNumber: 1, timeLabel: "09:00 AM" })).rejects.toMatchObject({ code: "UNAUTHORIZED" });
   });
 });
