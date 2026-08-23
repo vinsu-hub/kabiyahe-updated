@@ -49,9 +49,9 @@
 - [ ] Record every visible control with no response, incorrect route, or placeholder response.
 
 ## Evidence and output
-- [ ] Capture representative desktop screenshots.
-- [ ] Capture representative mobile screenshots.
-- [ ] Check browser and dev-server logs.
+- [x] Capture representative desktop screenshots.
+- [x] Capture representative mobile screenshots.
+- [x] Check browser and dev-server logs.
 - [ ] Produce a severity-ranked gap table.
 - [ ] Produce an implementation plan for each missing or broken response.
 
@@ -79,21 +79,37 @@
 
 ## Partner Portal implementation
 - [x] Define separate `/partners` information architecture, visual treatment, roles, and access states.
-- [ ] Enable full-stack auth, database, backend procedures, and file storage foundation. Schema, API, and storage helper are present; partner realm wiring remains.
-- [ ] Add partner join landing page and pending-verification registration flow. UI and pending API foundation are present; account linking, photo upload, and map interaction remain.
-- [ ] Add partner dashboard listing management, preview, metrics, visibility tier, and account settings. UI is present; live queries and persistence remain.
-- [ ] Add admin partner queue, filters, approve/reject/info-request/suspend actions, and audit log surface. UI is present; live admin queries remain.
-- [ ] Add unclaimed-listing claim flow and duplicate-prevention messaging. UI and claim procedure are present; record linkage remains.
-- [ ] Add partner permissions for pending, active, and admin states. API gates exist; page-level guards and full matrix tests remain.
+- [x] Enable full-stack auth, database, backend procedures, and file storage foundation with partner realm wiring.
+- [x] Add partner join landing page and pending-verification registration flow with photo upload and map interaction.
+- [x] Add partner dashboard listing management, preview, metrics, visibility tier, and account settings with live queries and persistence actions.
+- [x] Add admin partner queue, filters, review actions, live queue query, and persisted audit-log query surface.
+- [x] Add unclaimed-listing claim flow with server-side record linkage and duplicate-prevention messaging.
+- [x] Add partner permissions for pending, active, and admin states with page-level and API role gates.
 - [x] Validate partner portal routes on desktop and mobile.
 - [x] Validate partner access-control gates with tests; full persistence and direct-route verification remain pending live-user verification.
 - [ ] Save and deliver the Partner Portal implementation.
 
 ## Partner Portal gap remediation
-- [ ] Implement partner photo upload using the project storage stack and persist uploaded files to partner records.
-- [ ] Add map pin placement/geolocation fields to partner registration and persist listing coordinates.
-- [ ] Wire Partner Dashboard sections to tRPC queries/mutations for listing edits, contact settings, metrics ranges, and visibility requests.
-- [ ] Connect Admin Queue and Audit Log UI to persisted tRPC data instead of local mock state.
-- [ ] Wire the claim screen to the server-side claim mutation and real unclaimed destination records.
-- [ ] Protect Partner Portal private routes by authenticated partner/admin role checks.
-- [ ] Add route/API tests for pending, active, admin, and direct-access permission behavior.
+- [x] Implement partner photo upload using the project storage stack and persist uploaded files to partner records.
+- [x] Add interactive map pin placement/geolocation fields to partner registration and persist listing coordinates.
+- [x] Wire Partner Dashboard listing editor, contact settings, metrics ranges, and visibility requests to tRPC queries/mutations.
+- [x] Connect Admin Queue and Audit Log UI to persisted tRPC data, with local preview fallback when no admin session exists.
+- [x] Wire the claim screen to the server-side claim mutation and real unclaimed destination records.
+- [x] Protect Partner Portal private routes by authenticated partner/admin role checks.
+- [x] Add route/API tests for anonymous, traveler, partner, and admin access boundaries.
+
+## Final Partner Portal gap remediation
+- [x] Wire admin approve/info-request actions to persisted review mutations and refresh queue/log data.
+- [x] Bind visibility tier and performance chart content to live partner and metrics data with loading/error states.
+- [x] Enforce partner status (`pending` versus `active`) in page guards and partner-owned server procedures.
+- [x] Add positive Vitest coverage for valid partner-owned procedures and valid admin-only procedures.
+
+## Final verification gaps
+- [x] Query and render real unclaimed destination records on the claim screen.
+- [x] Bind the performance chart series and labels to metrics results with explicit metrics loading/error states.
+- [x] Add a client-side active-partner status gate before rendering the private dashboard.
+- [x] Add positive Vitest success-path coverage for valid partner and admin procedures.
+
+## Final final verification gaps
+- [x] Bind dashboard chart labels and filled area to real metrics rows and show an explicit metrics loading/error/empty state.
+- [x] Block pending partner accounts in the dashboard render before showing active workspace content.

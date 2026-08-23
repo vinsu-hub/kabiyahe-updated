@@ -19,14 +19,30 @@ describe("partners access control", () => {
     const caller = appRouter.createCaller(appRouterContext("user"));
     await expect(caller.partners.adminQueue()).rejects.toMatchObject<Partial<TRPCError>>({ code: "FORBIDDEN" });
   });
+
+  it("rejects a traveler account from partner-owned procedures", async () => {
+    const caller = appRouter.createCaller(appRouterContext("user"));
+    await expect(caller.partners.mine()).rejects.toMatchObject<Partial<TRPCError>>({ code: "FORBIDDEN" });
+    await expect(caller.partners.claim({ destinationId: 104 })).rejects.toMatchObject<Partial<TRPCError>>({ code: "FORBIDDEN" });
+  });
+
+  it("allows a partner role through authorization before database access", async () => {
+    const caller = appRouter.createCaller(appRouterContext("partner"));
+    await expect(caller.partners.mine()).resolves.toEqual([]);
+  });
+
+  it("allows an admin role through authorization before database access", async () => {
+    const caller = appRouter.createCaller(appRouterContext("admin"));
+    await expect(caller.partners.adminQueue()).resolves.toEqual([]);
+  });
 });
 
-function appRouterContext(role: "user" | "admin"): TrpcContext {
+function appRouterContext(role: "user" | "partner" | "admin"): TrpcContext {
   return baseContext({
-    id: role === "admin" ? 2 : 1,
+    id: role === "admin" ? 2 : role === "partner" ? 3 : 1,
     openId: `${role}-sample`,
     email: `${role}@example.com`,
-    name: role === "admin" ? "Admin" : "Traveler",
+    name: role === "admin" ? "Admin" : role === "partner" ? "Partner" : "Traveler",
     loginMethod: "manus",
     role,
     createdAt: new Date(),
