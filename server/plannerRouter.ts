@@ -78,6 +78,12 @@ export function parseContent(content: unknown) {
   return parsed;
 }
 
+export function normalizeInsertId(value: unknown) {
+  const tripId = Number(value);
+  if (!Number.isInteger(tripId) || tripId <= 0) throw new Error("Planner could not determine the created trip ID. Please try again.");
+  return tripId;
+}
+
 export function buildVerifiedStops(parsed: ReturnType<typeof parseContent>, verifiedIds: Set<number>, tripId: number) {
   return parsed.days.flatMap(day => day.stops.filter(stop => verifiedIds.has(stop.destinationId)).map((stop, index) => ({ tripId, dayNumber: day.dayNumber, stopOrder: index + 1, destinationId: stop.destinationId, timeLabel: stop.timeLabel.slice(0, 40), rationale: stop.rationale.slice(0, 1000) })));
 }
@@ -107,7 +113,7 @@ export const plannerRouter = router({
       notes: input.notes,
       status: "generating",
     });
-    const tripId = Number((inserted as { insertId?: number }).insertId);
+    const tripId = normalizeInsertId((inserted as { insertId?: number | bigint | string }).insertId);
 
     try {
       const response = await withTimeout(invokeLLM({
@@ -125,7 +131,13 @@ export const plannerRouter = router({
       await db.update(generatedTrips).set({ status: "ready" }).where(and(eq(generatedTrips.id, tripId), eq(generatedTrips.ownerUserId, ctx.user.id)));
       return { tripId };
     } catch (error) {
-      await db.update(generatedTrips).set({ status: "failed" }).where(and(eq(generatedTrips.id, tripId), eq(generatedTrips.ownerUserId, ctx.user.id)));
+      if (Number.isInteger(tripId) && tripId > 0) {
+        try {
+          await db.update(generatedTrips).set({ status: "failed" }).where(and(eq(generatedTrips.id, tripId), eq(generatedTrips.ownerUserId, ctx.user.id)));
+        } catch {
+          // Preserve the original generation error; never replace it with a cleanup failure.
+        }
+      }
       throw error;
     }
   }),

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { appRouter } from "./routers";
-import { addStopInput, buildVerifiedStops, hasForeignStopIds, isDuplicateDestination, isStopOwned, parseContent, reorderStopsInput } from "./plannerRouter";
+import { addStopInput, buildVerifiedStops, hasForeignStopIds, isDuplicateDestination, isStopOwned, normalizeInsertId, parseContent, reorderStopsInput } from "./plannerRouter";
 import type { TrpcContext } from "./_core/context";
 
 const context = (user: TrpcContext["user"]): TrpcContext => ({
@@ -44,6 +44,13 @@ describe("planner generation", () => {
       interests: ["Nature"],
       notes: "",
     })).rejects.toMatchObject({ code: "BAD_REQUEST" });
+  });
+
+  it("rejects missing or invalid database insert IDs instead of producing NaN", () => {
+    expect(() => normalizeInsertId(undefined)).toThrow("created trip ID");
+    expect(() => normalizeInsertId("not-a-number")).toThrow("created trip ID");
+    expect(() => normalizeInsertId(0)).toThrow("created trip ID");
+    expect(normalizeInsertId("42")).toBe(42);
   });
 
   it("keeps only verified destination ids from a structured model response", () => {

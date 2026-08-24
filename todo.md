@@ -243,3 +243,10 @@
 - [x] Recreate the reference-aligned itinerary overview with day tabs, stop timeline, trip summary, action controls, and customization callout.
 - [x] Validate route overview interactions, map behavior, destination points, external navigation, and mobile responsiveness.
 - [x] Add automated regression coverage for route points and route-overview contracts.
+
+## Planner NaN trip-ID error remediation
+- [x] Trace the planner generation failure from UI mutation state through server status updates.
+- [x] Prevent invalid or missing generated trip IDs from reaching generatedTrips update queries.
+- [x] Show a clear recoverable planner error state instead of issuing an update with NaN.
+- [x] Add regression tests for invalid trip IDs and valid failure-status updates.
+- [x] Validate `/plan/new`, generation failure handling, TypeScript, tests, and production build.

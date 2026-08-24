@@ -45,7 +45,16 @@ export function Plan({ Header, BottomNav, Button, Tag, IMG }: any) {
   const [step, setStep] = useState(1);
   const [loadingMessage, setLoadingMessage] = useState(loadingMessages[0]);
   const [, setLocation] = useLocation();
-  const generate = trpc.planner.generate.useMutation({ onSuccess: ({ tripId }) => setLocation(`/plan/new/result/${tripId}`) });
+  const generate = trpc.planner.generate.useMutation({
+    onSuccess: ({ tripId }) => {
+      if (!Number.isInteger(tripId) || tripId <= 0) {
+        notify("The itinerary was created without a valid trip reference. Please try again.");
+        return;
+      }
+      setLocation(`/plan/new/result/${tripId}`);
+    },
+    onError: error => notify(error.message || "We couldn’t generate the route yet. Please try again."),
+  });
   const valid = Boolean(dateStart && dateEnd && dateEnd >= dateStart && selected.length > 0);
 
   useEffect(() => {
