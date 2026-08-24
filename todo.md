@@ -257,3 +257,10 @@
 - [x] Preserve owner scoping and prevent duplicate or ambiguous trip recovery.
 - [x] Add regression tests for insert result variants and invalid/ambiguous recovery.
 - [x] Validate `/plan/new`, generation failure handling, TypeScript, tests, and production build.
+
+## Route overview 1:1 reference refinement
+- [x] Compare current route overview proportions, spacing, typography, controls, overlays, and content hierarchy with the supplied reference image.
+- [x] Refine desktop split layout, stop timeline, summary card, top actions, map overlays, labels, legend, and bottom customization callout toward 1:1 fidelity.
+- [x] Preserve real Google Maps markers, route line, map/satellite toggle, re-center action, and destination links while aligning their visual treatment.
+- [x] Validate reference-fidelity interactions and responsive behavior at desktop and mobile breakpoints.
+- [x] Update route overview regression checks and save a verified checkpoint.
