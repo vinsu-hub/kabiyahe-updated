@@ -227,3 +227,11 @@
 - [x] Add researched attraction records with useful descriptions, places, categories, and imagery without fabricated ratings or reviews.
 - [x] Ensure Explore filters, list/grid/map views, destination detail links, and mobile behavior support the expanded catalog.
 - [x] Validate the new restaurant and attraction cards with browser smoke tests and production checks.
+
+## Hotels & Stays and customer journey validation
+- [x] Research truthful Laguna hotel and stay options from reliable sources and save source notes.
+- [x] Add Laguna Hotels & Stays records with destination detail views and no fabricated reviews, ratings, prices, hours, or contact details.
+- [x] Validate Explore category, search, sort, filters, view toggles, cards, detail galleries, save, and booking handoff for the lodging records.
+- [x] Validate the customer journey from Home through Explore, destination detail, save, Plan a Trip, My Trips, trip detail, Wallet, and mobile bottom navigation.
+- [x] Fix any broken routes, dead-end actions, misleading states, or mobile layout issues discovered during the journey audit.
+- [x] Add automated regression coverage for lodging content and customer-journey route contracts.
