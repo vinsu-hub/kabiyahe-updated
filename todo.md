@@ -293,3 +293,10 @@
 - [x] Add safe location permission/start-trip behavior, map user marker, next-stop card, progress state, nearby verified-stop actions, and wallet quick access.
 - [x] Add responsive mobile ordering and preserve all existing trip, map, booking, guide, and wallet handoffs.
 - [x] Add regression coverage and validate live-trip interactions, map loading, responsive views, TypeScript, tests, and production build.
+
+## Dead controls and missing feature audit
+- [x] Inventory every button, link, menu, preview, modal, map control, and mobile navigation action across the customer journey.
+- [x] Reproduce controls that do nothing, open the wrong view, close incorrectly, or have no recoverable response at desktop and mobile widths.
+- [x] Identify missing feature states, misleading placeholders, and unfinished previews that should show a clear unavailable or coming-soon response.
+- [x] Fix confirmed dead controls, broken routes, missing previews, and misleading feature states without fabricating data.
+- [x] Add regression coverage for audited interaction contracts and validate the primary customer journey.
