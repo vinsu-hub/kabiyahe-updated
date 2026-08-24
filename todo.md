@@ -308,3 +308,11 @@
 - [x] Validate bundle cards at desktop/mobile widths, including image loading, animations, navigation, and no overlap or overflow.
 - [x] Run tests, TypeScript, and production build before committing.
 - [x] Commit and push the verified project and assets/code to the configured GitHub repository.
+
+## Final cross-viewport evaluation
+- [x] Audit every primary route, modal, drawer, preview, map surface, and navigation window for missing or broken animation states.
+- [x] Capture and compare key surfaces at 1536, 1382, 1280, 1024, 768, 414, 390, and 360px widths.
+- [x] Run interaction and route smoke tests for all customer, planner, wallet, trip, live-trip, guide, and partner surfaces.
+- [x] Verify reduced-motion behavior, focus/keyboard access, overflow, fixed navigation containment, image loading, and console cleanliness.
+- [x] Run the full test suite, TypeScript, production build, and record environment-blocked checks separately.
+- [x] Fix confirmed regressions and save a final verified checkpoint.

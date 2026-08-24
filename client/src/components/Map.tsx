@@ -76,7 +76,7 @@
 
 /// <reference types="@types/google.maps" />
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePersistFn } from "@/hooks/usePersistFn";
 import { cn } from "@/lib/utils";
 
@@ -92,8 +92,9 @@ const FORGE_BASE_URL =
   import.meta.env.VITE_FRONTEND_FORGE_API_URL ||
   "https://forge.butterfly-effect.dev";
 const MAPS_PROXY_URL = `${FORGE_BASE_URL}/v1/maps/proxy`;
+const MAP_LOAD_MAX_ATTEMPTS = 2;
 
-function loadMapScript(): Promise<void> {
+function loadMapScript(attempt = 0): Promise<void> {
   if (typeof window === "undefined") return Promise.reject(new Error("Google Maps requires a browser."));
   if (window.google?.maps) return Promise.resolve();
   if (window.__kabiyaheMapsLoader) return window.__kabiyaheMapsLoader;
@@ -109,8 +110,15 @@ function loadMapScript(): Promise<void> {
       else reject(new Error("Google Maps loaded without a usable API."));
     };
     const fail = () => {
+      script.remove();
       window.__kabiyaheMapsLoader = undefined;
-      reject(new Error("Failed to load Google Maps script."));
+      if (attempt < MAP_LOAD_MAX_ATTEMPTS) {
+        window.setTimeout(() => {
+          loadMapScript(attempt + 1).then(resolve, reject);
+        }, 650 * (attempt + 1));
+        return;
+      }
+      reject(new Error("Failed to load Google Maps script after retries."));
     };
 
     script.addEventListener("load", finish, { once: true });
@@ -142,13 +150,15 @@ export function MapView({
 }: MapViewProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<google.maps.Map | null>(null);
+  const [mapStatus, setMapStatus] = useState<"loading" | "ready" | "error">("loading");
 
   const init = usePersistFn(async () => {
     if (map.current) return;
+    setMapStatus("loading");
     try {
       await loadMapScript();
-    } catch (error) {
-      console.error(error);
+    } catch {
+      setMapStatus("error");
       return;
     }
     if (!mapContainer.current || map.current) {
@@ -164,6 +174,7 @@ export function MapView({
       streetViewControl: true,
       mapId: "DEMO_MAP_ID",
     });
+    setMapStatus("ready");
     if (onMapReady) {
       onMapReady(map.current);
     }
@@ -174,6 +185,29 @@ export function MapView({
   }, [init]);
 
   return (
-    <div ref={mapContainer} className={cn("w-full h-[500px]", className)} />
+    <div className={cn("relative w-full h-[500px] overflow-hidden", className)}>
+      <div ref={mapContainer} className="w-full h-full" aria-label="Google Maps route map" />
+      {mapStatus !== "ready" && (
+        <div className="absolute inset-0 z-10 grid place-items-center bg-[#e9f0e4]/95 p-6 text-center">
+          <div className="max-w-xs space-y-2">
+            <p className="text-sm font-semibold text-[#21452f]">
+              {mapStatus === "loading" ? "Loading route map…" : "Map temporarily unavailable"}
+            </p>
+            <p className="text-xs leading-relaxed text-[#687568]">
+              {mapStatus === "loading" ? "Preparing verified route points." : "The route is still available in the itinerary list."}
+            </p>
+            {mapStatus === "error" && (
+              <button
+                type="button"
+                className="mt-2 rounded-lg border border-[#21452f] px-3 py-2 text-xs font-semibold text-[#21452f] transition-transform active:scale-95"
+                onClick={() => void init()}
+              >
+                Retry map
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

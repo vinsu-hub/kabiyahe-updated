@@ -19,6 +19,9 @@ describe("route overview contracts", () => {
     expect(mapSource).toContain("if (window.google?.maps) return Promise.resolve();");
     expect(mapSource).toContain("if (window.__kabiyaheMapsLoader) return window.__kabiyaheMapsLoader;");
     expect(mapSource).toContain("if (map.current) return;");
+    expect(mapSource).toContain("MAP_LOAD_MAX_ATTEMPTS");
+    expect(mapSource).toContain("Failed to load Google Maps script after retries.");
+    expect(mapSource).toContain("Retry map");
   });
 
   it("uses the Google Maps SDK for directions and map state", () => {
