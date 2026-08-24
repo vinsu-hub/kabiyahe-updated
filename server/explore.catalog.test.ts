@@ -23,6 +23,15 @@ describe("Explore catalog content", () => {
     expect(appSource).toContain('d.placeholder?"Details pending":"Curated place"');
   });
 
+  it("exposes the Attractions quick filter and broadens discovery beyond Laguna", () => {
+    expect(appSource).toContain('"Attractions"');
+    expect(appSource).toContain('className="explore-quick-filters"');
+    expect(appSource).toContain('aria-label="Browse destination categories"');
+    expect(appSource).toContain('title="Explore the Philippines"');
+    expect(appSource).toContain('Explore the Philippines');
+    expect(appSource).toContain('across the Philippines');
+  });
+
   it("includes researched Los Baños falls and resort leads with truthful status states", () => {
     for (const name of ["Dampalit Falls", "Al Fresco Springs", "Laresio Lakeside Resort & Spa", "Splash Mountain Resort"]) {
       expect(appSource).toContain(`name: "${name}"`);

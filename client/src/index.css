@@ -330,3 +330,15 @@ main,.auth-page{animation:page-reveal var(--motion-slow) var(--ease-out) both}.h
   .landing-page .hero .script{font-size:29px}
   .landing-page .hero-copy>p:not(.eyebrow){font-size:13px}
 }
+
+/* Philippines-wide discovery category rail */
+.explore-quick-filters{display:flex;gap:8px;flex-wrap:wrap;padding:14px 24px;border-bottom:1px solid var(--line);background:rgba(246,242,232,.78)}
+.explore-quick-filters button{border:1px solid var(--line);border-radius:999px;background:var(--paper);color:var(--forest);font:700 12px/1.1 Inter,sans-serif;padding:10px 14px;cursor:pointer;transition:background .18s var(--ease-out),color .18s var(--ease-out),transform .18s var(--ease-out)}
+.explore-quick-filters button:hover{transform:translateY(-1px)}
+.explore-quick-filters button:focus-visible{outline:3px solid rgba(216,151,87,.45);outline-offset:2px}
+.explore-quick-filters button.active{background:var(--forest);border-color:var(--forest);color:#fff}
+@media(max-width:700px){
+  .explore-quick-filters{flex-wrap:nowrap;overflow-x:auto;padding:12px 14px;scrollbar-width:none;overscroll-behavior-inline:contain}
+  .explore-quick-filters::-webkit-scrollbar{display:none}
+  .explore-quick-filters button{flex:0 0 auto;min-height:38px;padding:10px 13px}
+}

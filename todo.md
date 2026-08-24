@@ -349,3 +349,9 @@
 - [x] Add Enchanted Kingdom, Dampalit Falls, Al Fresco Springs, and Laresio Lakeside Resort & Spa with truthful verification and rating states.
 - [x] Upload persistent venue imagery and promote Enchanted Kingdom plus Laresio in Home Featured Destinations.
 - [x] Validate Home, Explore, and destination detail routes at mobile and desktop widths with regression tests.
+
+## Philippines-wide discovery expansion
+- [x] Audit current Explore category controls and Laguna-specific labels across Home, Explore, map copy, and navigation.
+- [x] Add an explicit Attractions filter/category that works with the existing destination catalog.
+- [x] Replace Laguna-only Explore wording with Philippines-focused copy while keeping Laguna records and routes intact.
+- [x] Validate filter results, empty states, mobile controls, and regression tests.
