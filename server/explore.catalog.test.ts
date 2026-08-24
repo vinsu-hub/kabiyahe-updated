@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 
 describe("Explore catalog content", () => {
   const appSource = readFileSync(resolve(process.cwd(), "client/src/App.tsx"), "utf8");
+  const cssSource = readFileSync(resolve(process.cwd(), "client/src/index.css"), "utf8");
 
   it("includes the requested restaurant placeholders with explicit placeholder labeling", () => {
     expect(appSource).toContain('name: "Danielitos Home Kitchen"');
@@ -30,6 +31,9 @@ describe("Explore catalog content", () => {
     expect(appSource).toContain('title="Explore the Philippines"');
     expect(appSource).toContain('Explore the Philippines');
     expect(appSource).toContain('across the Philippines');
+    expect(cssSource).toContain('overflow-x:auto');
+    expect(cssSource).toContain('touch-action:pan-x');
+    expect(cssSource).toContain('white-space:nowrap');
   });
 
   it("includes researched Los Baños falls and resort leads with truthful status states", () => {

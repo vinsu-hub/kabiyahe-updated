@@ -355,3 +355,8 @@
 - [x] Add an explicit Attractions filter/category that works with the existing destination catalog.
 - [x] Replace Laguna-only Explore wording with Philippines-focused copy while keeping Laguna records and routes intact.
 - [x] Validate filter results, empty states, mobile controls, and regression tests.
+
+## Category strip horizontal scrolling
+- [x] Audit the Explore category-strip width and overflow behavior at narrow mobile widths.
+- [x] Make all category pills horizontally scrollable without wrapping or viewport clipping.
+- [x] Validate touch/keyboard access, active states, desktop regression, and tests.
