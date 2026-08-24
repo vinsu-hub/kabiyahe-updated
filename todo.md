@@ -328,3 +328,8 @@
 - [x] Audit bundle card title, metadata, description, tags, audience note, and action alignment against the supplied reference.
 - [x] Correct the Bundles card typography and spacing so labels and titles do not collide or clip.
 - [x] Validate the corrected grid at desktop and mobile widths, including filter pills and card actions.
+
+## Mobile landing-page composition correction
+- [x] Audit the compact hero, featured-destination rail, and fixed bottom navigation at the reported mobile width.
+- [x] Correct mobile hero height and destination-card typography/overflow to match the supplied reference.
+- [x] Preserve bottom-nav clearance and validate mobile plus desktop regression behavior.
