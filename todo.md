@@ -213,3 +213,9 @@
 ## Mobile bottom navigation verification evidence
 - [x] Validate the corrected bottom navigation at 390px width.
 - [x] Document no overlap, clipping, uneven spacing, or safe-area issue after reviewing all captured widths.
+
+## Quick reservation wallet access
+- [ ] Add a prominent Wallet/References quick action to trip cards and relevant trip surfaces.
+- [ ] Add a compact reservation-reference preview or fast-open action that reveals booking codes without extra navigation when appropriate.
+- [ ] Preserve the full wallet route for ticket screenshots and complete references.
+- [ ] Validate fast access, reference visibility, and mobile reachability.
