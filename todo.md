@@ -360,3 +360,9 @@
 - [x] Audit the Explore category-strip width and overflow behavior at narrow mobile widths.
 - [x] Make all category pills horizontally scrollable without wrapping or viewport clipping.
 - [x] Validate touch/keyboard access, active states, desktop regression, and tests.
+
+## Explore view-toggle and UI structure audit
+- [x] Audit Map, List, and Grid controls for state changes, content visibility, and mobile containment.
+- [x] Make each Explore view toggle visibly render its intended result layout and accessible active state.
+- [x] Audit Explore desktop/mobile spacing, clipping, category rail, filters, map legend, result cards, and bottom navigation.
+- [x] Add regression coverage and validate all three views at representative desktop and mobile widths.

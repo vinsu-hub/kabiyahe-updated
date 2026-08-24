@@ -36,6 +36,15 @@ describe("Explore catalog content", () => {
     expect(cssSource).toContain('white-space:nowrap');
   });
 
+  it("keeps Map, List, and Grid controls functional and structurally distinct", () => {
+    expect(appSource).toContain('aria-label={`Show ${v} view`}');
+    expect(appSource).toContain('aria-pressed={view===v}');
+    expect(appSource).toContain('className={`explore-workspace ${view}`}');
+    expect(cssSource).toContain('.explore-workspace.list');
+    expect(cssSource).toContain('.explore-workspace.grid');
+    expect(cssSource).toContain('.explore-workspace.grid .result-list{display:grid');
+  });
+
   it("includes researched Los Baños falls and resort leads with truthful status states", () => {
     for (const name of ["Dampalit Falls", "Al Fresco Springs", "Laresio Lakeside Resort & Spa", "Splash Mountain Resort"]) {
       expect(appSource).toContain(`name: "${name}"`);

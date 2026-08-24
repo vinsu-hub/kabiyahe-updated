@@ -349,3 +349,25 @@ main,.auth-page{animation:page-reveal var(--motion-slow) var(--ease-out) both}.h
   .explore-quick-filters{box-sizing:border-box;width:100%;max-width:100%;min-width:0;display:flex;flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;overflow-y:hidden;touch-action:pan-x;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;scrollbar-width:thin}
   .explore-quick-filters button{display:block;flex:0 0 auto;white-space:nowrap;scroll-snap-align:start}
 }
+
+/* Explore view-toggle layouts */
+.explore-workspace.list{display:block;height:auto;min-height:calc(100vh - 158px)}
+.explore-workspace.list .result-list{max-width:980px;margin:0 auto;padding:22px 28px}
+.explore-workspace.list .destination-card.compact{grid-template-columns:190px minmax(0,1fr);max-width:900px}
+.explore-workspace.grid{display:block;height:auto;min-height:calc(100vh - 158px)}
+.explore-workspace.grid .result-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:14px;padding:22px 28px}
+.explore-workspace.grid .result-list>.result-count,.explore-workspace.grid .result-list>.btn,.explore-workspace.grid .result-list>.empty-state{grid-column:1/-1}
+.explore-workspace.grid .destination-card.compact{display:block;margin:0;min-width:0}
+.explore-workspace.grid .destination-card.compact .image-wrap{height:175px}
+.explore-workspace.grid .destination-card.compact .card-body{padding:12px}
+@media(max-width:700px){
+  .explore-workspace.list,.explore-workspace.grid{min-height:auto}
+  .explore-workspace.list .result-list{padding:14px}
+  .explore-workspace.list .destination-card.compact{grid-template-columns:120px minmax(0,1fr);max-width:none}
+  .explore-workspace.grid .result-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:14px}
+  .explore-workspace.grid .destination-card.compact .image-wrap{height:128px}
+  .explore-workspace.grid .destination-card.compact .card-body{padding:10px}
+  .explore-workspace.grid .destination-card.compact h3{font-size:13px;line-height:1.2}
+  .explore-workspace.grid .destination-card.compact .muted{font-size:10px}
+  .explore-workspace.grid .destination-card.compact .rating{font-size:10px}
+}
