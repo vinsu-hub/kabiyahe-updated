@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { appRouter } from "./routers";
-import { addStopInput, buildVerifiedStops, hasForeignStopIds, isDuplicateDestination, isStopOwned, normalizeInsertId, parseContent, reorderStopsInput } from "./plannerRouter";
+import { addStopInput, buildVerifiedStops, hasForeignStopIds, isDuplicateDestination, isStopOwned, normalizeInsertId, optionalInsertId, parseContent, reorderStopsInput } from "./plannerRouter";
 import type { TrpcContext } from "./_core/context";
 
 const context = (user: TrpcContext["user"]): TrpcContext => ({
@@ -51,6 +51,9 @@ describe("planner generation", () => {
     expect(() => normalizeInsertId("not-a-number")).toThrow("created trip ID");
     expect(() => normalizeInsertId(0)).toThrow("created trip ID");
     expect(normalizeInsertId("42")).toBe(42);
+    expect(optionalInsertId(undefined)).toBeNull();
+    expect(optionalInsertId("not-a-number")).toBeNull();
+    expect(optionalInsertId(42n)).toBe(42);
   });
 
   it("keeps only verified destination ids from a structured model response", () => {

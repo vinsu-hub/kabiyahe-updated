@@ -250,3 +250,10 @@
 - [x] Show a clear recoverable planner error state instead of issuing an update with NaN.
 - [x] Add regression tests for invalid trip IDs and valid failure-status updates.
 - [x] Validate `/plan/new`, generation failure handling, TypeScript, tests, and production build.
+
+## Planner missing created-trip ID remediation
+- [x] Inspect the actual Drizzle/mysql2 insert result shape used by generatedTrips.
+- [x] Recover the created trip ID reliably when insertId is absent or driver-shaped differently.
+- [x] Preserve owner scoping and prevent duplicate or ambiguous trip recovery.
+- [x] Add regression tests for insert result variants and invalid/ambiguous recovery.
+- [x] Validate `/plan/new`, generation failure handling, TypeScript, tests, and production build.

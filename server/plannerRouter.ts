@@ -1,4 +1,4 @@
-import { and, eq, inArray, max } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, max } from "drizzle-orm";
 import { z } from "zod";
 import { invokeLLM } from "./_core/llm";
 import { getDb } from "./db";
@@ -84,6 +84,11 @@ export function normalizeInsertId(value: unknown) {
   return tripId;
 }
 
+export function optionalInsertId(value: unknown) {
+  const tripId = Number(value);
+  return Number.isInteger(tripId) && tripId > 0 ? tripId : null;
+}
+
 export function buildVerifiedStops(parsed: ReturnType<typeof parseContent>, verifiedIds: Set<number>, tripId: number) {
   return parsed.days.flatMap(day => day.stops.filter(stop => verifiedIds.has(stop.destinationId)).map((stop, index) => ({ tripId, dayNumber: day.dayNumber, stopOrder: index + 1, destinationId: stop.destinationId, timeLabel: stop.timeLabel.slice(0, 40), rationale: stop.rationale.slice(0, 1000) })));
 }
@@ -102,6 +107,8 @@ export const plannerRouter = router({
     const verified = await db.select({ id: destinations.id, name: destinations.name, category: destinations.category, description: destinations.description, address: destinations.address }).from(destinations).where(eq(destinations.status, "active"));
     if (verified.length === 0) throw new Error("No verified Laguna destinations are available yet.");
 
+    // MySQL/TiDB timestamp columns may truncate milliseconds; leave a small window so the fallback can see the inserted row.
+    const createdAfter = new Date(Date.now() - 2_000);
     const inserted = await db.insert(generatedTrips).values({
       ownerUserId: ctx.user.id,
       name: "Laguna Adventure",
@@ -113,7 +120,20 @@ export const plannerRouter = router({
       notes: input.notes,
       status: "generating",
     });
-    const tripId = normalizeInsertId((inserted as { insertId?: number | bigint | string }).insertId);
+    const directTripId = optionalInsertId((inserted as { insertId?: number | bigint | string }).insertId);
+    const tripId = directTripId ?? (await db.select({ id: generatedTrips.id })
+      .from(generatedTrips)
+      .where(and(
+        eq(generatedTrips.ownerUserId, ctx.user.id),
+        eq(generatedTrips.name, "Laguna Adventure"),
+        eq(generatedTrips.travelers, input.travelers),
+        eq(generatedTrips.budgetLevel, input.budgetLevel),
+        eq(generatedTrips.status, "generating"),
+        gte(generatedTrips.createdAt, createdAfter),
+      ))
+      .orderBy(desc(generatedTrips.createdAt), desc(generatedTrips.id))
+      .limit(1))[0]?.id;
+    if (!tripId) throw new Error("Planner could not determine the created trip ID. Please try again.");
 
     try {
       const response = await withTimeout(invokeLLM({
