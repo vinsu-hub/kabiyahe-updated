@@ -316,3 +316,10 @@
 - [x] Verify reduced-motion behavior, focus/keyboard access, overflow, fixed navigation containment, image loading, and console cleanliness.
 - [x] Run the full test suite, TypeScript, production build, and record environment-blocked checks separately.
 - [x] Fix confirmed regressions and save a final verified checkpoint.
+
+## Minimalist scrolling landing-page animation
+- [x] Audit the landing-page sections, existing motion tokens, and responsive layout boundaries.
+- [x] Add restrained scroll reveal choreography for hero, destinations, bundles, and supporting sections.
+- [x] Add subtle scroll-linked image/parallax motion without affecting layout or readability.
+- [x] Respect prefers-reduced-motion and avoid scroll jank, excessive movement, or inaccessible hidden content.
+- [x] Validate desktop, tablet, and mobile scroll behavior, image loading, navigation, and build/tests.
