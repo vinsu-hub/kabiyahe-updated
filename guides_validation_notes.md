@@ -1,0 +1,7 @@
+# Guides Phase 1 validation notes
+
+Desktop screenshots show the Guides tab integrated into the global header with the expected forest-green active underline. The directory has a clear editorial hero, place-based trust banner, four usable controls, four guide cards, and a populated callout. The detail route uses a large split hero, areas covered, specialties, about, rate confirmation, contact actions, and a prominent off-platform booking/payment disclaimer. No ratings, reviews, testimonials, phone numbers, or social URLs were fabricated; listings are clearly marked curated or unverified and instruct travelers to confirm details directly.
+
+Mobile validation remains to be captured. Interaction validation should cover place filtering, specialty filtering, search, sorting, reset, detail navigation, nearby guides, and guide links from itinerary stops.
+
+The guide service areas now derive from the shared destination catalog passed from App.tsx, so place filters and contextual itinerary links use the same destination vocabulary. Guide detail contact UI now renders working `tel:`/external links only when real per-guide contact fields exist; current curated listings intentionally show an explicit unavailable-contact message instead of fake channels. The hardened desktop/mobile smoke test confirms one filtered result, one searchable result, the off-platform disclaimer, the truthful contact fallback, three itinerary contextual guide links, and no console errors at either breakpoint.

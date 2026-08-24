@@ -192,3 +192,16 @@
 - [blocked] Apply the additive wallet attachment migration safely without destructive changes; the additive table was applied manually through the connected database channel, while Drizzle CLI migration recording remains unavailable due to timeout.
 - [x] Ensure the planner page is not destabilized by the wallet attachment query failure.
 - [blocked] Validate the authenticated planner and wallet query paths after schema synchronization; the live page loads and no missing-table error remains, but the current browser session was redirected to OAuth sign-in before authenticated verification.
+
+## Tour Guides Phase 1 discovery
+- [x] Add a public Guides tab to the primary navigation and mobile bottom navigation.
+- [x] Add curated guide records tied to the existing verified destinations table, with truthful trust labels and no fabricated reviews.
+- [x] Add place, specialty, search, and sort controls with a useful empty state.
+- [x] Add guide detail pages with areas, specialties, typical rate range, contact methods, and an always-visible off-platform disclaimer.
+- [x] Add contextual guide links from guide-relevant itinerary stops where appropriate.
+- [x] Validate guide routes, filters, contact actions, trust copy, and responsive mobile behavior.
+
+## Tour Guides Phase 1 production hardening
+- [x] Bind guide service areas to the existing destination records or a shared verified destination dataset instead of standalone strings.
+- [blocked] Add real per-guide contact fields with working call/message/social links, using explicit unavailable fallbacks only where no verified guide contact details have been supplied.
+- [blocked] Re-run browser validation for guide detail contact actions after verified guide contact links are supplied and implemented.
