@@ -285,3 +285,11 @@
 - [x] Preserve real map tiles, markers, directions, controls, and satellite state after consolidation.
 - [x] Add regression coverage that detects duplicate loader paths and validates the shared map contract.
 - [x] Validate the route map in a fresh browser session with no duplicate-load console error, then run tests, TypeScript, and build.
+
+## Live Trip Mode reference implementation
+- [x] Audit current trip routes and map capabilities against the supplied live-trip dashboard reference.
+- [x] Define truthful live-trip states for on-time, ahead, running-late, and unavailable-location cases without fabricating live telemetry.
+- [x] Implement the three-column live-trip structure: trip progress rail, live map/next-stop workspace, and companion utility rail.
+- [x] Add safe location permission/start-trip behavior, map user marker, next-stop card, progress state, nearby verified-stop actions, and wallet quick access.
+- [x] Add responsive mobile ordering and preserve all existing trip, map, booking, guide, and wallet handoffs.
+- [x] Add regression coverage and validate live-trip interactions, map loading, responsive views, TypeScript, tests, and production build.
