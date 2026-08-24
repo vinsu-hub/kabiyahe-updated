@@ -213,3 +213,17 @@ main,.auth-page{animation:page-reveal var(--motion-slow) var(--ease-out) both}.h
 .route-stop-tools{display:flex;align-items:center;justify-content:flex-end;gap:4px;align-self:start;padding-top:2px}.route-stop-tools button{display:grid;place-items:center;border:0;background:transparent;color:#657267;padding:2px;cursor:pointer;font:inherit}.route-stop-tools button:hover{color:var(--forest)}
 .route-segment-row{display:flex;align-items:center;gap:10px;min-height:42px;padding:8px 22px 8px 48px;border-top:1px solid #eef0e9;border-bottom:1px solid #eef0e9;color:#56645a;font-size:11px}.route-segment-row svg{color:#344f41;flex:0 0 auto}.route-segment-row span{display:flex;align-items:center;gap:8px}.route-segment-row b{font-weight:800}.route-segment-row small{color:#7b857a}
 @media(max-width:600px){.route-segment-row{min-height:38px;padding-left:42px;padding-right:10px;font-size:10px}.route-stop-tools{gap:1px}}
+
+/* Intensive UI audit: prevent trip-stop action controls from colliding with adjacent content */
+.trip-stop{min-width:0}
+.stop-main,.stop-details{min-width:0}
+.stop-actions{display:flex;flex-wrap:wrap;align-items:stretch;gap:7px;max-width:100%;overflow:visible}
+.stop-actions .btn{flex:1 1 86px;min-width:0;white-space:nowrap;padding:0 9px}
+@media (max-width:1120px) and (min-width:901px){.trip-stop{grid-template-columns:72px minmax(140px,175px) minmax(120px,1fr) minmax(245px,285px) 18px;gap:10px}.stop-actions .btn{flex-basis:78px;padding:0 7px;font-size:11px}.stop-details p{font-size:12px}}
+@media (max-width:900px){.stop-actions{width:100%;gap:7px}.stop-actions .btn{flex:1 1 0;padding:0 8px;min-height:34px}}
+@media (max-width:600px){.stop-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.stop-actions .btn{width:100%;min-width:0;padding:0 6px;font-size:11px}.stop-actions .btn:last-child{grid-column:span 2}}
+
+/* Mobile safe-area audit: keep final itinerary actions above fixed bottom navigation */
+@media(max-width:720px){.trip-page{padding-bottom:calc(150px + env(safe-area-inset-bottom))}.trip-page .day-block:last-of-type{padding-bottom:18px}.trip-stop{scroll-margin-bottom:150px}.stop-actions{padding-bottom:2px}}
+
+@media(max-width:600px){.trip-stop>a img{width:100%;height:130px;object-fit:cover;border-radius:10px}.trip-stop>a{display:block;min-width:0}.trip-stop{padding-bottom:16px}}

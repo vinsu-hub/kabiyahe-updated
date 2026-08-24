@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 
 describe("customer journey contracts", () => {
   const appSource = readFileSync(resolve(process.cwd(), "client/src/App.tsx"), "utf8");
+  const styleSource = readFileSync(resolve(process.cwd(), "client/src/index.css"), "utf8");
 
   it("keeps Explore lodging discovery connected to category and detail routes", () => {
     expect(appSource).toContain('"Hotels & Stays":"Hotels"');
@@ -11,6 +12,15 @@ describe("customer journey contracts", () => {
     expect(appSource).toContain('name: "Sol Y Viento Hotels and Resorts"');
     expect(appSource).toContain('<Route path="/explore/:id"');
     expect(appSource).toContain('href=`/explore/${slugify(d.name)}`');
+  });
+
+  it("keeps audited stop actions and mobile-safe spacing in place", () => {
+    expect(appSource).toContain("Navigate");
+    expect(appSource).toContain("Booking");
+    expect(appSource).toContain("Find a guide");
+    expect(styleSource).toContain(".stop-actions{display:flex;flex-wrap:wrap");
+    expect(styleSource).toContain(".trip-page{padding-bottom:calc(150px + env(safe-area-inset-bottom))}");
+    expect(styleSource).toContain(".trip-stop>a img{width:100%;height:130px");
   });
 
   it("keeps the main customer journey escape routes and wallet handoffs present", () => {

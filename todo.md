@@ -271,3 +271,10 @@
 - [x] Match the stop-row anatomy, active day state, map summary placement, numbered callouts, legend, controls, and customization footer.
 - [x] Preserve real map behavior and route destination links while implementing the structural changes.
 - [x] Validate desktop/mobile screenshots and all route overview interactions, then update regression coverage.
+
+## Intensive route overview UI bug audit
+- [x] Audit route overview stop-row anatomy, action buttons, panel boundaries, map overlays, and responsive overflow.
+- [x] Reproduce overlap and wrapping risks at 1536px, 1280px, 1024px, 768px, 414px, 390px, and 360px widths.
+- [x] Verify every route-view button, destination link, day control, map control, stop action, booking/guide action, and footer CTA has a safe response.
+- [x] Fix confirmed overlap, clipping, wrapping, z-index, focus, and dead-end interaction issues.
+- [x] Add or update automated regression coverage and complete final visual/browser validation.
