@@ -343,3 +343,9 @@
 - [x] Audit the router and BottomNav transitions for scroll restoration behavior.
 - [x] Reset the viewport to the top when switching primary mobile tabs without disrupting browser history.
 - [x] Validate Home, Explore, Guides, Plan, Trips, and Saved tab switching plus direct navigation and tests.
+
+## Researched Laguna destination enrichment
+- [x] Research Enchanted Kingdom and Los Baños falls/resort candidates using venue and travel sources.
+- [x] Add Enchanted Kingdom, Dampalit Falls, Al Fresco Springs, and Laresio Lakeside Resort & Spa with truthful verification and rating states.
+- [x] Upload persistent venue imagery and promote Enchanted Kingdom plus Laresio in Home Featured Destinations.
+- [x] Validate Home, Explore, and destination detail routes at mobile and desktop widths with regression tests.

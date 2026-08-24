@@ -22,4 +22,17 @@ describe("Explore catalog content", () => {
     expect(appSource).toContain('d.rating?<span className="rating">');
     expect(appSource).toContain('d.placeholder?"Details pending":"Curated place"');
   });
+
+  it("includes researched Los Baños falls and resort leads with truthful status states", () => {
+    for (const name of ["Dampalit Falls", "Al Fresco Springs", "Laresio Lakeside Resort & Spa", "Splash Mountain Resort"]) {
+      expect(appSource).toContain(`name: "${name}"`);
+      expect(appSource).toContain(`place: "Los Baños, Laguna"`);
+    }
+    expect(appSource).toContain('name: "Enchanted Kingdom", place: "Santa Rosa, Laguna", image: IMG.enchantedKingdom');
+    expect(appSource).toContain('name: "Al Fresco Springs", place: "Brgy Tadlac, Los Baños, Laguna", image: IMG.alFresco');
+    expect(appSource).toContain('name: "Laresio Lakeside Resort & Spa", place: "Los Baños, Laguna", image: IMG.laresio');
+    expect(appSource).toContain('const homeFeaturedDestinationNames = ["Pagsanjan Falls", "Enchanted Kingdom", "Los Baños Hot Springs", "Laresio Lakeside Resort & Spa"]');
+    expect(appSource).toContain("Confirm availability and rates directly with the venue.");
+    expect(appSource).toContain("Trail conditions, access, and fees should be confirmed before visiting.");
+  });
 });
