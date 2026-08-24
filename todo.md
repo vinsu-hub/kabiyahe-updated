@@ -323,3 +323,8 @@
 - [x] Add subtle scroll-linked image/parallax motion without affecting layout or readability.
 - [x] Respect prefers-reduced-motion and avoid scroll jank, excessive movement, or inaccessible hidden content.
 - [x] Validate desktop, tablet, and mobile scroll behavior, image loading, navigation, and build/tests.
+
+## Bundles reference text-layout correction
+- [x] Audit bundle card title, metadata, description, tags, audience note, and action alignment against the supplied reference.
+- [x] Correct the Bundles card typography and spacing so labels and titles do not collide or clip.
+- [x] Validate the corrected grid at desktop and mobile widths, including filter pills and card actions.
