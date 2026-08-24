@@ -235,3 +235,11 @@
 - [x] Validate the customer journey from Home through Explore, destination detail, save, Plan a Trip, My Trips, trip detail, Wallet, and mobile bottom navigation.
 - [x] Fix any broken routes, dead-end actions, misleading states, or mobile layout issues discovered during the journey audit.
 - [x] Add automated regression coverage for lodging content and customer-journey route contracts.
+
+## Route plan overview and real map validation
+- [x] Analyze and document the supplied route-plan overview layout and interaction hierarchy.
+- [x] Add verified Philippine itinerary points with coordinates and route metadata for the overview.
+- [x] Integrate the existing Google Maps frontend SDK with real markers, route lines, controls, legend, and map/satellite state.
+- [x] Recreate the reference-aligned itinerary overview with day tabs, stop timeline, trip summary, action controls, and customization callout.
+- [x] Validate route overview interactions, map behavior, destination points, external navigation, and mobile responsiveness.
+- [x] Add automated regression coverage for route points and route-overview contracts.
