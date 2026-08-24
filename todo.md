@@ -338,3 +338,8 @@
 - [x] Audit mobile hero copy width, line breaks, contrast, header layering, and action spacing from the supplied reference.
 - [x] Make the supporting itinerary sentence readable at narrow mobile widths without affecting desktop composition.
 - [x] Validate hero copy, buttons, header, bottom navigation, and build/tests at mobile and desktop sizes.
+
+## Mobile tab scroll restoration
+- [x] Audit the router and BottomNav transitions for scroll restoration behavior.
+- [x] Reset the viewport to the top when switching primary mobile tabs without disrupting browser history.
+- [x] Validate Home, Explore, Guides, Plan, Trips, and Saved tab switching plus direct navigation and tests.
