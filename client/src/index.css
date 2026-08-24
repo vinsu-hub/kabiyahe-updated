@@ -176,3 +176,10 @@ main,.auth-page{animation:page-reveal var(--motion-slow) var(--ease-out) both}.h
 @media(max-width:620px){.guides-page,.guide-detail-page{padding-top:1.25rem}.guides-hero{display:block;padding-top:1rem}.guides-hero-mark{margin-top:1rem;min-width:0}.guides-controls{grid-template-columns:1fr}.guide-search,.guide-sort{grid-column:auto}.guides-grid{grid-template-columns:1fr}.guides-results-head{align-items:center}.guides-callout{display:block}.guides-callout .btn{margin-top:1rem;width:100%;justify-content:center}.guide-card-image{height:12rem}.guide-rate{display:block}.guide-rate small{display:block;margin-top:.7rem}.guide-contact-actions button{flex:1;justify-content:center}.guide-detail-hero{margin-top:.5rem}}
 
 .guide-contact-actions a{display:inline-flex;align-items:center;gap:.4rem;border:1px solid #cfdbc9;border-radius:.7rem;padding:.7rem .9rem;background:#f3f8ed;color:#315b43;font-weight:800;text-decoration:none}.guide-contact-unavailable{display:flex;align-items:flex-start;gap:.5rem;margin:0;padding:.8rem;border-radius:.7rem;background:#f7f2e4;color:#6f674f;font-size:.86rem;line-height:1.5}.guide-contact-unavailable svg{flex:0 0 auto;margin-top:.12rem}
+
+/* Five-item mobile navigation containment fix */
+@media (max-width: 720px){
+  .bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr));height:calc(66px + env(safe-area-inset-bottom));padding:0 4px env(safe-area-inset-bottom);box-sizing:border-box;align-items:stretch}
+  .bottom-nav a{min-width:0;overflow:hidden;white-space:nowrap;gap:2px;font-size:10px;line-height:1.1}
+  .bottom-nav a svg{width:18px;height:18px;flex:0 0 auto}
+}

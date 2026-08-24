@@ -205,3 +205,11 @@
 - [x] Bind guide service areas to the existing destination records or a shared verified destination dataset instead of standalone strings.
 - [blocked] Add real per-guide contact fields with working call/message/social links, using explicit unavailable fallbacks only where no verified guide contact details have been supplied.
 - [blocked] Re-run browser validation for guide detail contact actions after verified guide contact links are supplied and implemented.
+
+## Mobile bottom navigation bug
+- [x] Fix the five-tab mobile bottom navigation so icons and labels remain inside the bar without overlap or clipping.
+- [x] Validate the corrected bar at 360px, 390px, and 414px widths plus desktop regression.
+
+## Mobile bottom navigation verification evidence
+- [x] Validate the corrected bottom navigation at 390px width.
+- [x] Document no overlap, clipping, uneven spacing, or safe-area issue after reviewing all captured widths.
