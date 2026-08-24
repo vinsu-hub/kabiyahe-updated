@@ -236,3 +236,26 @@ main,.auth-page{animation:page-reveal var(--motion-slow) var(--ease-out) both}.h
 
 /* Partner admin preview modals */
 .partner-modal-backdrop{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px;background:rgba(24,43,31,.38);backdrop-filter:blur(4px)}.partner-modal{position:relative;width:min(520px,100%);max-height:min(680px,calc(100vh - 40px));overflow:auto;padding:26px;border:1px solid #d8e1d3;border-radius:16px;background:#fffdf7;box-shadow:0 20px 60px rgba(25,50,34,.24)}.partner-modal h2{margin:14px 0 5px;color:var(--forest);font:400 28px 'DM Serif Display'}.partner-modal p{margin:7px 0;color:#59695d}.partner-modal-close{position:absolute;top:13px;right:13px;width:34px;height:34px;border:1px solid #d7e0d4;border-radius:50%;background:#fff;color:var(--forest);display:grid;place-items:center;cursor:pointer}.partner-modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}.partner-modal-actions button{min-width:120px}.partner-modal .live-audit-list{display:grid;gap:2px;margin-top:16px}@media(max-width:520px){.partner-modal-backdrop{padding:12px;align-items:end}.partner-modal{max-height:calc(100vh - 24px);padding:22px 18px}.partner-modal-actions{display:grid;grid-template-columns:1fr}.partner-modal-actions button{width:100%}}
+
+/* Popular Trip Bundles reference treatment: image-led cards with a prominent curated-route overlay. */
+.home-section .bundle-rail{grid-auto-columns:minmax(220px,1fr);align-items:stretch;overflow-x:auto;scroll-snap-type:x proximity;padding:0 0 8px}
+.home-section .bundle-card{min-height:336px;display:flex;flex-direction:column;overflow:hidden;border:1px solid #e3e1d7;border-radius:15px;background:#fffdf7;box-shadow:0 5px 14px rgba(39,58,42,.08);scroll-snap-align:start;transition:transform .2s var(--ease-out),box-shadow .2s var(--ease-out)}
+.home-section .bundle-card:hover{transform:translateY(-3px);box-shadow:0 11px 22px rgba(39,58,42,.13)}
+.home-section .bundle-card .image-wrap{height:100px;position:relative;display:block;overflow:hidden;background:#dfe7db}
+.home-section .bundle-card .image-wrap img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .28s var(--ease-out)}
+.home-section .bundle-card:hover .image-wrap img{transform:scale(1.04)}
+.home-section .bundle-card .bundle-curated-badge{position:absolute;left:10px;top:10px;z-index:1;width:88px;height:80px;display:grid;place-items:center;padding:0 8px;border-radius:20px;background:#eba83f;color:#fffaf0;font-size:11px;font-weight:700;line-height:1.15;text-align:center;box-shadow:0 4px 10px rgba(117,79,22,.12)}
+.home-section .bundle-card .card-body{display:flex;flex:1;flex-direction:column;position:relative;padding:13px 12px 50px}
+.home-section .bundle-card .card-body> a:first-child{color:var(--ink);text-decoration:none}
+.home-section .bundle-card .card-body h3{margin:0 0 7px;font-size:14px;line-height:1.2}
+.home-section .bundle-card .card-body>.muted{display:flex;align-items:center;gap:5px;margin:0 0 8px;font-size:11px;white-space:nowrap}
+.home-section .bundle-card .bundle-card-description{min-height:36px;margin:0 0 4px;font-size:11px;line-height:1.42}
+.home-section .bundle-card .bundle-card-facts{gap:9px;margin:4px 0 10px;font-size:10px}
+.home-section .bundle-card .card-footer{min-height:38px;margin-top:auto;align-items:end;gap:7px}
+.home-section .bundle-card .card-footer>div{display:flex;flex-wrap:wrap;gap:5px;min-width:0}
+.home-section .bundle-card .card-footer .tag{font-size:10px;padding:5px 8px}
+.home-section .bundle-card .card-footer small{max-width:92px;font-size:9px;line-height:1.3}
+.home-section .bundle-card .btn{right:11px;bottom:10px;min-height:32px;border-color:#26362a;border-radius:13px;background:#fffdf7;color:#18261e;font-size:11px;font-weight:800}
+.home-section .bundle-card .btn:hover{background:#eef3e9}
+@media(max-width:900px){.home-section .bundle-rail{grid-auto-columns:minmax(240px,42vw)}}
+@media(max-width:560px){.home-section .bundle-rail{grid-auto-columns:78%;padding-right:16px}.home-section .bundle-card{min-height:326px}.home-section .bundle-card .image-wrap{height:120px}.home-section .bundle-card .bundle-curated-badge{width:82px;height:72px;left:9px;top:9px}.home-section .bundle-card .card-body{padding:12px 12px 52px}}

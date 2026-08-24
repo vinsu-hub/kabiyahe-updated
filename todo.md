@@ -300,3 +300,11 @@
 - [x] Identify missing feature states, misleading placeholders, and unfinished previews that should show a clear unavailable or coming-soon response.
 - [x] Fix confirmed dead controls, broken routes, missing previews, and misleading feature states without fabricating data.
 - [x] Add regression coverage for audited interaction contracts and validate the primary customer journey.
+
+## Curated route cards, assets, animations, and GitHub delivery
+- [x] Inspect the wide bundle reference and document the intended card image, overlay badge, metadata, tags, and View Trip hierarchy.
+- [x] Replace any incorrect text-only curated-route presentation with the reference-aligned image card view.
+- [x] Verify all runtime images use valid webdev asset URLs and all required animation styles remain in source-controlled project files.
+- [x] Validate bundle cards at desktop/mobile widths, including image loading, animations, navigation, and no overlap or overflow.
+- [x] Run tests, TypeScript, and production build before committing.
+- [ ] Commit and push the verified project and assets/code to the configured GitHub repository.
