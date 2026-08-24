@@ -220,3 +220,10 @@
 - [x] Preserve the full wallet route for ticket screenshots and complete references.
 - [x] Validate fast access, reference visibility, and mobile reachability.
 - [x] Add the quick Wallet/References action to the main trip detail or itinerary surface and verify it on desktop and mobile.
+
+## Explore food and attraction expansion
+- [x] Add clearly labeled placeholder Food & Restaurants records for Danielitos Home Kitchen and Malayas Cafe.
+- [x] Research additional Laguna attractions from reliable sources and save source notes before implementation.
+- [x] Add researched attraction records with useful descriptions, places, categories, and imagery without fabricated ratings or reviews.
+- [x] Ensure Explore filters, list/grid/map views, destination detail links, and mobile behavior support the expanded catalog.
+- [x] Validate the new restaurant and attraction cards with browser smoke tests and production checks.
