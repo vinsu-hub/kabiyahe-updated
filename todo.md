@@ -333,3 +333,8 @@
 - [x] Audit the compact hero, featured-destination rail, and fixed bottom navigation at the reported mobile width.
 - [x] Correct mobile hero height and destination-card typography/overflow to match the supplied reference.
 - [x] Preserve bottom-nav clearance and validate mobile plus desktop regression behavior.
+
+## Mobile hero readability correction
+- [x] Audit mobile hero copy width, line breaks, contrast, header layering, and action spacing from the supplied reference.
+- [x] Make the supporting itinerary sentence readable at narrow mobile widths without affecting desktop composition.
+- [x] Validate hero copy, buttons, header, bottom navigation, and build/tests at mobile and desktop sizes.

@@ -312,3 +312,21 @@ main,.auth-page{animation:page-reveal var(--motion-slow) var(--ease-out) both}.h
   .landing-page .destination-grid::-webkit-scrollbar-thumb{background:#c8cfc5;border-radius:99px}
   .landing-page .destination-grid::-webkit-scrollbar-track{background:transparent}
 }
+
+/* Narrow mobile hero readability: keep the editorial copy below the fixed header and within a readable measure. */
+@media(max-width:700px){
+  .landing-page .hero{height:600px}
+  .landing-page .hero-copy{top:82px;left:22px;right:22px;z-index:2}
+  .landing-page .hero h1{max-width:340px;font-size:clamp(36px,10.5vw,44px);line-height:1.03;letter-spacing:-.02em}
+  .landing-page .hero .script{font-size:32px;line-height:1.05;margin-top:10px}
+  .landing-page .hero .accent-rule{width:min(100%,330px);margin:16px 0 15px}
+  .landing-page .hero-copy>p:not(.eyebrow){max-width:330px;margin-bottom:17px;font-size:14px;line-height:1.45;text-wrap:balance}
+  .landing-page .hero-actions{gap:10px}
+  .landing-page .hero-actions .btn{min-height:42px}
+}
+@media(max-width:380px){
+  .landing-page .hero-copy{top:78px;left:18px;right:18px}
+  .landing-page .hero h1{font-size:35px}
+  .landing-page .hero .script{font-size:29px}
+  .landing-page .hero-copy>p:not(.eyebrow){font-size:13px}
+}
