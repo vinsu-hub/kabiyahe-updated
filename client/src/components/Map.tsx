@@ -83,6 +83,7 @@ import { cn } from "@/lib/utils";
 declare global {
   interface Window {
     google?: typeof google;
+    __kabiyaheMapsLoader?: Promise<void>;
   }
 }
 
@@ -92,22 +93,38 @@ const FORGE_BASE_URL =
   "https://forge.butterfly-effect.dev";
 const MAPS_PROXY_URL = `${FORGE_BASE_URL}/v1/maps/proxy`;
 
-function loadMapScript() {
-  return new Promise(resolve => {
-    const script = document.createElement("script");
-    const origin = encodeURIComponent(window.location.origin);
-    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry&origin=${origin}`;
-    script.async = true;
-    script.crossOrigin = "anonymous";
-    script.onload = () => {
-      resolve(null);
-      script.remove(); // Clean up immediately
+function loadMapScript(): Promise<void> {
+  if (typeof window === "undefined") return Promise.reject(new Error("Google Maps requires a browser."));
+  if (window.google?.maps) return Promise.resolve();
+  if (window.__kabiyaheMapsLoader) return window.__kabiyaheMapsLoader;
+
+  const origin = encodeURIComponent(window.location.origin);
+  const src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry&origin=${origin}`;
+  const existing = document.querySelector<HTMLScriptElement>(`script[src^="${MAPS_PROXY_URL}/maps/api/js"]`);
+
+  window.__kabiyaheMapsLoader = new Promise<void>((resolve, reject) => {
+    const script = existing || document.createElement("script");
+    const finish = () => {
+      if (window.google?.maps) resolve();
+      else reject(new Error("Google Maps loaded without a usable API."));
     };
-    script.onerror = () => {
-      console.error("Failed to load Google Maps script");
+    const fail = () => {
+      window.__kabiyaheMapsLoader = undefined;
+      reject(new Error("Failed to load Google Maps script."));
     };
-    document.head.appendChild(script);
+
+    script.addEventListener("load", finish, { once: true });
+    script.addEventListener("error", fail, { once: true });
+    if (!existing) {
+      script.src = src;
+      script.async = true;
+      script.crossOrigin = "anonymous";
+      document.head.appendChild(script);
+    }
+    if (window.google?.maps) finish();
   });
+
+  return window.__kabiyaheMapsLoader;
 }
 
 interface MapViewProps {
@@ -127,8 +144,14 @@ export function MapView({
   const map = useRef<google.maps.Map | null>(null);
 
   const init = usePersistFn(async () => {
-    await loadMapScript();
-    if (!mapContainer.current) {
+    if (map.current) return;
+    try {
+      await loadMapScript();
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+    if (!mapContainer.current || map.current) {
       console.error("Map container not found");
       return;
     }

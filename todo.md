@@ -278,3 +278,10 @@
 - [x] Verify every route-view button, destination link, day control, map control, stop action, booking/guide action, and footer CTA has a safe response.
 - [x] Fix confirmed overlap, clipping, wrapping, z-index, focus, and dead-end interaction issues.
 - [x] Add or update automated regression coverage and complete final visual/browser validation.
+
+## Google Maps duplicate-loader remediation
+- [x] Trace all Google Maps script injection paths and route-map mount/unmount behavior.
+- [x] Consolidate Google Maps initialization so the JavaScript API loads at most once per page.
+- [x] Preserve real map tiles, markers, directions, controls, and satellite state after consolidation.
+- [x] Add regression coverage that detects duplicate loader paths and validates the shared map contract.
+- [x] Validate the route map in a fresh browser session with no duplicate-load console error, then run tests, TypeScript, and build.
