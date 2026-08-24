@@ -215,7 +215,8 @@
 - [x] Document no overlap, clipping, uneven spacing, or safe-area issue after reviewing all captured widths.
 
 ## Quick reservation wallet access
-- [ ] Add a prominent Wallet/References quick action to trip cards and relevant trip surfaces.
-- [ ] Add a compact reservation-reference preview or fast-open action that reveals booking codes without extra navigation when appropriate.
-- [ ] Preserve the full wallet route for ticket screenshots and complete references.
-- [ ] Validate fast access, reference visibility, and mobile reachability.
+- [x] Add a prominent Wallet/References quick action to trip cards and relevant trip surfaces.
+- [x] Add a compact reservation-reference preview or fast-open action that reveals booking codes without extra navigation when appropriate.
+- [x] Preserve the full wallet route for ticket screenshots and complete references.
+- [x] Validate fast access, reference visibility, and mobile reachability.
+- [x] Add the quick Wallet/References action to the main trip detail or itinerary surface and verify it on desktop and mobile.
