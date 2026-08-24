@@ -264,3 +264,10 @@
 - [x] Preserve real Google Maps markers, route line, map/satellite toggle, re-center action, and destination links while aligning their visual treatment.
 - [x] Validate reference-fidelity interactions and responsive behavior at desktop and mobile breakpoints.
 - [x] Update route overview regression checks and save a verified checkpoint.
+
+## Route overview reference structure implementation
+- [x] Document the reference hierarchy: global header, route header, AI summary banner, action group, day tabs, stop timeline, map workspace, overlays, and bottom trust/action bar.
+- [x] Rebuild the route overview structure so the left timeline and right map align to the reference’s shared vertical rhythm and proportions.
+- [x] Match the stop-row anatomy, active day state, map summary placement, numbered callouts, legend, controls, and customization footer.
+- [x] Preserve real map behavior and route destination links while implementing the structural changes.
+- [x] Validate desktop/mobile screenshots and all route overview interactions, then update regression coverage.
