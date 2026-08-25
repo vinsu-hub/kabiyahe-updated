@@ -21,7 +21,8 @@ describe("Explore catalog content", () => {
     expect(appSource).toContain("verified: true");
     expect(appSource).toContain("gallery:");
     expect(appSource).toContain('d.rating?<span className="rating">');
-    expect(appSource).toContain('d.placeholder?"Details pending":"Curated place"');
+    expect(appSource).toContain('Reviews coming soon');
+    expect(appSource).toContain('className="reviews-coming-soon"');
   });
 
   it("exposes the Attractions quick filter and broadens discovery beyond Laguna", () => {

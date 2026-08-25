@@ -395,3 +395,16 @@ main,.auth-page{animation:page-reveal var(--motion-slow) var(--ease-out) both}.h
   .footer-links>div:last-child{grid-column:1/-1}
   .footer-bottom{margin-top:34px;display:grid;gap:6px}
 }
+
+/* Truthful review availability states */
+.reviews-coming-soon{display:flex;align-items:center;gap:5px;margin-top:8px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.01em}
+.reviews-coming-soon svg,.review-empty-state>svg{color:#c58a2a;flex:none}
+.review-empty-state{display:flex;align-items:flex-start;gap:10px;margin-top:18px;padding:12px;border:1px dashed rgba(41,76,55,.24);border-radius:10px;background:rgba(239,243,231,.58);color:var(--forest)}
+.review-empty-state>div{display:grid;gap:3px;min-width:0}
+.review-empty-state b{font-size:12px}
+.review-empty-state small{color:var(--muted);font-size:11px;line-height:1.4}
+@media(max-width:700px){
+  .reviews-coming-soon{font-size:9px}
+  .review-empty-state{margin-top:14px;padding:10px}
+  .review-empty-state small{font-size:10px}
+}

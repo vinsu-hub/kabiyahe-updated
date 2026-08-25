@@ -371,3 +371,8 @@
 - [x] Audit shared page shells and choose footer placement that does not conflict with the fixed mobile bottom bar.
 - [x] Add a minimalist responsive footer with branded context and wired navigation links.
 - [x] Validate footer spacing, link destinations, mobile bottom-bar clearance, desktop layout, and regression tests.
+
+## Truthful review availability state
+- [x] Audit current rating/review labels in Explore cards, destination detail, bundle cards, and bundle itinerary views.
+- [x] Replace unavailable review presentation with a consistent “Reviews coming soon” state without adding fabricated feedback.
+- [x] Validate responsive presentation and add regression coverage for bundle and Explore review states.
