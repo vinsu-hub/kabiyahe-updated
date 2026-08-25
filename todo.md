@@ -366,3 +366,8 @@
 - [x] Make each Explore view toggle visibly render its intended result layout and accessible active state.
 - [x] Audit Explore desktop/mobile spacing, clipping, category rail, filters, map legend, result cards, and bottom navigation.
 - [x] Add regression coverage and validate all three views at representative desktop and mobile widths.
+
+## Responsive footer section
+- [x] Audit shared page shells and choose footer placement that does not conflict with the fixed mobile bottom bar.
+- [x] Add a minimalist responsive footer with branded context and wired navigation links.
+- [x] Validate footer spacing, link destinations, mobile bottom-bar clearance, desktop layout, and regression tests.

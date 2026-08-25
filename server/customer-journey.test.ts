@@ -23,6 +23,15 @@ describe("customer journey contracts", () => {
     expect(styleSource).toContain(".trip-stop>a img{width:100%;height:130px");
   });
 
+  it("keeps the responsive footer navigation and mobile clearance present", () => {
+    expect(appSource).toContain('className="site-footer"');
+    expect(appSource).toContain('aria-label="Footer navigation"');
+    expect(appSource).toContain('href="/explore"');
+    expect(appSource).toContain('href="/partners/join"');
+    expect(styleSource).toContain('.site-footer');
+    expect(styleSource).toContain('padding:40px 0 92px');
+  });
+
   it("keeps the main customer journey escape routes and wallet handoffs present", () => {
     expect(appSource).toContain('href="/explore"');
     expect(appSource).toContain('href="/plan/new"');

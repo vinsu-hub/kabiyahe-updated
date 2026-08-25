@@ -371,3 +371,27 @@ main,.auth-page{animation:page-reveal var(--motion-slow) var(--ease-out) both}.h
   .explore-workspace.grid .destination-card.compact .muted{font-size:10px}
   .explore-workspace.grid .destination-card.compact .rating{font-size:10px}
 }
+
+/* Shared landing-page footer */
+.site-footer{background:var(--forest);color:#f6f2e8;margin-top:18px;padding:54px 0 24px}
+.footer-inner{display:grid;grid-template-columns:minmax(220px,1.1fr) minmax(420px,1fr);gap:44px 72px}
+.footer-logo{display:inline-flex;align-items:center;gap:10px;color:#fff;text-decoration:none}
+.footer-logo img{width:43px;height:43px;object-fit:contain}
+.footer-logo span{display:grid;font:400 27px/1 'DM Serif Display',serif}
+.footer-logo small{margin-top:4px;color:#e1a35d;font:italic 14px/1 Georgia,serif}
+.footer-brand p{max-width:280px;margin:18px 0 0;color:rgba(246,242,232,.72);font-size:13px;line-height:1.6}
+.footer-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+.footer-links>div{display:grid;align-content:start;gap:10px}
+.footer-links b{margin-bottom:4px;color:#e4ad6d;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.footer-links a{color:rgba(246,242,232,.82);font-size:13px;text-decoration:none;transition:color .18s var(--ease-out),transform .18s var(--ease-out)}
+.footer-links a:hover,.footer-links a:focus-visible{color:#fff;transform:translateX(3px)}
+.footer-links a:focus-visible{outline:2px solid #e4ad6d;outline-offset:4px;border-radius:3px}
+.footer-bottom{grid-column:1/-1;display:flex;justify-content:space-between;gap:16px;padding-top:18px;border-top:1px solid rgba(246,242,232,.18);color:rgba(246,242,232,.56);font-size:11px}
+@media(max-width:700px){
+  .site-footer{margin-top:0;padding:40px 0 92px}
+  .footer-inner{display:block;padding-left:22px;padding-right:22px}
+  .footer-brand p{max-width:300px;margin-top:14px}
+  .footer-links{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 18px;margin-top:32px}
+  .footer-links>div:last-child{grid-column:1/-1}
+  .footer-bottom{margin-top:34px;display:grid;gap:6px}
+}
