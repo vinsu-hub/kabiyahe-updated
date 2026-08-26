@@ -392,3 +392,9 @@
 - [x] Inventory all image references used by the current build and identify which assets need local copies.
 - [x] Add a Git-tracked local asset fetcher and manifest plus a local-compatible image resolution strategy without breaking Manus-hosted paths.
 - [x] Validate fresh-clone asset loading, tests, TypeScript, production build, and repository synchronization.
+
+## Los Baños stays and Local Spots Highlights
+- [x] Research Airbnb Los Baños handoff behavior, a verified local food-market candidate, and a local night-market candidate.
+- [x] Add a Los Baños stays discovery section with an Airbnb area-search handoff and truthful availability/rating treatment.
+- [x] Add Local Spots Highlights for food-market and night-market discovery with clear details-pending states where needed.
+- [x] Validate links, content labels, mobile/desktop layout, and regression tests.

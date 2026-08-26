@@ -32,6 +32,18 @@ describe("customer journey contracts", () => {
     expect(styleSource).toContain('padding:40px 0 92px');
   });
 
+  it("keeps Los Baños stay discovery and local spot handoffs truthful", () => {
+    expect(appSource).toContain('airbnbLosBanosUrl = "https://www.airbnb.com/s/Los-Banos--Laguna--Philippines/homes"');
+    expect(appSource).toContain("View Airbnb stays");
+    expect(appSource).toContain("Kabiyahe does not reproduce or estimate Airbnb availability, pricing, or ratings.");
+    expect(appSource).toContain("Local Spots Highlights");
+    expect(appSource).toContain("Elbi Community Sunday Market");
+    expect(appSource).toContain("Elbi Community Night Market");
+    expect(appSource).toContain('target="_blank" rel="noreferrer"');
+    expect(styleSource).toContain(".stay-discovery");
+    expect(styleSource).toContain(".local-spots-grid");
+  });
+
   it("keeps the main customer journey escape routes and wallet handoffs present", () => {
     expect(appSource).toContain('href="/explore"');
     expect(appSource).toContain('href="/plan/new"');
