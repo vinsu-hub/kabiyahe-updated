@@ -376,3 +376,14 @@
 - [x] Audit current rating/review labels in Explore cards, destination detail, bundle cards, and bundle itinerary views.
 - [x] Replace unavailable review presentation with a consistent “Reviews coming soon” state without adding fabricated feedback.
 - [x] Validate responsive presentation and add regression coverage for bundle and Explore review states.
+
+## Explore LB label update
+- [x] Audit Explore-only headings and CTA labels for the current Philippines wording.
+- [x] Replace the Explore tab’s visible “Explore the Philippines” label with “Explore LB” without changing global Home messaging.
+- [x] Validate Explore navigation, mobile label fit, and regression tests.
+- [x] Replace the Home hero CTA text with “Explore LB” while preserving its existing `/explore` destination.
+
+## Featured Events & Destinations heading correction
+- [x] Verify whether the visual editor heading change was applied or missed because the target selector was stale.
+- [x] Apply “Featured Events & Destinations” to the actual Featured section heading if still unchanged.
+- [x] Validate the heading on desktop and mobile, run regression checks, and save a checkpoint.
