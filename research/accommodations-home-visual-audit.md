@@ -1,0 +1,3 @@
+
+## Visual verification
+At 390px mobile, the Home page stacks the Airbnb stay discovery panel, live-search note, Local Spots Highlights cards, map preview, bundles, and footer without horizontal overflow; the fixed mobile bottom navigation remains clear. At 1280px desktop, the stay panel uses a balanced two-column layout, Local Spots cards align evenly in a two-column row, and the map preview keeps a clear copy/map split. The newly added Explore Accommodations state is implemented as a category filter with Los Baños hotel/resort records and an external Airbnb area-search card; availability, pricing, ratings, and reviews remain external or unavailable rather than being invented.

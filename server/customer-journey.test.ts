@@ -32,6 +32,16 @@ describe("customer journey contracts", () => {
     expect(styleSource).toContain('padding:40px 0 92px');
   });
 
+  it("keeps Accommodations filtering and the Airbnb handoff truthful", () => {
+    expect(appSource).toContain('"Accommodations":"Hotels"');
+    expect(appSource).toContain('category==="Accommodations"?d.type==="Hotels"&&d.place.includes("Los Baños")');
+    expect(appSource).toContain('name: "Al Fresco Springs"');
+    expect(appSource).toContain('name: "Laresio Lakeside Resort & Spa"');
+    expect(appSource).toContain('className="airbnb-result-card"');
+    expect(appSource).toContain("More homes around Los Baños");
+    expect(styleSource).toContain('.airbnb-result-card');
+  });
+
   it("keeps Los Baños stay discovery and local spot handoffs truthful", () => {
     expect(appSource).toContain('airbnbLosBanosUrl = "https://www.airbnb.com/s/Los-Banos--Laguna--Philippines/homes"');
     expect(appSource).toContain("View Airbnb stays");
@@ -42,6 +52,8 @@ describe("customer journey contracts", () => {
     expect(appSource).toContain('target="_blank" rel="noreferrer"');
     expect(styleSource).toContain(".stay-discovery");
     expect(styleSource).toContain(".local-spots-grid");
+    expect(styleSource).toContain(".local-spots-section .section-title");
+    expect(styleSource).toContain(".explore-preview>div:first-child");
   });
 
   it("keeps the main customer journey escape routes and wallet handoffs present", () => {

@@ -404,3 +404,9 @@
 - [x] Normalize the expanded attraction records with category, location, description, verification state, and source notes.
 - [x] Integrate the expanded catalog into Explore filters and destination detail routes without fabricated ratings, reviews, or operating claims.
 - [x] Validate catalog coverage, filters, routes, responsive cards, tests, and production build.
+
+## Home alignment and Accommodations discovery
+- [x] Audit Local Spots Highlights and map-preview alignment against the supplied desktop reference and mobile stacking behavior.
+- [x] Correct heading baselines, card heights, spacing, and map-preview proportions without disrupting the footer or bottom navigation.
+- [x] Add an Accommodations tab/filter with Los Baños hotels and resorts plus a truthful Airbnb area-search handoff.
+- [x] Validate tabs, external links, card alignment, responsive layout, and regression tests.

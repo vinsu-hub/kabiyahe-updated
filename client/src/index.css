@@ -433,3 +433,20 @@ main,.auth-page{animation:page-reveal var(--motion-slow) var(--ease-out) both}.h
 .local-spot-card small{display:flex;align-items:center;gap:5px;grid-column:2;margin-top:9px;color:var(--muted);font-size:10px}
 .local-spot-card>a{grid-column:2;display:inline-flex;align-items:center;gap:5px;margin-top:3px;font-size:10px}
 @media(max-width:700px){.stay-discovery{grid-template-columns:1fr;padding-top:10px;padding-bottom:12px}.stay-discovery-copy,.stay-discovery-note{padding:21px 18px}.stay-discovery-copy h2{font-size:30px}.local-spots-section{padding-top:15px}.local-spots-grid{grid-template-columns:1fr}.local-spot-card{padding:17px}.local-spot-card h3{font-size:20px}}
+
+/* Home lower-section alignment and accommodation discovery */
+.local-spots-section .section-title{align-items:flex-end;gap:24px;margin-bottom:16px}
+.local-spots-section .section-title>div{display:flex;align-items:baseline;gap:14px;min-width:0}
+.local-spots-section .section-title .eyebrow{margin:0;white-space:nowrap}
+.local-spots-section .section-title h2{margin:0}
+.explore-preview{min-height:236px;align-items:stretch}
+.explore-preview>div:first-child{display:flex;flex-direction:column;justify-content:center;padding:28px 32px}
+.explore-preview>div:first-child .section-title{margin-bottom:9px}
+.explore-preview>div:first-child>p{margin:0 0 15px;line-height:1.5}
+.explore-preview>div:first-child .btn{align-self:flex-start}
+.airbnb-result-card{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:4px 0 12px;padding:15px 17px;border:1px solid #e4d6be;border-radius:14px;background:linear-gradient(110deg,#f7ecd9,#edf3e9);color:var(--ink);text-decoration:none;transition:transform .18s var(--ease-out),box-shadow .18s var(--ease-out)}
+.airbnb-result-card:hover{transform:translateY(-2px);box-shadow:0 7px 16px rgba(39,58,42,.1)}
+.airbnb-result-card h3{margin:3px 0 4px;font:400 20px/1.08 'DM Serif Display',serif}
+.airbnb-result-card p{margin:0;color:var(--muted);font-size:11px;line-height:1.45}
+.airbnb-result-card>svg{flex:0 0 auto;color:#b9792c}
+@media(max-width:700px){.local-spots-section .section-title{align-items:flex-start;gap:7px;margin-bottom:12px}.local-spots-section .section-title>div{display:block}.local-spots-section .section-title .eyebrow{display:block;margin-bottom:4px}.explore-preview>div:first-child{padding:22px 19px}.airbnb-result-card{margin-top:5px;padding:14px}.airbnb-result-card h3{font-size:18px}}
