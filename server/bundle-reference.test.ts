@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 
 describe("Popular Trip Bundles reference contract", () => {
   const app = readFileSync(resolve(process.cwd(), "client/src/App.tsx"), "utf8");
+  const assets = readFileSync(resolve(process.cwd(), "client/src/lib/assets.ts"), "utf8");
   const css = readFileSync(resolve(process.cwd(), "client/src/index.css"), "utf8");
 
   it("keeps the five curated routes image-backed and navigable", () => {
@@ -23,10 +24,13 @@ describe("Popular Trip Bundles reference contract", () => {
     expect(css).toContain("background:#eba83f");
   });
 
-  it("keeps images and motion in source-controlled code while using webdev asset URLs", () => {
-    expect(app).toContain("/manus-storage/kabiyahe-calinaya-lake_");
-    expect(app).toContain("/manus-storage/kabiyahe-hero-laguna_");
-    expect(app).toContain("/manus-storage/kabiyahe-bundles-sunset_");
+  it("keeps hosted and local image resolution paths available", () => {
+    expect(assets).toContain("VITE_KABIYAHE_LOCAL_ASSETS");
+    expect(assets).toContain('"/assets"');
+    expect(assets).toContain('"/manus-storage"');
+    expect(app).toContain("kabiyahe-calinaya-lake_96b9ff18.jpg");
+    expect(app).toContain("kabiyahe-hero-laguna_e334210c.jpg");
+    expect(app).toContain("kabiyahe-bundles-sunset_99ff267e.jpg");
     expect(css).toContain(".home-section .bundle-card:hover");
     expect(css).toContain("transition:transform .2s var(--ease-out)");
     expect(css).toContain("prefers-reduced-motion");

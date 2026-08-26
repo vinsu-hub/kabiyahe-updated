@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, Car, Flag, MapPin, Navigation, Sparkles, WalletCards } from "lucide-react";
 import { MapView } from "@/components/Map";
 import { Link } from "wouter";
+import { assetPath } from "@/lib/assets";
 
 export type RoutePoint = {
   number: number;
@@ -17,11 +18,11 @@ export type RoutePoint = {
 };
 
 export const LAGUNA_ROUTE_POINTS: RoutePoint[] = [
-  { number: 1, name: "Pagsanjan Falls", place: "Pagsanjan, Laguna", time: "09:00 AM – 11:00 AM", category: "Nature", duration: "2 hrs", image: "/manus-storage/kabiyahe-pagsanjan-falls_bd37de01.jpg", slug: "pagsanjan-falls", position: { lat: 14.2737, lng: 121.4555 } },
-  { number: 2, name: "Danielitos Home Kitchen", place: "Pagsanjan, Laguna", time: "12:00 PM – 01:00 PM", category: "Food", duration: "1 hr", image: "/manus-storage/kabiyahe-bundles-sunset_99ff267e.jpg", slug: "danielitos-home-kitchen", position: { lat: 14.2705, lng: 121.4551 } },
-  { number: 3, name: "Majayjay Church", place: "Majayjay, Laguna", time: "02:00 PM – 03:00 PM", category: "Culture", duration: "1 hr", image: "/manus-storage/kabiyahe-bundles-sunset_99ff267e.jpg", slug: "majayjay-church", position: { lat: 14.1467, lng: 121.4721 } },
-  { number: 4, name: "Los Baños Hot Springs", place: "Los Baños, Laguna", time: "04:00 PM – 06:00 PM", category: "Relaxation", duration: "2 hrs", image: "/manus-storage/kabiyahe-hero-laguna_e334210c.jpg", slug: "los-banos-hot-springs", position: { lat: 14.1692, lng: 121.2416 } },
-  { number: 5, name: "Sol Y Viento Hotels and Resorts", place: "Pansol, Calamba, Laguna", time: "07:30 PM", category: "Stay", duration: "Overnight", image: "/manus-storage/kabiyahe-calinaya-lake_96b9ff18.jpg", slug: "sol-y-viento-hotels-and-resorts", position: { lat: 14.2059, lng: 121.1957 }, overnight: true },
+  { number: 1, name: "Pagsanjan Falls", place: "Pagsanjan, Laguna", time: "09:00 AM – 11:00 AM", category: "Nature", duration: "2 hrs", image: assetPath("kabiyahe-pagsanjan-falls_bd37de01.jpg"), slug: "pagsanjan-falls", position: { lat: 14.2737, lng: 121.4555 } },
+  { number: 2, name: "Danielitos Home Kitchen", place: "Pagsanjan, Laguna", time: "12:00 PM – 01:00 PM", category: "Food", duration: "1 hr", image: assetPath("kabiyahe-bundles-sunset_99ff267e.jpg"), slug: "danielitos-home-kitchen", position: { lat: 14.2705, lng: 121.4551 } },
+  { number: 3, name: "Majayjay Church", place: "Majayjay, Laguna", time: "02:00 PM – 03:00 PM", category: "Culture", duration: "1 hr", image: assetPath("kabiyahe-bundles-sunset_99ff267e.jpg"), slug: "majayjay-church", position: { lat: 14.1467, lng: 121.4721 } },
+  { number: 4, name: "Los Baños Hot Springs", place: "Los Baños, Laguna", time: "04:00 PM – 06:00 PM", category: "Relaxation", duration: "2 hrs", image: assetPath("kabiyahe-hero-laguna_e334210c.jpg"), slug: "los-banos-hot-springs", position: { lat: 14.1692, lng: 121.2416 } },
+  { number: 5, name: "Sol Y Viento Hotels and Resorts", place: "Pansol, Calamba, Laguna", time: "07:30 PM", category: "Stay", duration: "Overnight", image: assetPath("kabiyahe-calinaya-lake_96b9ff18.jpg"), slug: "sol-y-viento-hotels-and-resorts", position: { lat: 14.2059, lng: 121.1957 }, overnight: true },
 ];
 
 export function RouteOverview({ points = LAGUNA_ROUTE_POINTS }: { points?: RoutePoint[] }) {

@@ -8,6 +8,7 @@ import { GeneratedResult, Plan } from "@/pages/Planner";
 import { LiveTripPage } from "@/pages/LiveTrip";
 import { RouteOverview } from "@/components/RouteOverview";
 import { trpc } from "@/lib/trpc";
+import { assetPath } from "@/lib/assets";
 import { Link, Route, Switch, useLocation, useRoute } from "wouter";
 import {
   ArrowLeft, ArrowRight, Bell, Bookmark, CalendarDays, Car, Check, ChevronDown,
@@ -16,15 +17,16 @@ import {
   SlidersHorizontal, Sparkles, Star, Ticket, Users, Utensils, WalletCards, X
 } from "lucide-react";
 
+const localAssetPath = assetPath;
 const IMG = {
-  hero: "/manus-storage/kabiyahe-hero-laguna_e334210c.jpg",
-  lake: "/manus-storage/kabiyahe-calinaya-lake_96b9ff18.jpg",
-  falls: "/manus-storage/kabiyahe-pagsanjan-falls_bd37de01.jpg",
-  sunset: "/manus-storage/kabiyahe-bundles-sunset_99ff267e.jpg",
-  enchantedKingdom: "/manus-storage/enchanted-kingdom_a3aaee52.jpg",
-  alFresco: "/manus-storage/al-fresco-springs_c60eb0da.jpg",
-  laresio: "/manus-storage/laresio-lakeside_049170eb.jpg",
-  emblem: "/manus-storage/kabiyahe-emblem_04426ca6.png",
+  hero: localAssetPath("kabiyahe-hero-laguna_e334210c.jpg"),
+  lake: localAssetPath("kabiyahe-calinaya-lake_96b9ff18.jpg"),
+  falls: localAssetPath("kabiyahe-pagsanjan-falls_bd37de01.jpg"),
+  sunset: localAssetPath("kabiyahe-bundles-sunset_99ff267e.jpg"),
+  enchantedKingdom: localAssetPath("enchanted-kingdom_a3aaee52.jpg"),
+  alFresco: localAssetPath("al-fresco-springs_c60eb0da.jpg"),
+  laresio: localAssetPath("laresio-lakeside_049170eb.jpg"),
+  emblem: localAssetPath("kabiyahe-emblem_04426ca6.png"),
 };
 const slugify = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 const notify = (message: string) => window.dispatchEvent(new CustomEvent("kabiyahe:notice", { detail: message }));

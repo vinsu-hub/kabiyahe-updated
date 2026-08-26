@@ -387,3 +387,8 @@
 - [x] Verify whether the visual editor heading change was applied or missed because the target selector was stale.
 - [x] Apply “Featured Events & Destinations” to the actual Featured section heading if still unchanged.
 - [x] Validate the heading on desktop and mobile, run regression checks, and save a checkpoint.
+
+## Local clone image packaging
+- [x] Inventory all image references used by the current build and identify which assets need local copies.
+- [x] Add a Git-tracked local asset fetcher and manifest plus a local-compatible image resolution strategy without breaking Manus-hosted paths.
+- [x] Validate fresh-clone asset loading, tests, TypeScript, production build, and repository synchronization.
