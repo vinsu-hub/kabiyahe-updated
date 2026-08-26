@@ -398,3 +398,9 @@
 - [x] Add a Los Baños stays discovery section with an Airbnb area-search handoff and truthful availability/rating treatment.
 - [x] Add Local Spots Highlights for food-market and night-market discovery with clear details-pending states where needed.
 - [x] Validate links, content labels, mobile/desktop layout, and regression tests.
+
+## Comprehensive Los Baños attractions catalog
+- [x] Research publicly verifiable Los Baños attractions across heritage, nature, hot springs, science, education, food/community, recreation, and family categories.
+- [x] Normalize the expanded attraction records with category, location, description, verification state, and source notes.
+- [x] Integrate the expanded catalog into Explore filters and destination detail routes without fabricated ratings, reviews, or operating claims.
+- [x] Validate catalog coverage, filters, routes, responsive cards, tests, and production build.

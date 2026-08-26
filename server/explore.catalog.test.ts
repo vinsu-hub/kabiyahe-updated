@@ -25,6 +25,17 @@ describe("Explore catalog content", () => {
     expect(appSource).toContain('className="reviews-coming-soon"');
   });
 
+  it("includes a broad Los Baños attraction inventory across categories", () => {
+    for (const name of ["Makiling Botanic Gardens", "UPLB Museum of Natural History", "UPLB Fertility Tree", "Sining Makiling Gallery", "Makiling Mud Spring", "Flat Rocks", "IRRI Riceworld Museum", "Philippine Carabao Center at UPLB", "Diocesan Shrine of St. Therese of the Child Jesus", "San Antonio de Padua Parish", "Los Baños Municipal Hall & History", "Los Baños Public Market", "Olivarez Plaza"]) {
+      expect(appSource).toContain(`name: "${name}"`);
+    }
+    expect(appSource).toContain('tags: ["Nature", "Science", "Family Friendly"]');
+    expect(appSource).toContain('tags: ["Heritage", "History", "Culture"]');
+    expect(appSource).toContain("Visitor access and current hours should be confirmed with UPLB.");
+    expect(appSource).toContain("Public access and learning visits require confirmation.");
+    expect(appSource).toContain("Stall selection and operating times vary.");
+  });
+
   it("exposes the Attractions quick filter and broadens discovery beyond Laguna", () => {
     expect(appSource).toContain('"Attractions"');
     expect(appSource).toContain('className="explore-quick-filters"');
