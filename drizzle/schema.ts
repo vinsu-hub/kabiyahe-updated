@@ -204,3 +204,37 @@ export const walletTicketAttachments = mysqlTable("walletTicketAttachments", {
 });
 export type WalletTicketAttachment = typeof walletTicketAttachments.$inferSelect;
 export type InsertWalletTicketAttachment = typeof walletTicketAttachments.$inferInsert;
+
+
+export const feedPosts = mysqlTable("feedPosts", {
+  id: int("id").autoincrement().primaryKey(),
+  type: mysqlEnum("type", ["popup", "live_event", "promo", "cultural", "alert"]).notNull(),
+  title: varchar("title", { length: 220 }).notNull(),
+  description: text("description").notNull(),
+  coverPhoto: varchar("coverPhoto", { length: 800 }),
+  destinationId: int("destinationId"),
+  partnerId: int("partnerId"),
+  startsAt: timestamp("startsAt").notNull(),
+  endsAt: timestamp("endsAt"),
+  outboundLink: varchar("outboundLink", { length: 800 }),
+  source: mysqlEnum("source", ["admin", "partner", "tourism_council"]).default("admin").notNull(),
+  status: mysqlEnum("status", ["pending_review", "live", "archived", "rejected"]).default("pending_review").notNull(),
+  boosted: int("boosted").default(0).notNull(),
+  boostedUntil: timestamp("boostedUntil"),
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type FeedPost = typeof feedPosts.$inferSelect;
+export type InsertFeedPost = typeof feedPosts.$inferInsert;
+
+export const feedPostNotifications = mysqlTable("feedPostNotifications", {
+  id: int("id").autoincrement().primaryKey(),
+  feedPostId: int("feedPostId").notNull(),
+  userId: int("userId").notNull(),
+  sentAt: timestamp("sentAt").defaultNow().notNull(),
+  readAt: timestamp("readAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type FeedPostNotification = typeof feedPostNotifications.$inferSelect;
+export type InsertFeedPostNotification = typeof feedPostNotifications.$inferInsert;

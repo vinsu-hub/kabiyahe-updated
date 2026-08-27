@@ -6,6 +6,7 @@ import { partnerRouter } from "./partnerRouter";
 import { plannerRouter } from "./plannerRouter";
 import { reservationRouter } from "./reservationRouter";
 import { walletRouter } from "./walletRouter";
+import { feedRouter } from "./feedRouter";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -14,6 +15,7 @@ export const appRouter = router({
   planner: plannerRouter,
   reservations: reservationRouter,
   wallet: walletRouter,
+  feed: feedRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

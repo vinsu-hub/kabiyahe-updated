@@ -431,3 +431,16 @@
 - [x] Document multi-property support as a deliberate follow-up boundary because the current account model resolves one active listing per partner workspace.
 - [x] Document external email/SMS/push notifications as provider-dependent follow-up work; keep the in-dashboard source of truth implemented now.
 - [x] Fix PartnerPortal runtime error: `MessageSquare is not defined` on `/partners/dashboard`.
+
+## Happening feed MVP
+- [x] Reconcile the Happening brief with the current React/tRPC/Drizzle/MySQL architecture and document the Phase 1 boundaries.
+- [x] Add additive feed post and user notification persistence models for admin-curated time-sensitive events.
+- [x] Add admin-only feed post creation, editing, publishing, rejection, and archive-safe procedures.
+- [x] Add urgency-based public feed queries with computed Happening Now, Starting Soon, Upcoming, and Past states.
+- [x] Add feed type, town/place, and near-me-compatible filters without exposing stale archived items in the live feed.
+- [x] Add the public Happening route with post detail views, linked destination/partner context, source labels, outbound handoffs, and distinct type badges.
+- [x] Add a homepage Happening in Laguna strip between the hero and featured destinations.
+- [x] Wire the existing bell icon to in-app feed notifications with unread state, read actions, and deep links.
+- [x] Add an admin Happening management workspace with truthful empty/loading/error states.
+- [x] Add regression tests for timestamp status computation, urgency ordering, admin authorization, notification ownership, and stale-post exclusion.
+- [x] Validate Happening desktop/mobile layouts and document partner submissions, push delivery, payment, and external calendar sync as follow-up boundaries.
