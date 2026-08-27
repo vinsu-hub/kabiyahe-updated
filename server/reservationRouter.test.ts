@@ -59,6 +59,9 @@ describe("partner reservation intake contracts", () => {
       expect(portalSource).toContain(`href:\"${route}\"`);
     }
     expect(appSource).toContain("path=\"/partners/reserve/:id\"");
+    expect(appSource).toContain("path=\"/partners/reviews\"");
+    expect(portalSource).toContain("PartnerStaffManagement");
+    expect(routerSource).toContain("partnerAccess(input.partnerId, ctx.user, true)");
     expect(portalSource).toContain("External Airbnb or venue booking links remain available separately.");
     expect(portalSource).toContain("Send reservation request");
     expect(portalSource).toContain("MessageSquare");
