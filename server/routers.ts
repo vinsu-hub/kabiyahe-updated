@@ -4,6 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { partnerRouter } from "./partnerRouter";
 import { plannerRouter } from "./plannerRouter";
+import { reservationRouter } from "./reservationRouter";
 import { walletRouter } from "./walletRouter";
 
 export const appRouter = router({
@@ -11,6 +12,7 @@ export const appRouter = router({
   system: systemRouter,
   partners: partnerRouter,
   planner: plannerRouter,
+  reservations: reservationRouter,
   wallet: walletRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),

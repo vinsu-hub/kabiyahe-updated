@@ -35,6 +35,8 @@ export const partners = mysqlTable("partners", {
   ownerUserId: int("ownerUserId"),
   businessName: varchar("businessName", { length: 180 }).notNull(),
   partnerType: mysqlEnum("partnerType", ["spot", "restaurant", "hotel", "guide"]).notNull(),
+  listingSubtype: mysqlEnum("listingSubtype", ["hotel_resort", "airbnb_host", "restaurant"]),
+  acceptReservations: int("acceptReservations").default(0).notNull(),
   categories: text("categories"),
   contactName: varchar("contactName", { length: 160 }).notNull(),
   contactEmail: varchar("contactEmail", { length: 320 }).notNull(),
@@ -55,6 +57,79 @@ export const partners = mysqlTable("partners", {
 });
 export type Partner = typeof partners.$inferSelect;
 export type InsertPartner = typeof partners.$inferInsert;
+
+export const inventoryUnits = mysqlTable("inventoryUnits", {
+  id: int("id").autoincrement().primaryKey(),
+  partnerId: int("partnerId").notNull(),
+  type: mysqlEnum("type", ["room_type", "vacation_unit", "table_category", "menu_highlight"]).notNull(),
+  name: varchar("name", { length: 180 }).notNull(),
+  capacity: int("capacity").default(1).notNull(),
+  quantityAvailable: int("quantityAvailable").default(1).notNull(),
+  baseRateRange: varchar("baseRateRange", { length: 120 }),
+  photos: text("photos"),
+  active: int("active").default(1).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type InventoryUnit = typeof inventoryUnits.$inferSelect;
+export type InsertInventoryUnit = typeof inventoryUnits.$inferInsert;
+
+export const availabilityBlocks = mysqlTable("availabilityBlocks", {
+  id: int("id").autoincrement().primaryKey(),
+  partnerId: int("partnerId").notNull(),
+  inventoryUnitId: int("inventoryUnitId"),
+  dateStart: timestamp("dateStart").notNull(),
+  dateEnd: timestamp("dateEnd").notNull(),
+  reason: varchar("reason", { length: 500 }),
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type AvailabilityBlock = typeof availabilityBlocks.$inferSelect;
+export type InsertAvailabilityBlock = typeof availabilityBlocks.$inferInsert;
+
+export const reservations = mysqlTable("reservations", {
+  id: int("id").autoincrement().primaryKey(),
+  partnerId: int("partnerId").notNull(),
+  destinationId: int("destinationId"),
+  inventoryUnitId: int("inventoryUnitId"),
+  guestName: varchar("guestName", { length: 180 }).notNull(),
+  guestContact: varchar("guestContact", { length: 320 }).notNull(),
+  partySize: int("partySize").default(1).notNull(),
+  roomOrTableRef: varchar("roomOrTableRef", { length: 180 }),
+  dateStart: timestamp("dateStart").notNull(),
+  dateEnd: timestamp("dateEnd"),
+  timeSlot: varchar("timeSlot", { length: 80 }),
+  status: mysqlEnum("status", ["requested", "confirmed", "completed", "cancelled", "no_show"]).default("requested").notNull(),
+  source: mysqlEnum("source", ["kabiyahe_direct", "itinerary_linked"]).default("kabiyahe_direct").notNull(),
+  notes: text("notes"),
+  cancelledReason: varchar("cancelledReason", { length: 500 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type Reservation = typeof reservations.$inferSelect;
+export type InsertReservation = typeof reservations.$inferInsert;
+
+export const partnerNotifications = mysqlTable("partnerNotifications", {
+  id: int("id").autoincrement().primaryKey(),
+  partnerId: int("partnerId").notNull(),
+  type: mysqlEnum("type", ["new_reservation", "cancellation", "review_flag", "admin_message"]).notNull(),
+  reservationId: int("reservationId"),
+  message: varchar("message", { length: 500 }).notNull(),
+  readAt: timestamp("readAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type PartnerNotification = typeof partnerNotifications.$inferSelect;
+export type InsertPartnerNotification = typeof partnerNotifications.$inferInsert;
+
+export const partnerStaff = mysqlTable("partnerStaff", {
+  id: int("id").autoincrement().primaryKey(),
+  partnerId: int("partnerId").notNull(),
+  userId: int("userId").notNull(),
+  role: mysqlEnum("role", ["owner", "staff"]).default("staff").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type PartnerStaff = typeof partnerStaff.$inferSelect;
+export type InsertPartnerStaff = typeof partnerStaff.$inferInsert;
 
 export const partnerPhotos = mysqlTable("partnerPhotos", {
   id: int("id").autoincrement().primaryKey(),

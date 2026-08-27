@@ -410,3 +410,24 @@
 - [x] Correct heading baselines, card heights, spacing, and map-preview proportions without disrupting the footer or bottom navigation.
 - [x] Add an Accommodations tab/filter with Los Baños hotels and resorts plus a truthful Airbnb area-search handoff.
 - [x] Validate tabs, external links, card alignment, responsive layout, and regression tests.
+
+## Partner reservation-intake dashboard expansion
+- [ ] Reconcile the attached dashboard plan with the current React/tRPC/Drizzle/MySQL architecture and document the MVP boundaries.
+- [x] Add partner listing subtype and reservation opt-in settings for hotel/resort, Airbnb-style host, and restaurant partners.
+- [x] Add reservations, inventory units, availability blocks, and partner notification persistence models with additive migrations.
+- [ ] Add partner-scoped reservation queries and mutations with owner/staff/admin authorization checks.
+- [ ] Add reservation request, confirm, cancel, complete, and no-show status workflows with conflict-safe validation.
+- [ ] Add availability and calendar controls for accommodation inventory and opt-in restaurant time slots.
+- [ ] Add category-aware inventory management for rooms, vacation units, table categories, and restaurant menu highlights.
+- [ ] Add partner dashboard tabs for Overview, Reservations, Availability & Calendar, Inventory, Listing Management, Reviews & Feedback, Analytics, Featured Placement, Notifications, and Account & Settings.
+- [ ] Add reservation-volume, conversion, and cancellation analytics without fabricating live metrics.
+- [ ] Add in-dashboard partner notifications for new reservation requests, cancellations, review flags, and admin messages.
+- [ ] Preserve the no-payment/no-card-storage/no-external-calendar-sync boundary in UI copy and backend behavior.
+- [ ] Add regression tests for reservation ownership, role boundaries, status transitions, availability conflicts, opt-in behavior, and notification access.
+- [ ] Validate partner dashboard tabs and reservation workflows at desktop and mobile widths, then save a checkpoint.
+- [ ] Add a view-only Reviews & Feedback partner tab with truthful empty states and admin flag handoff.
+- [ ] Add owner-only staff management controls for inviting and removing partner staff members.
+- [ ] Add category-aware availability copy and controls for accommodation date ranges and restaurant same-day requests.
+- [ ] Document multi-property support as a deliberate follow-up boundary because the current account model resolves one active listing per partner workspace.
+- [ ] Document external email/SMS/push notifications as provider-dependent follow-up work; keep the in-dashboard source of truth implemented now.
+- [x] Fix PartnerPortal runtime error: `MessageSquare is not defined` on `/partners/dashboard`.
