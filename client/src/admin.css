@@ -82,8 +82,9 @@ a .admin-stat:hover { border-color: var(--forest); }
 
 @media (max-width: 820px) {
   .admin-root { grid-template-columns: 1fr; }
-  .admin-sidebar { position: static; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; }
-  .admin-sidebar nav { flex-direction: row; flex-wrap: wrap; }
+  .admin-sidebar { position: static; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 12px 16px; }
+  .admin-sidebar nav { flex-direction: row; flex-wrap: wrap; gap: 4px 6px; }
+  .admin-brand { margin-bottom: 0; width: 100%; }
   .admin-exit, .admin-who { margin: 0; }
   .admin-main { padding: 20px; }
   .admin-grid2 { grid-template-columns: 1fr; }
