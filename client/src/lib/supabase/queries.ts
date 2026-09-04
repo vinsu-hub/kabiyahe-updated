@@ -3,8 +3,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "./client";
 import { useAuth } from "./AuthProvider";
 import type {
-  AccommodationRow, DelicacyRow, DestinationRow, EventDetailRow, EventRow, ParkingSpotRow, PassportLocationPublic,
-  PassportReward, RideRoute, RideTip, ScanResult, Season, TourPackageDetail, TourPackageRow,
+  AccommodationRow, DelicacyRow, DestinationRow, EventDetailRow, EventRow, HeritageWalkStop, ParkingSpotRow,
+  PassportLocationPublic, PassportReward, RideRoute, RideTip, ScanResult, Season, TourPackageDetail, TourPackageRow,
 } from "./types";
 
 const throwIf = <T>({ data, error }: { data: T; error: { message: string } | null }): T => {
@@ -276,6 +276,16 @@ export function useDestination(slug: string | undefined) {
     queryKey: ["destination", slug],
     queryFn: async () =>
       throwIf(await supabase.from("destinations").select("*").eq("slug", slug!).maybeSingle()) as DestinationRow | null,
+  });
+}
+
+/* ------------------------------------------------------------ heritage walk */
+export function useHeritageWalk() {
+  return useQuery({
+    queryKey: ["heritage-walk"],
+    queryFn: async () =>
+      throwIf(await supabase.from("heritage_walk_stops").select("*").order("sort")) as HeritageWalkStop[],
+    staleTime: 10 * 60_000,
   });
 }
 

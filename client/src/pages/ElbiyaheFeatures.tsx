@@ -6,15 +6,16 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
   ArrowLeft, BadgeCheck, Bookmark, Bus, CalendarDays, Car, Check, ChevronRight,
-  Clock3, Compass, ExternalLink, Heart, List, Loader2, MapPin, Navigation, QrCode,
+  Clock3, Compass, ExternalLink, Footprints, Heart, List, Loader2, MapPin, Navigation, QrCode,
   Share2, Sparkles, Star, Ticket, Users, Utensils,
 } from "lucide-react";
 import { useAuth } from "@/lib/supabase/AuthProvider";
 import {
   useAccommodations, useDelicacies, useEvent, useEvents, useMyRsvp, useParkingSpots, usePassport,
   useReserveAccommodation, useReserveTour, useRideGuide, useScanPassport, useSeasons, useToggleRsvp, useTour, useTours,
+  useHeritageWalk,
 } from "@/lib/supabase/queries";
-import type { AccommodationRow, DelicacyRow, EventRow, ParkingSpotRow, StampCategory } from "@/lib/supabase/types";
+import type { AccommodationRow, DelicacyRow, EventRow, HeritageWalkStop, ParkingSpotRow, StampCategory } from "@/lib/supabase/types";
 import { MapView, type LBPoint, type ZoneCircle } from "@/components/MapView";
 import { LB_CENTER, directionsUrl, distanceKm, formatDistance, getPosition, useUserLocation } from "@/lib/geo";
 
@@ -65,6 +66,7 @@ function Stars({ value }: { value: number }) {
 
 const EVENT_CATEGORIES = ["All", "Culture", "Sports", "Arts", "Community"] as const;
 const EVENT_GROUPS: { key: EventRow["status"][]; label: string }[] = [
+  { key: ["anytime"], label: "Anytime in Los Baños" },
   { key: ["live", "today"], label: "Today" },
   { key: ["week"], label: "This Week" },
   { key: ["season"], label: "This Season" },
@@ -272,6 +274,14 @@ export function EventDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shel
             <h2>Getting there</h2>
             <MapView points={[{ id: e.id, lat: e.lat, lng: e.lng, name: e.venue_name ?? e.title, kind: "Event", sub: e.date_label ?? undefined }]} interactive={false} height={220} ariaLabel={`Map showing ${e.venue_name ?? e.title}`} />
             <Button onClick={() => window.open(directionsUrl(e.lat!, e.lng!), "_blank", "noopener")}><Navigation size={15} /> Get directions</Button>
+          </section>
+        )}
+
+        {e.slug === "los-banos-heritage-walk" && (
+          <section className="elbiyahe-location-section">
+            <h2>The full trail</h2>
+            <p className="muted">All 17 stops, grouped by era, with a map, route line, and directions to each site.</p>
+            <Button href="/heritage-walk"><Footprints size={15} /> See the full 17-stop trail</Button>
           </section>
         )}
 
@@ -754,6 +764,96 @@ export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
             <section className="elbiyahe-tips">
               <h2>Local travel tips</h2>
               <ul>{data.tips.map(t => <li key={t.id}>{t.body}</li>)}</ul>
+            </section>
+          </>
+        )}
+      </main>
+      <Footer />
+      <BottomNav />
+    </>
+  );
+}
+
+/* ======================= HERITAGE WALK ======================= */
+
+export function HeritageWalk({ Header, BottomNav, Footer }: Shell) {
+  const { data: stops, isLoading, error } = useHeritageWalk();
+  const eras = useMemo(() => {
+    const groups: { era: string; list: HeritageWalkStop[] }[] = [];
+    for (const s of stops ?? []) {
+      let g = groups.find(x => x.era === s.era_group);
+      if (!g) { g = { era: s.era_group, list: [] }; groups.push(g); }
+      g.list.push(s);
+    }
+    return groups;
+  }, [stops]);
+  const points = (stops ?? [])
+    .filter(s => s.lat != null && s.lng != null)
+    .map(s => ({ id: s.id, lat: s.lat!, lng: s.lng!, name: `${s.sort}. ${s.name}`, kind: "Culture", sub: s.era_group }));
+
+  return (
+    <>
+      <Header />
+      <main className="container elbiyahe-page elbiyahe-heritage">
+        <div className="elbiyahe-page-head">
+          <div>
+            <p className="eyebrow">SELF-GUIDED · ~2.5 KM ON FOOT</p>
+            <h1>Los Baños Heritage Walk</h1>
+            <p className="muted">
+              For over 400 years, Los Baños has been a sanctuary for rest and rejuvenation. This
+              17-stop walk traces the places that shaped the town — from the 1613 Immaculate
+              Conception Parish and the ruins of Agua Santa Resort to the old train station,
+              Baker Hall, and the hot springs that gave "The Baths" its name. Start anywhere along
+              the route; most stops sit within the poblacion, with a few on the UPLB campus.
+            </p>
+          </div>
+        </div>
+
+        {isLoading && <Loading />}
+        {error && <LoadError message={(error as Error).message} />}
+
+        {stops && stops.length > 0 && (
+          <>
+            <MapView
+              points={points}
+              routeLine
+              numbered
+              fitBounds
+              height={420}
+              ariaLabel="Map of the 17-stop Los Baños Heritage Walk"
+            />
+
+            {eras.map(({ era, list }) => (
+              <section key={era} className="elbiyahe-heritage-era">
+                <h2>{era}</h2>
+                <ol className="elbiyahe-heritage-list">
+                  {list.map(s => (
+                    <li key={s.id}>
+                      <span className="elbiyahe-heritage-num">{s.sort}</span>
+                      <div>
+                        <b>{s.name}</b>
+                        {s.is_passport_spot && <span className="tag ochre">Passport stamp</span>}
+                        <p className="muted">{s.blurb}</p>
+                        {s.lat != null && s.lng != null && (
+                          <a href={directionsUrl(s.lat, s.lng)} target="_blank" rel="noreferrer" className="link-accent">
+                            <Navigation size={13} /> Directions
+                          </a>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            ))}
+
+            <section className="elbiyahe-location-section">
+              <h2>Make it a trip</h2>
+              <div className="elbiyahe-cv-grid">
+                <Link href="/passport" className="elbiyahe-cv-item"><QrCode size={18} /> Collect Passport stamps</Link>
+                <Link href="/ride-guide" className="elbiyahe-cv-item"><Navigation size={18} /> How to get around</Link>
+                <Link href="/delicacies" className="elbiyahe-cv-item"><Utensils size={18} /> Eat along the way</Link>
+                <Link href="/explore" className="elbiyahe-cv-item"><Compass size={18} /> More of Los Baños</Link>
+              </div>
             </section>
           </>
         )}

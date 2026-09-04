@@ -48,6 +48,12 @@ export function formatDistance(km: number): string {
   return km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(km < 10 ? 1 : 0)} km`;
 }
 
+/** True when a point sits within the Los Baños town + Makiling footprint (~7 km of the poblacion). */
+export function isLosBanos(lat: number | null | undefined, lng: number | null | undefined): boolean {
+  if (lat == null || lng == null) return false;
+  return distanceKm(LB_CENTER, { lat, lng }) <= 7;
+}
+
 /** Universal directions link — opens the visitor's default map app. No API key. */
 export function directionsUrl(lat: number, lng: number): string {
   return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
