@@ -121,3 +121,5 @@ screenshots/
 # scratch
 .tmp/
 scratchpad-build/
+.vercel
+.env*
