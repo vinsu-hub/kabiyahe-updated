@@ -15,6 +15,8 @@ import {
   useReserveAccommodation, useReserveTour, useRideGuide, useScanPassport, useSeasons, useToggleRsvp, useTour, useTours,
 } from "@/lib/supabase/queries";
 import type { AccommodationRow, DelicacyRow, EventRow, ParkingSpotRow, StampCategory } from "@/lib/supabase/types";
+import { MapView, type LBPoint, type ZoneCircle } from "@/components/MapView";
+import { LB_CENTER, directionsUrl, distanceKm, formatDistance, getPosition, useUserLocation } from "@/lib/geo";
 
 interface Shell {
   Header: React.ComponentType;
@@ -139,24 +141,10 @@ export function EventsList({ Header, BottomNav, Footer, Tag }: Shell) {
         {error && <LoadError message={(error as Error).message} />}
 
         {!isLoading && !error && (view === "map" ? (
-          <div className="elbiyahe-map-field">
-            <div className="map-copy">Los Baños<br /><small>Laguna</small></div>
-            {filtered.map((e, i) => (
-              <Link
-                key={e.id}
-                href={`/events/${e.slug}`}
-                className={`pin ${e.category === "Culture" ? "culture" : e.category === "Sports" ? "nature" : e.category === "Arts" ? "gem" : "food"}`}
-                style={{ left: `${12 + ((i * 19) % 74)}%`, top: `${16 + ((i * 23) % 66)}%` }}
-              >⌖</Link>
-            ))}
-            <div className="map-legend">
-              <b>Category</b>
-              <span><span className="dot culture" /> Culture</span>
-              <span><span className="dot nature" /> Sports</span>
-              <span><span className="dot gem" /> Arts</span>
-              <span><span className="dot food" /> Community</span>
-            </div>
-          </div>
+          <MapView
+            points={filtered.filter(e => e.lat != null && e.lng != null).map(e => ({ id: e.id, lat: e.lat!, lng: e.lng!, name: e.title, kind: e.category, href: `/events/${e.slug}`, sub: e.date_label ?? undefined }))}
+            fitBounds height={480} ariaLabel="Map of Los Baños events"
+          />
         ) : (
           EVENT_GROUPS.map(group => {
             const items = filtered.filter(e => group.key.includes(e.status));
@@ -278,6 +266,14 @@ export function EventDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shel
             )) : <p className="muted">No updates yet. Check back closer to the date.</p>
           )}
         </div>
+
+        {e.lat != null && e.lng != null && (
+          <section className="elbiyahe-location-section">
+            <h2>Getting there</h2>
+            <MapView points={[{ id: e.id, lat: e.lat, lng: e.lng, name: e.venue_name ?? e.title, kind: "Event", sub: e.date_label ?? undefined }]} interactive={false} height={220} ariaLabel={`Map showing ${e.venue_name ?? e.title}`} />
+            <Button onClick={() => window.open(directionsUrl(e.lat!, e.lng!), "_blank", "noopener")}><Navigation size={15} /> Get directions</Button>
+          </section>
+        )}
 
         <section className="elbiyahe-complete-visit">
           <h2>Complete Your Visit</h2>
@@ -428,6 +424,12 @@ export function TourDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shell
 
         <section className="elbiyahe-itinerary">
           <h2>Itinerary</h2>
+          {stops.some(s => s.lat != null && s.lng != null) && (
+            <MapView
+              points={stops.filter(s => s.lat != null && s.lng != null).map((s, i) => ({ id: s.id, lat: s.lat!, lng: s.lng!, name: `${i + 1}. ${s.name}`, kind: "Attractions", sub: s.time_label }))}
+              fitBounds height={280} ariaLabel={`Map of ${t.title} stops`}
+            />
+          )}
           <ol>
             {stops.map(s => (
               <li key={s.id}>
@@ -471,17 +473,6 @@ const STAMP_TONE: Record<StampCategory, string> = {
 };
 const DOT_CLASS: Record<string, string> = { Nature: "nature", Culture: "culture", Food: "food", Science: "gem", Event: "culture", Community: "gem" };
 
-function getPosition(): Promise<{ lat: number; lng: number } | null> {
-  return new Promise(resolve => {
-    if (!navigator.geolocation) return resolve(null);
-    navigator.geolocation.getCurrentPosition(
-      p => resolve({ lat: p.coords.latitude, lng: p.coords.longitude }),
-      () => resolve(null),
-      { timeout: 6000 },
-    );
-  });
-}
-
 export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
   const { user } = useAuth();
   const [, navigate] = useLocation();
@@ -491,6 +482,7 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
   const [code, setCode] = useState("");
   const [scanOpen, setScanOpen] = useState(false);
   const [last, setLast] = useState<{ name: string; category: string; total: number } | null>(null);
+  const loc = useUserLocation();
 
   useEffect(() => {
     if (!scanOpen) return;
@@ -578,15 +570,38 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
         </section>
 
         <section className="elbiyahe-nearby-stamps">
-          <h2>Nearby stamps</h2>
+          <div className="elbiyahe-nearby-head">
+            <h2>Nearby stamps</h2>
+            {loc.status !== "granted" && (
+              <button className="link-accent" onClick={() => loc.request()}>
+                <Navigation size={14} /> {loc.status === "prompting" ? "Locating…" : "Sort by distance"}
+              </button>
+            )}
+          </div>
           <ul>
-            {(data?.locations ?? []).filter(l => !data?.scannedLocationIds.includes(l.id)).slice(0, 6).map(l => (
-              <li key={l.id}>
-                <span className={`dot ${DOT_CLASS[l.category] ?? "gem"}`} />
-                <div><b>{l.name}</b><small className="muted">{l.category}</small></div>
-                <ChevronRight size={16} />
-              </li>
-            ))}
+            {(() => {
+              let list = (data?.locations ?? []).filter(l => !data?.scannedLocationIds.includes(l.id));
+              if (loc.coords) {
+                list = [...list].sort((a, b) => {
+                  const da = a.lat != null ? distanceKm(loc.coords!, { lat: a.lat, lng: a.lng! }) : Infinity;
+                  const db = b.lat != null ? distanceKm(loc.coords!, { lat: b.lat, lng: b.lng! }) : Infinity;
+                  return da - db;
+                });
+              }
+              return list.slice(0, 6).map(l => {
+                const km = loc.coords && l.lat != null ? distanceKm(loc.coords, { lat: l.lat, lng: l.lng! }) : null;
+                const inner = (
+                  <>
+                    <span className={`dot ${DOT_CLASS[l.category] ?? "gem"}`} />
+                    <div><b>{l.name}</b><small className="muted">{l.category}{km != null ? ` · ${formatDistance(km)}` : ""}</small></div>
+                    <ChevronRight size={16} />
+                  </>
+                );
+                return l.lat != null && l.lng != null
+                  ? <li key={l.id}><a href={directionsUrl(l.lat, l.lng)} target="_blank" rel="noreferrer" className="elbiyahe-nearby-row">{inner}</a></li>
+                  : <li key={l.id}>{inner}</li>;
+              });
+            })()}
             {data && data.locations.length > 0 && data.locations.every(l => data.scannedLocationIds.includes(l.id)) && (
               <li><div><b>All nearby stamps collected — nice.</b></div></li>
             )}
@@ -711,12 +726,20 @@ export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
 
             <section className="elbiyahe-routes">
               <h2>Tricycle zones</h2>
-              <div className="elbiyahe-map-field small">
-                <div className="map-copy">Los Baños<br /><small>tricycle zones</small></div>
-                <span className="pin nature" style={{ left: "24%", top: "40%" }}>1</span>
-                <span className="pin culture" style={{ left: "54%", top: "30%" }}>2</span>
-                <span className="pin food" style={{ left: "70%", top: "60%" }}>3</span>
-              </div>
+              <MapView
+                center={LB_CENTER}
+                zoom={13}
+                interactive
+                height={320}
+                ariaLabel="Los Baños tricycle zones map"
+                zones={data.zones.slice(0, 3).map((z, i) => (
+                  [
+                    { center: { lat: 14.166, lng: 121.238 }, radiusKm: 1.1, label: `Z1 · ${z.fare_text}`, color: "#0e543c" },
+                    { center: { lat: 14.177, lng: 121.217 }, radiusKm: 1.0, label: `Z2 · ${z.fare_text}`, color: "#6d2740" },
+                    { center: { lat: 14.190, lng: 121.243 }, radiusKm: 1.3, label: `Z3 · ${z.fare_text}`, color: "#d17b27" },
+                  ] as ZoneCircle[]
+                )[i])}
+              />
               <div className="elbiyahe-route-list">
                 {data.zones.map(z => (
                   <div key={z.id} className="elbiyahe-route-row">
@@ -919,6 +942,9 @@ function ParkingCard({ p }: { p: ParkingSpotRow }) {
       <p className="muted"><MapPin size={13} /> {p.place}{p.barangay ? `, Brgy. ${p.barangay}` : ""}</p>
       <p className="muted">{[p.fee_label, p.capacity_estimate, p.hours_label].filter(Boolean).join(" · ")}</p>
       {p.notes && <p>{p.notes}</p>}
+      {p.lat != null && p.lng != null && (
+        <a href={directionsUrl(p.lat, p.lng)} target="_blank" rel="noreferrer" className="link-accent"><Navigation size={13} /> Directions</a>
+      )}
     </div>
   );
 }
@@ -927,6 +953,7 @@ export function Parking({ Header, BottomNav, Footer }: Shell) {
   const { data, isLoading, error } = useParkingSpots();
   const [filter, setFilter] = useState<(typeof PARKING_FILTERS)[number]>("All");
   const list = (data ?? []).filter(p => filter === "All" || p.kind === filter);
+  const mapPoints: LBPoint[] = (data ?? []).filter(p => p.lat != null && p.lng != null).map(p => ({ id: p.id, lat: p.lat!, lng: p.lng!, name: p.name, kind: "Parking", sub: p.kind === "free" ? "Free" : "Paid" }));
 
   return (
     <>
@@ -948,6 +975,8 @@ export function Parking({ Header, BottomNav, Footer }: Shell) {
 
         {isLoading && <Loading />}
         {error && <LoadError message={(error as Error).message} />}
+
+        {mapPoints.length > 0 && <MapView points={mapPoints} fitBounds interactive height={300} ariaLabel="Map of Los Baños parking areas" />}
 
         <div className="elbiyahe-route-list">
           {list.map(p => <ParkingCard p={p} key={p.id} />)}
