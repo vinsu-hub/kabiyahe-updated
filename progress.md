@@ -1,5 +1,37 @@
 # Progress Log
 
+## 2026-09-04 (Real maps + Bañamos Festival + backlog — branch `feat/real-maps`, merged to `main`)
+- **Real maps** replace every fake CSS "map" (gradient + randomly-positioned pins):
+  - `MapLibre GL JS` + `react-map-gl` v8, basemap = OpenStreetMap standard raster (keyless, no billing;
+    swap point noted in `todo.md`). OpenFreeMap vector was tried first but wouldn't render tiles in
+    headless test browsers — raster is universal. CARTO now needs a key (dropped).
+  - `client/src/components/LBMap.tsx` — one component for all surfaces: colour-coded markers, popups
+    with View/Directions, fit-bounds, zone-circle overlays, opt-in user location, `ResizeObserver`
+    keeps the canvas synced (react-map-gl misses container resizes on its own)
+  - `MapView.tsx` lazy-loads it → `maplibre-gl` stays a 266 KB-gz **async** chunk, initial bundle
+    unchanged at ~175 KB gz
+  - `lib/geo.ts` — `useUserLocation` (opt-in, never auto-prompts), `distanceKm` haversine,
+    `directionsUrl`, WebGL + reduced-motion guards; `getPosition` moved here from ElbiyaheFeatures
+  - Wired: Explore map view (+ "Show near me" → sort list by distance), Events map view, Home
+    mini-map, Destination/Event detail location cards + "Get directions", Tour detail itinerary map,
+    Ride Guide tricycle-zone circles, Passport "Nearby stamps" distance-sort + per-row directions,
+    Parking map + per-card Directions
+  - a11y: `role=region` + label, focusable markers, Escape-closable popups, list stays the primary
+    path, geolocation opt-in only, no-WebGL fallback link
+- **Coordinates**: migration `20260906090001_geo` adds `lat`/`lng` to `destinations` +
+  `tour_itinerary_stops`; `scripts/seed-geo.mjs` backfills real town/landmark coords for all 33
+  destinations, 4 delicacies, 3 accommodations, 3 parking, 14 tour stops; stop coords also inlined in
+  `seed.mjs` so a re-seed doesn't drop them
+- **Bañamos Festival** — new headline event "25th Bañamos Festival & 411th Founding Anniversary"
+  (Sep 17–19 2026, poblacion, `status: live`, theme "Honoring Heritage, Sustaining Traditions,
+  Rekindling the Los Baños Spirit"). Shows top of `/events` under "Today" + on the Home strip
+- **`todo.md`** at repo root — full organised backlog: (A) content to confirm, (B) missing features
+  from the spec, (C) tech debt, (D) ops
+- Verified: `pnpm check` + `build` clean, `maplibre-gl` in a lazy chunk, all 8 map surfaces render
+  real markers at correct LB positions, `qa-writeflows` still 8/8, no console errors. Merged to
+  `main`, pushed, Vercel redeploy
+
+
 ## 2026-09-04 (Phases 11 + 12 of the El-Biyahe! rebrand — QA sweep + batch fix, branch `rebrand/el-biyahe`)
 - Built 4 QA scripts: `qa-responsive.mjs` (24 routes × 7 breakpoints, 150 screenshots, console/network capture), `qa-interactions.mjs` (every control clicked + overlay pass), `qa-writeflows.mjs` (all 5 write flows + DB row checks + RLS), `qa-admin-crud.mjs` (representative create/edit/delete + RLS). `QA-REPORT.md` catalogued 24 findings
 - **All 8 write-flow checks pass** (RSVP on/off, tour reserve, accommodation reserve, passport scan valid+invalid, RLS blocks anon); admin CRUD create/delete + RLS pass; zero image 404s; only real console error was the guest-redirect one (fixed)
