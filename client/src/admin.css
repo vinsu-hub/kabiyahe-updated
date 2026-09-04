@@ -6,7 +6,7 @@
   min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 12px; text-align: center; padding: 40px; background: var(--cream); color: var(--forest);
 }
-.admin-gate h1 { font: 700 26px 'Poppins', sans-serif; margin: 0; }
+.admin-gate h1 { font: 700 26px 'Space Grotesk', sans-serif; margin: 0; }
 
 .admin-root { display: grid; grid-template-columns: 232px 1fr; min-height: 100vh; background: var(--cream); }
 .admin-sidebar {
@@ -27,7 +27,7 @@
 
 .admin-main { padding: 28px 34px 60px; min-width: 0; }
 .admin-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
-.admin-head h1 { font: 700 26px 'Poppins', sans-serif; color: var(--forest); margin: 0; }
+.admin-head h1 { font: 700 26px 'Space Grotesk', sans-serif; color: var(--forest); margin: 0; }
 .admin-note { margin-top: 18px; color: var(--muted); font-size: 13px; }
 
 .admin-stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
@@ -52,7 +52,7 @@ a .admin-stat:hover { border-color: var(--forest); }
 
 .admin-section { margin-bottom: 34px; }
 .admin-section-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.admin-section-head h2 { font: 700 18px 'Poppins', sans-serif; color: var(--forest); margin: 0; }
+.admin-section-head h2 { font: 700 18px 'Space Grotesk', sans-serif; color: var(--forest); margin: 0; }
 
 .btn.sm { min-height: 30px; padding: 0 10px; font-size: 12px; }
 
@@ -60,7 +60,7 @@ a .admin-stat:hover { border-color: var(--forest); }
 .admin-drawer-backdrop { position: fixed; inset: 0; background: rgba(11,61,46,.32); z-index: 60; display: flex; justify-content: flex-end; }
 .admin-drawer { width: min(560px, 100%); background: var(--paper); height: 100%; display: flex; flex-direction: column; box-shadow: -8px 0 30px rgba(0,0,0,.15); }
 .admin-drawer-head { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--line); }
-.admin-drawer-head h2 { font: 700 18px 'Poppins', sans-serif; color: var(--forest); margin: 0; }
+.admin-drawer-head h2 { font: 700 18px 'Space Grotesk', sans-serif; color: var(--forest); margin: 0; }
 .admin-drawer-body { padding: 18px 20px; overflow-y: auto; flex: 1; }
 .admin-drawer-foot { padding: 14px 20px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: 10px; }
 

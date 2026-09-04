@@ -24,10 +24,10 @@
 .elbiyahe-page{padding:26px 0 70px}
 .elbiyahe-detail{padding:22px 0 90px;max-width:860px}
 .elbiyahe-page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:18px;flex-wrap:wrap}
-.elbiyahe-page-head h1{font:700 40px/1.05 'Poppins',sans-serif;color:var(--forest);margin:6px 0 4px}
-.elbiyahe-page h2{font:700 22px 'Poppins',sans-serif;color:var(--forest);margin:22px 0 12px}
-.elbiyahe-detail h1{font:700 32px/1.12 'Poppins',sans-serif;color:var(--forest);margin:10px 0 6px}
-.elbiyahe-detail h2{font:700 20px 'Poppins',sans-serif;color:var(--forest);margin:26px 0 12px}
+.elbiyahe-page-head h1{font:700 40px/1.05 'Space Grotesk',sans-serif;color:var(--forest);margin:6px 0 4px}
+.elbiyahe-page h2{font:700 22px 'Space Grotesk',sans-serif;color:var(--forest);margin:22px 0 12px}
+.elbiyahe-detail h1{font:700 32px/1.12 'Space Grotesk',sans-serif;color:var(--forest);margin:10px 0 6px}
+.elbiyahe-detail h2{font:700 20px 'Space Grotesk',sans-serif;color:var(--forest);margin:26px 0 12px}
 
 .elbiyahe-view-toggle,.filter-pills{display:flex;gap:8px;flex-wrap:wrap}
 .elbiyahe-view-toggle button,.filter-pills button{min-height:36px;padding:0 14px;border-radius:999px;background:#eef3ec;font-weight:600;display:inline-flex;align-items:center;gap:6px;font-size:13px}
@@ -62,7 +62,7 @@
 .map-legend{position:absolute;right:14px;bottom:14px;background:rgba(255,255,255,.94);border-radius:12px;padding:10px 12px;font-size:11px;display:flex;flex-direction:column;gap:5px;font-weight:600}
 .map-legend b{font-size:10px;letter-spacing:.08em;color:var(--muted)}
 .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
-.dot.nature{background:var(--forest)}.dot.food{background:#d17b27}.dot.culture{background:#8B1E3F}.dot.gem{background:var(--ochre)}
+.dot.nature{background:var(--forest)}.dot.food{background:#d17b27}.dot.culture{background:#6d2740}.dot.gem{background:var(--ochre)}
 
 .elbiyahe-detail-hero{position:relative;border-radius:16px;overflow:hidden;height:300px;margin-bottom:8px}
 .elbiyahe-detail-hero img{width:100%;height:100%;object-fit:cover}
@@ -129,12 +129,12 @@
 
 .elbiyahe-passport-header{display:flex;gap:18px;align-items:center;background:var(--forest);border-radius:18px;padding:18px;color:var(--cream)}
 .elbiyahe-passport-header img{width:110px;height:110px;border-radius:12px;object-fit:cover}
-.elbiyahe-passport-header h1{color:#fff;font:700 26px 'Poppins',sans-serif;margin:8px 0 4px}
+.elbiyahe-passport-header h1{color:#fff;font:700 26px 'Space Grotesk',sans-serif;margin:8px 0 4px}
 .elbiyahe-passport-header .muted{color:#cfe3d8}
 .elbiyahe-passport-header .progress{margin-top:8px;background:rgba(255,255,255,.25)}
 .elbiyahe-passport-header .progress span{background:var(--ochre)}
 .elbiyahe-scan-btn{width:100%;min-height:52px;border-radius:14px;background:var(--ochre);color:#1c1c1c;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:8px;margin:16px 0}
-.elbiyahe-stamp-success{display:flex;gap:12px;align-items:center;background:#fff7e6;border:1px solid var(--ochre);border-radius:14px;padding:14px;margin-bottom:16px}
+.elbiyahe-stamp-success{display:flex;gap:12px;align-items:center;background:#f7f4ea;border:1px solid var(--ochre);border-radius:14px;padding:14px;margin-bottom:16px}
 .elbiyahe-stamp-success b{display:block;color:var(--forest)}
 .elbiyahe-stamp-success span{font-weight:700;font-size:13px}
 .elbiyahe-stamp-success small{display:block;color:var(--muted)}
@@ -144,7 +144,7 @@
 .elbiyahe-stamp-cat.sage{background:var(--forest)}
 .elbiyahe-stamp-cat.maroon{background:var(--maroon)}
 .elbiyahe-stamp-cat.gold{background:#c9971f}
-.elbiyahe-stamp-cat.teal{background:#2E7D32}
+.elbiyahe-stamp-cat.teal{background:#2f6b4f}
 .elbiyahe-nearby-stamps ul{list-style:none;padding:0;margin:0}
 .elbiyahe-nearby-stamps li{display:flex;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid var(--line)}
 .elbiyahe-nearby-stamps li div{flex:1}
@@ -180,7 +180,7 @@
 .elbiyahe-hero-section h1{font-weight:700}
 .elbiyahe-hero-section .script{color:#c9971f}
 .elbiyahe-season-banner{display:flex;justify-content:space-between;align-items:center;gap:18px;background:var(--maroon);color:#fff;border-radius:18px;padding:20px 24px;margin:24px auto;flex-wrap:wrap}
-.elbiyahe-season-banner h2{color:#fff;font:700 22px 'Poppins',sans-serif;margin:6px 0}
+.elbiyahe-season-banner h2{color:#fff;font:700 22px 'Space Grotesk',sans-serif;margin:6px 0}
 .elbiyahe-season-banner .eyebrow{color:var(--ochre)}
 .elbiyahe-season-banner p{opacity:.9;margin:0;max-width:520px}
 .elbiyahe-happening-strip{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,1fr);gap:14px;overflow-x:auto;padding-bottom:6px}
@@ -196,7 +196,7 @@
 .elbiyahe-quick-icon{width:46px;height:46px;border-radius:12px;background:#eef3ec;display:grid;place-items:center;color:var(--forest)}
 .elbiyahe-quick-item small{position:absolute;top:8px;right:8px;font-size:9px;font-weight:800;letter-spacing:.05em;color:var(--muted);text-transform:uppercase}
 .elbiyahe-newsletter{display:flex;justify-content:space-between;align-items:center;gap:20px;background:var(--forest);color:var(--cream);border-radius:18px;padding:24px;margin:28px auto 0;flex-wrap:wrap}
-.elbiyahe-newsletter h2{color:#fff;font:700 22px 'Poppins',sans-serif;margin:6px 0}
+.elbiyahe-newsletter h2{color:#fff;font:700 22px 'Space Grotesk',sans-serif;margin:6px 0}
 .elbiyahe-newsletter .eyebrow{color:var(--ochre)}
 .elbiyahe-newsletter p{opacity:.85;margin:0}
 .elbiyahe-newsletter form{display:flex;gap:8px}
@@ -204,7 +204,7 @@
 
 .elbiyahe-coming-soon{text-align:center;padding:80px 0 120px;display:flex;flex-direction:column;align-items:center;gap:8px}
 .elbiyahe-coming-soon img{width:96px;height:96px;object-fit:contain;margin-bottom:8px}
-.elbiyahe-coming-soon h1{font:700 30px 'Poppins',sans-serif;color:var(--forest);margin:0}
+.elbiyahe-coming-soon h1{font:700 30px 'Space Grotesk',sans-serif;color:var(--forest);margin:0}
 .elbiyahe-cs-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;justify-content:center}
 
 @media (max-width:900px){
