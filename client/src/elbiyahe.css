@@ -347,4 +347,59 @@
   .elbiyahe-filters-toggle{display:inline-flex}
 }
 
+/* ===================== Delicacies page: hero + 3-column mockup layout ===================== */
+.elbiyahe-delicacies-hero{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:center;background:var(--forest);color:var(--cream);border-radius:18px;padding:28px;margin-bottom:26px}
+.elbiyahe-delicacies-hero .eyebrow{color:var(--ochre)}
+.elbiyahe-delicacies-hero h1{color:#fff;font:700 34px/1.1 'Space Grotesk',sans-serif;margin:6px 0}
+.elbiyahe-delicacies-hero h1 .script{color:var(--ochre);font-size:1.05em}
+.elbiyahe-delicacies-hero .muted{color:#dce7de}
+.elbiyahe-hero-stat-chip{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:10px 16px;margin-top:14px}
+.elbiyahe-hero-stat-chip b{display:block;font:800 18px 'Space Grotesk',sans-serif}
+.elbiyahe-hero-stat-chip span{font-size:11px;opacity:.85}
+.elbiyahe-delicacies-hero-media{border-radius:14px;overflow:hidden;height:220px}
+.elbiyahe-delicacies-hero-media img{width:100%;height:100%;object-fit:cover}
+
+/* filter rail extras: category counts, price group */
+.elbiyahe-radio{justify-content:space-between}
+.elbiyahe-radio-count{margin-left:auto;color:var(--muted);font-size:11px;font-weight:700}
+.elbiyahe-price-group{display:flex;gap:6px;margin:0 8px 14px}
+.elbiyahe-price-group button{flex:1;min-height:36px;border-radius:8px;border:1px solid var(--line);background:var(--paper);font-weight:700;font-size:12px}
+.elbiyahe-price-group button.active{background:var(--forest);color:#fff;border-color:var(--forest)}
+
+/* horizontal themed rows */
+.elbiyahe-row-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.elbiyahe-row-head h2{margin:0;font-size:15px;letter-spacing:.04em}
+.elbiyahe-hrow-wrap{position:relative}
+.elbiyahe-delicacy-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,1fr);gap:14px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:6px}
+.elbiyahe-delicacy-row>*{scroll-snap-align:start}
+.elbiyahe-hrow-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:1;width:32px;height:32px;border-radius:999px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);display:grid;place-items:center}
+.elbiyahe-hrow-arrow.left{left:-14px}
+.elbiyahe-hrow-arrow.right{right:-14px}
+
+/* delicacy card: bookmark over media, rating+distance foot */
+.elbiyahe-delicacy-card{position:relative}
+.elbiyahe-delicacy-card .elbiyahe-tour-card-media .elbiyahe-card-bookmark{position:absolute;top:10px;right:10px}
+.elbiyahe-delicacy-card .rating.sm{font-size:11px}
+.elbiyahe-delicacy-card .elbiyahe-tour-card-foot{gap:8px;flex-wrap:wrap}
+
+/* community CTA */
+.elbiyahe-community-cta{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-top:24px}
+.elbiyahe-community-cta h3{margin:0 0 2px;font-size:16px;color:var(--forest)}
+.elbiyahe-community-cta p{margin:0;color:var(--muted);font-size:13px}
+
+/* right rail: discover panel rows */
+.elbiyahe-discover-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.elbiyahe-discover-row:first-of-type{border-top:0}
+.elbiyahe-discover-row img{width:44px;height:44px;border-radius:10px;object-fit:cover;flex:none}
+.elbiyahe-discover-row b{display:block;font-size:13px}
+.elbiyahe-discover-row small{display:block;color:var(--muted);font-size:11px;margin:1px 0}
+
+@media(max-width:1150px){
+  .elbiyahe-delicacies-hero{grid-template-columns:1fr}
+  .elbiyahe-delicacies-hero-media{height:160px;order:-1}
+}
+@media(max-width:700px){
+  .elbiyahe-hrow-arrow{display:none}
+}
+
 @media (prefers-reduced-motion:reduce){.maplibregl-map *{transition:none!important}}

@@ -79,6 +79,12 @@ anything but a demo, confirm:
 - [ ] **Map tiles** — currently OpenStreetMap standard raster (keyless, but OSMF's tile policy
       discourages heavy app use). If traffic grows, move to a keyed provider (MapTiler / Protomaps /
       self-hosted) — `MAP_STYLE` in `client/src/components/LBMap.tsx` is the only change point. **S**
+- [ ] **Delicacy suggestions have no admin UI yet** — the Delicacies page's "Add a Recommendation" CTA
+      writes real rows to `delicacy_suggestions` (name/place/note/submitted_by), but there's no
+      `/admin/...` page to review them yet — admins currently need Supabase Studio. **S**
+- [ ] **Street Food category has 0 real Los Baños items** — no verifiable named street-food vendor was
+      found during the Delicacies research pass; the category exists in the filter/taxonomy but its
+      themed row stays hidden until a real one is sourced. **S**
 
 ---
 
