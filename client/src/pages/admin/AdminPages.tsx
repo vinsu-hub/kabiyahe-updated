@@ -547,7 +547,7 @@ export function AdminPassport() {
 const EMPTY_DELICACY = {
   id: "", slug: "", name: "", category: "Local Favorites", place: "", barangay: "", lat: "", lng: "",
   description: "", hero_image: "", price_tier: "1", rating: "", review_count: "0", tags: "",
-  source_url: "", featured: false,
+  dietary_tags: "", source_url: "", featured: false,
 };
 type DelicacyForm = typeof EMPTY_DELICACY;
 
@@ -565,14 +565,14 @@ export function AdminDelicacies() {
     place: row.place ?? "", barangay: row.barangay ?? "", lat: String(row.lat ?? ""), lng: String(row.lng ?? ""),
     description: row.description ?? "", hero_image: row.hero_image ?? "", price_tier: String(row.price_tier),
     rating: row.rating != null ? String(row.rating) : "", review_count: String(row.review_count),
-    tags: arrToCsv(row.tags), source_url: row.source_url ?? "",
+    tags: arrToCsv(row.tags), dietary_tags: arrToCsv(row.dietary_tags), source_url: row.source_url ?? "",
   } : { ...EMPTY_DELICACY });
 
   const save = async () => {
     if (!form) return;
     setSaving(true);
     try {
-      const { id, tags, ...f } = form;
+      const { id, tags, dietary_tags, ...f } = form;
       const row = {
         ...(id ? { id } : {}),
         ...f,
@@ -584,6 +584,7 @@ export function AdminDelicacies() {
         rating: f.rating ? Number(f.rating) : null,
         review_count: Number(f.review_count) || 0,
         tags: csvToArr(tags),
+        dietary_tags: csvToArr(dietary_tags),
         source_url: f.source_url || null,
       };
       await upsertRow<any>("delicacies", row);
@@ -625,7 +626,7 @@ export function AdminDelicacies() {
           <div className="admin-grid2">
             <Field label="Category">
               <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}>
-                {["Local Favorites", "Street Food", "Baked Goods", "Dairy & Desserts", "Market Finds"].map(c => <option key={c}>{c}</option>)}
+                {["Local Favorites", "Street Food", "Baked Goods", "Cafes & Desserts", "Filipino Classics", "Healthy Eats", "Drinks & Beverages", "Market Finds"].map(c => <option key={c}>{c}</option>)}
               </select>
             </Field>
             <Field label="Price tier (1-4)"><input value={form.price_tier} onChange={e => setForm({ ...form, price_tier: e.target.value })} /></Field>
@@ -645,6 +646,7 @@ export function AdminDelicacies() {
             <Field label="Review count"><input value={form.review_count} onChange={e => setForm({ ...form, review_count: e.target.value })} /></Field>
           </div>
           <Field label="Tags (comma-separated)"><input value={form.tags} onChange={e => setForm({ ...form, tags: e.target.value })} /></Field>
+          <Field label="Dietary tags (comma-separated — only what's explicitly verified, e.g. Vegetarian, Vegan)"><input value={form.dietary_tags} onChange={e => setForm({ ...form, dietary_tags: e.target.value })} /></Field>
           <Field label="Source URL"><input value={form.source_url} onChange={e => setForm({ ...form, source_url: e.target.value })} /></Field>
           <Field label="Featured"><input type="checkbox" checked={form.featured} onChange={e => setForm({ ...form, featured: e.target.checked })} /></Field>
         </Drawer>

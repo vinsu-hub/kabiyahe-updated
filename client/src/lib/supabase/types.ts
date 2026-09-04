@@ -160,7 +160,9 @@ export interface Profile {
   xp: number;
 }
 
-export type DelicacyCategory = "Local Favorites" | "Street Food" | "Baked Goods" | "Dairy & Desserts" | "Market Finds";
+export type DelicacyCategory =
+  | "Local Favorites" | "Street Food" | "Baked Goods" | "Cafes & Desserts"
+  | "Filipino Classics" | "Healthy Eats" | "Drinks & Beverages" | "Market Finds";
 
 export interface DelicacyRow {
   id: string;
@@ -177,6 +179,7 @@ export interface DelicacyRow {
   rating: number | null;
   review_count: number;
   tags: string[];
+  dietary_tags: string[];
   source_url: string | null;
   featured: boolean;
 }

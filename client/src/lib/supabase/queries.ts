@@ -231,6 +231,18 @@ export function useDelicacy(slug: string | undefined) {
   });
 }
 
+export function useSubmitDelicacySuggestion() {
+  const { user } = useAuth();
+  return useMutation({
+    mutationFn: async (input: { name: string; place: string; note: string }) => {
+      if (!user) throw new Error("auth");
+      const { error } = await supabase.from("delicacy_suggestions").insert({ ...input, submitted_by: user.id });
+      if (error) throw new Error(error.message);
+      return true;
+    },
+  });
+}
+
 /* ------------------------------------------------------------ accommodations */
 export function useAccommodations() {
   return useQuery({
