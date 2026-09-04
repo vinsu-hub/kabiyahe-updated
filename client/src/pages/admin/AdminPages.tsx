@@ -114,7 +114,7 @@ export function AdminDashboard() {
 const EMPTY_EVENT = {
   id: "", slug: "", title: "", category: "Community", season_key: "", status: "week",
   date_label: "", time_label: "", venue_name: "", barangay: "", lat: "", lng: "",
-  attendee_count: "0", organizer: "", description: "", hero_image: "",
+  attendee_count: "0", organizer: "", description: "", hero_image: "", featured: false,
 };
 type EventForm = typeof EMPTY_EVENT & { schedule: { time_label: string; item: string; state: string }[] };
 
@@ -134,7 +134,7 @@ export function AdminEvents() {
     attendee_count: String(row.attendee_count ?? 0),
     date_label: row.date_label ?? "", time_label: row.time_label ?? "",
     venue_name: row.venue_name ?? "", barangay: row.barangay ?? "", organizer: row.organizer ?? "",
-    description: row.description ?? "", hero_image: row.hero_image ?? "",
+    description: row.description ?? "", hero_image: row.hero_image ?? "", featured: row.featured ?? false,
     schedule: [...(row.event_schedule_items ?? [])].sort((a, b) => a.sort - b.sort)
       .map(s => ({ time_label: s.time_label, item: s.item, state: s.state ?? "" })),
   } : { ...EMPTY_EVENT, schedule: [] });
@@ -227,6 +227,10 @@ export function AdminEvents() {
           </div>
           <Field label="Description"><textarea rows={3} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} /></Field>
           <Field label="Hero image"><ImageField value={form.hero_image} onChange={url => setForm({ ...form, hero_image: url })} folder="events" /></Field>
+          <label className="admin-checkbox">
+            <input type="checkbox" checked={form.featured} onChange={e => setForm({ ...form, featured: e.target.checked })} />
+            Featured (shows in the Events page's Featured Event card)
+          </label>
           <Field label="Schedule">
             <RowsEditor
               rows={form.schedule}

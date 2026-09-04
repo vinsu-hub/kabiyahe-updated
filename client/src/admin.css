@@ -89,3 +89,6 @@ a .admin-stat:hover { border-color: var(--forest); }
   .admin-main { padding: 20px; }
   .admin-grid2 { grid-template-columns: 1fr; }
 }
+
+.admin-checkbox { display: flex; align-items: center; gap: 8px; margin: 4px 0 14px; font-size: 13px; font-weight: 600; }
+.admin-checkbox input { width: 16px; height: 16px; }

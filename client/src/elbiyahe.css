@@ -24,7 +24,9 @@
 .elbiyahe-page{padding:26px 0 70px}
 .elbiyahe-detail{padding:22px 0 90px;max-width:860px}
 .elbiyahe-page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:18px;flex-wrap:wrap}
-.elbiyahe-page-head h1{font:700 40px/1.05 'Space Grotesk',sans-serif;color:var(--forest);margin:6px 0 4px}
+.elbiyahe-page-head h1,.elbiyahe-events-hero-intro h1{font:700 40px/1.05 'Space Grotesk',sans-serif;color:var(--forest);margin:6px 0 4px}
+.elbiyahe-events-hero-intro .eyebrow{display:block}
+.elbiyahe-events-hero-intro .script{margin-top:0}
 .elbiyahe-page h2{font:700 22px 'Space Grotesk',sans-serif;color:var(--forest);margin:22px 0 12px}
 .elbiyahe-detail h1{font:700 32px/1.12 'Space Grotesk',sans-serif;color:var(--forest);margin:10px 0 6px}
 .elbiyahe-detail h2{font:700 20px 'Space Grotesk',sans-serif;color:var(--forest);margin:26px 0 12px}
@@ -207,7 +209,7 @@
 
 @media (max-width:900px){
   .elbiyahe-topbar nav{display:none}
-  .elbiyahe-page-head h1{font-size:32px}
+  .elbiyahe-page-head h1,.elbiyahe-events-hero-intro h1{font-size:32px}
 }
 @media (max-width:640px){
   .elbiyahe-season-banner,.elbiyahe-newsletter{flex-direction:column;align-items:flex-start}
@@ -261,5 +263,88 @@
 .elbiyahe-nearby-passport-card:hover{background:#e2ebde}
 .elbiyahe-nearby-passport-card b{display:block;font-size:13px}
 .elbiyahe-nearby-passport-card small{display:block;color:var(--muted);font-size:11px;text-transform:capitalize}
+
+/* ===================== Events page: hero + 3-column mockup layout ===================== */
+
+/* -- hero: intro | carousel | season callout -- */
+.elbiyahe-events-hero{display:grid;grid-template-columns:1fr 1.3fr 260px;gap:20px;align-items:stretch;margin-bottom:26px}
+.elbiyahe-events-hero-intro{display:flex;flex-direction:column;justify-content:center}
+.elbiyahe-hero-carousel{position:relative;border-radius:18px;overflow:hidden;min-height:220px;background:var(--forest)}
+.elbiyahe-hero-carousel img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.elbiyahe-hero-carousel-dots{position:absolute;right:14px;bottom:12px;display:flex;gap:6px;z-index:1}
+.elbiyahe-hero-carousel-dots button{width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.55);padding:0}
+.elbiyahe-hero-carousel-dots button.active{background:#fff;width:20px}
+.elbiyahe-season-callout{background:var(--forest);color:var(--cream);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:6px}
+.elbiyahe-season-callout .eyebrow{color:var(--ochre)}
+.elbiyahe-season-callout-title{display:flex;align-items:baseline;gap:8px;margin:2px 0}
+.elbiyahe-season-callout-title b{font:800 30px 'Space Grotesk',sans-serif}
+.elbiyahe-season-callout-title span{font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:.03em}
+.elbiyahe-season-callout p{opacity:.85;margin:0 0 10px;font-size:13px}
+.elbiyahe-season-callout .btn{border-color:rgba(255,255,255,.5);color:#fff;margin-top:auto}
+
+/* -- 3-column layout: filter rail | event list | widget rail -- */
+.elbiyahe-events-layout{display:grid;grid-template-columns:240px 1fr 300px;gap:24px;align-items:start}
+.elbiyahe-events-filter-rail{border-radius:14px;border:1px solid var(--line)}
+.elbiyahe-events-filter-rail .rail-title h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.elbiyahe-radio-group{display:grid;gap:8px;margin:0 8px 6px}
+.elbiyahe-radio{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink)}
+.elbiyahe-radio input{width:15px;height:15px;accent-color:var(--forest)}
+.elbiyahe-date-range{display:flex;gap:6px;margin:2px 8px 6px}
+.elbiyahe-date-range input{flex:1;min-width:0;height:34px;border-radius:8px;border:1px solid var(--line);padding:0 8px;font-size:12px}
+.elbiyahe-rail-select{width:calc(100% - 16px);margin:0 8px 10px;min-height:38px;border-radius:10px;border:1px solid var(--line);background:var(--paper);padding:0 10px;font-weight:600;color:var(--ink)}
+.elbiyahe-rail-select-wrap{display:flex;align-items:center;gap:6px;margin:0 8px;color:var(--muted)}
+.elbiyahe-rail-select-wrap .elbiyahe-rail-select{margin:0;flex:1}
+.elbiyahe-events-filter-rail>.btn{width:calc(100% - 16px);margin:14px 8px 8px}
+
+.elbiyahe-events-main-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.elbiyahe-results-count{font-size:13px;font-weight:600;color:var(--muted);margin:0}
+.elbiyahe-events-main-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.elbiyahe-filters-toggle{display:none}
+
+/* -- event cards: bookmark + View Details footer + avatar dots -- */
+.elbiyahe-event-card{position:relative}
+.elbiyahe-event-card-link{display:block;color:inherit;text-decoration:none}
+.elbiyahe-card-bookmark{position:absolute;top:10px;right:10px;z-index:1;width:30px;height:30px;border-radius:999px;background:rgba(255,255,255,.92);display:grid;place-items:center;color:var(--forest);box-shadow:var(--shadow)}
+.elbiyahe-card-bookmark.on{color:var(--ochre)}
+.elbiyahe-event-card-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 13px 14px}
+.elbiyahe-event-card-footer .btn{min-height:34px;padding:0 14px;font-size:12px}
+.elbiyahe-event-card-going{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-weight:600}
+.elbiyahe-avatar-dots{display:inline-flex}
+.elbiyahe-avatar-dots i{width:16px;height:16px;border-radius:999px;border:2px solid var(--paper);margin-left:-6px;display:inline-block}
+.elbiyahe-avatar-dots i:first-child{margin-left:0}
+
+/* -- right widget rail -- */
+.elbiyahe-widget-rail{display:flex;flex-direction:column;gap:16px}
+.elbiyahe-featured-card,.elbiyahe-newsletter-card,.elbiyahe-calendar-widget{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px}
+.elbiyahe-featured-card{display:flex;flex-direction:column;gap:4px}
+.elbiyahe-featured-card-media{border-radius:12px;overflow:hidden;height:150px;margin:6px 0 4px}
+.elbiyahe-featured-card-media img{width:100%;height:100%;object-fit:cover}
+.elbiyahe-featured-card h3{margin:2px 0 4px;font-size:17px}
+.elbiyahe-featured-card .btn{width:100%;margin-top:6px}
+
+.elbiyahe-newsletter-card{background:var(--forest);color:var(--cream);display:flex;flex-direction:column;gap:8px}
+.elbiyahe-newsletter-card h4{color:#fff;margin:0;font:700 16px 'Space Grotesk',sans-serif}
+.elbiyahe-newsletter-card p{margin:0;opacity:.85;font-size:12px}
+.elbiyahe-newsletter-card input{min-height:40px;border-radius:10px;border:0;padding:0 12px;background:#fff;color:#1c1c1c}
+.elbiyahe-newsletter-card .btn{width:100%}
+
+.elbiyahe-calendar-widget-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.elbiyahe-calendar-widget-head h4{margin:0;font-size:11px;letter-spacing:.06em;color:var(--muted)}
+.elbiyahe-calendar-widget-nav{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--forest)}
+.elbiyahe-calendar-widget-nav button{width:22px;height:22px;border-radius:999px;background:#eef3ec;display:grid;place-items:center}
+.elbiyahe-calendar-widget-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;margin-bottom:10px}
+.elbiyahe-calendar-widget-dow{font-size:10px;color:var(--muted);font-weight:700}
+.elbiyahe-calendar-widget-day{position:relative;height:30px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:12px;font-weight:600}
+.elbiyahe-calendar-widget-day.today{background:var(--forest);color:#fff}
+.elbiyahe-calendar-widget-day i{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:999px;background:var(--ochre)}
+.elbiyahe-calendar-widget-day.today i{background:#fff}
+
+@media(max-width:1150px){
+  .elbiyahe-events-hero{grid-template-columns:1fr;gap:14px}
+  .elbiyahe-hero-carousel{min-height:180px}
+  .elbiyahe-events-layout{display:block}
+  .elbiyahe-widget-rail{margin-top:20px}
+  .elbiyahe-filters-toggle{display:inline-flex}
+}
 
 @media (prefers-reduced-motion:reduce){.maplibregl-map *{transition:none!important}}
