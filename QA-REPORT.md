@@ -1,5 +1,15 @@
 # El-Biyahe! — Phase 11 + 12 QA Report
 
+> **Resolution (2026-09-04):** user approved all findings. Fixed in 3 commits
+> (`95f0aa1` responsive, `805d339` correctness/a11y/polish, `e2f3ea5` scenes + seed data)
+> plus asset-pipeline + Vercel commits. **Deferred:** #9 full save-persistence
+> (SaveButton stays local-only; `/saved` now shows an honest empty state), #22 dead-CSS
+> cleanup (out-of-scope risk), #24 regional-destinations framing (product call).
+> Re-verified: `pnpm check` + `build` clean, Explore no overflow 768–1200, mobile Filters
+> reveals the rail, modals close on Escape, write flows 8/8, admin CRUD + RLS pass,
+> zero console errors. Merged to `main`, deployed → **https://el-biyahe.vercel.app**
+
+
 Branch `rebrand/el-biyahe` · 2026-09-04 · automated sweep + manual screenshot review
 
 **Method**
