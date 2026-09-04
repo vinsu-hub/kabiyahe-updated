@@ -19,7 +19,7 @@ import {
 // `pnpm assets:download` (pulls the verified GitHub-release archive). El-Biyahe! logo
 // art is committed under client/public/brand/.
 const IMG = {
-  hero: "/assets/kabiyahe-hero-laguna_e334210c.jpg",
+  hero: "/assets/elbiyahe-hero-losbanos.jpg",
   emblem: "/brand/elbiyahe-mark.png",
   logoH: "/brand/elbiyahe-logo-horizontal.png",
 };
@@ -31,6 +31,33 @@ const formatFileSize = (bytes: number) => bytes < 1024 * 1024 ? `${Math.max(1, M
 // Destinations now live in Supabase (see lib/supabase/queries.ts useDestinations/useDestination).
 // icon_key on each row resolves to one of these lucide icons for display.
 const DESTINATION_ICONS: Record<string, any> = { Mountain, Landmark, Sparkles, Compass, Utensils, WalletCards };
+
+// Attribution for the Wikimedia Commons destination photos (see
+// scripts/destination-photo-manifest.json). Shown under the gallery on the
+// destination detail page; generic Laguna stock images carry no credit line.
+const PHOTO_CREDITS: Record<string, string> = {
+  "/assets/elbiyahe-pagsanjan-falls.jpg": "Andrew Martin, CC BY 3.0, via Wikimedia Commons",
+  "/assets/elbiyahe-caliraya-lake.jpg": "Maestrocuerdo, CC BY-SA 4.0, via Wikimedia Commons",
+  "/assets/elbiyahe-majayjay-church.jpg": "Ralff Nestor Nacor, CC BY-SA 4.0, via Wikimedia Commons",
+  "/assets/elbiyahe-los-banos-hot-springs.jpg": "Ramon FVelasquez, CC BY-SA 3.0, via Wikimedia Commons",
+  "/assets/elbiyahe-nuvali-lakeside.jpg": "RioHondo, CC BY-SA 3.0, via Wikimedia Commons",
+  "/assets/elbiyahe-rizal-shrine.jpg": "RaywollesenFortes, CC BY-SA 4.0, via Wikimedia Commons",
+  "/assets/elbiyahe-seven-crater-lakes.jpg": "Patrickroque01, CC BY-SA 4.0, via Wikimedia Commons",
+  "/assets/elbiyahe-mount-makiling.jpg": "Florante A. Cruz, CC BY-SA 4.0, via Wikimedia Commons",
+  "/assets/elbiyahe-makiling-trail.jpg": "Twentyone-ways-to, CC BY-SA 4.0, via Wikimedia Commons",
+  "/assets/elbiyahe-makiling-mud-spring.jpg": "Andrew Martin, CC BY 3.0, via Wikimedia Commons",
+  "/assets/elbiyahe-paete-church.jpg": "Carlo Joseph Moskito, CC BY-SA 4.0, via Wikimedia Commons",
+  "/assets/elbiyahe-enchanted-kingdom.jpg": "LMP 2001, public domain, via Wikimedia Commons",
+  "/assets/elbiyahe-makiling-botanic-gardens.jpg": "A.C.T. Alejandre, CC BY-SA 4.0, via Wikimedia Commons",
+  "/assets/elbiyahe-uplb-mnh.jpg": "Florante A. Cruz, CC BY-SA 4.0, via Wikimedia Commons",
+  "/assets/elbiyahe-uplb-fertility-tree.jpg": "Ralff Nestor Nacor, CC BY-SA 4.0, via Wikimedia Commons",
+  "/assets/elbiyahe-uplb-campus.jpg": "Patrick Roque, CC BY-SA 4.0, via Wikimedia Commons",
+  "/assets/elbiyahe-riceworld-museum.jpg": "IRRI, CC BY 2.0, via Wikimedia Commons",
+  "/assets/elbiyahe-st-therese-church.jpg": "Julia Sumangil, CC BY 2.0, via Wikimedia Commons",
+  "/assets/elbiyahe-san-antonio-parish.jpg": "Elmer B. Domingo, CC BY-SA 4.0, via Wikimedia Commons",
+  "/assets/elbiyahe-los-banos-municipal-hall.jpg": "Ralff Nestor Nacor, CC BY-SA 4.0, via Wikimedia Commons",
+  "/assets/elbiyahe-los-banos-public-market.jpg": "Ralff Nestor Nacor, CC BY-SA 4.0, via Wikimedia Commons",
+};
 
 const airbnbLosBanosUrl = "https://www.airbnb.com/s/Los-Banos--Laguna--Philippines/homes";
 const localSpots = [
@@ -263,7 +290,7 @@ function DestinationDetail({id}:{id?:string}) {
   if (isLoading) return <><Header/><main className="container detail-page"><div className="elbiyahe-loading" role="status">Loading…</div></main><BottomNav/></>;
   if (error || !d) return <><Header/><main className="container detail-page"><div className="empty-state"><h3>Couldn't find that destination.</h3><Button href="/explore">Back to Explore</Button></div></main><BottomNav/></>;
   const gallery = d.gallery.length ? d.gallery : [d.hero_image || IMG.hero];
-  return <><Header/><main className="container detail-page"><Link href="/explore" className="back-link"><ArrowLeft size={16}/> Back to Explore</Link><section className="detail-hero"><img src={gallery[photo]} alt={d.name}/><div className="detail-hero-copy"><div><Tag>{d.type}</Tag>{d.placeholder?<Tag tone="ochre">Placeholder listing</Tag>:d.verified?<Tag tone="ochre">Research-backed</Tag>:<Tag tone="ochre">Curated place</Tag>}</div><h1>{d.name}</h1><p className="muted"><MapPin size={16}/> {d.place} {d.rating&&<><span>·</span> <span className="rating"><Star size={15} fill="currentColor"/> {d.rating} ({d.review_count})</span></>}</p></div><SaveButton label="Save destination"/><button className="share-image" aria-label="Share destination" onClick={()=>notify("Destination link copied to clipboard.")}><Share2 size={18}/></button></section><div className="gallery-strip">{gallery.map((image,i)=><button className={i===photo?"active":""} onClick={()=>setPhoto(i)} key={image}><img src={image} alt={`${d.name} view ${i+1}`}/></button>)}</div><div className="detail-layout"><section className="detail-copy"><h2>About</h2><p>{d.description} Experience a place where local stories, fresh air, and a slower pace make room for the moments you remember long after the trip.</p><h2>Details</h2><div className="detail-facts"><span><b>Address</b>{d.place}</span><span><b>Opening hours</b>{d.placeholder?"To be verified":"Check venue before visiting"}</span><span><b>Price range</b>{"₱".repeat(d.price_tier)} · {d.placeholder?"Preview only":"Indicative"}</span><span><b>Recommended duration</b>2–3 hours</span></div><h2>Good for</h2><div>{d.tags.map(t=><Tag key={t}>{t}</Tag>)}</div><div className="location-card"><div className="map-field small-map"><div className="map-copy">{d.name}<br/><small>Laguna</small></div><span className="pin nature">⌖</span></div><Button variant="outline" onClick={()=>notify("Opening map preview for this destination.")}><Map size={15}/> View on Map</Button></div></section><aside className="detail-aside"><div className="side-card action-card"><h2>Make it a trip</h2><Button href="/events"><CalendarDays size={16}/> What's on nearby</Button><Button href="/passport" variant="secondary"><Landmark size={16}/> Passport spots</Button><Button href="/ride-guide" variant="secondary"><Navigation size={16}/> How to get here</Button></div><div className="side-card booking-card"><p className="eyebrow">BOOKING</p><h2>Book directly with the venue.</h2><p>El-Biyahe! links you to the venue's own channel and never processes payment.</p><Button variant="outline ochre" onClick={()=>notify("External booking link ready — this will open the venue site.")}><ExternalLink size={15}/> Book / Reserve</Button></div></aside></div></main><BottomNav/></> }
+  return <><Header/><main className="container detail-page"><Link href="/explore" className="back-link"><ArrowLeft size={16}/> Back to Explore</Link><section className="detail-hero"><img src={gallery[photo]} alt={d.name}/><div className="detail-hero-copy"><div><Tag>{d.type}</Tag>{d.placeholder?<Tag tone="ochre">Placeholder listing</Tag>:d.verified?<Tag tone="ochre">Research-backed</Tag>:<Tag tone="ochre">Curated place</Tag>}</div><h1>{d.name}</h1><p className="muted"><MapPin size={16}/> {d.place} {d.rating&&<><span>·</span> <span className="rating"><Star size={15} fill="currentColor"/> {d.rating} ({d.review_count})</span></>}</p></div><SaveButton label="Save destination"/><button className="share-image" aria-label="Share destination" onClick={()=>notify("Destination link copied to clipboard.")}><Share2 size={18}/></button></section><div className="gallery-strip">{gallery.map((image,i)=><button className={i===photo?"active":""} onClick={()=>setPhoto(i)} key={image}><img src={image} alt={`${d.name} view ${i+1}`}/></button>)}</div>{PHOTO_CREDITS[gallery[photo]]&&<p className="muted" style={{fontSize:12,marginTop:6}}>Photo: {PHOTO_CREDITS[gallery[photo]]}</p>}<div className="detail-layout"><section className="detail-copy"><h2>About</h2><p>{d.description} Experience a place where local stories, fresh air, and a slower pace make room for the moments you remember long after the trip.</p><h2>Details</h2><div className="detail-facts"><span><b>Address</b>{d.place}</span><span><b>Opening hours</b>{d.placeholder?"To be verified":"Check venue before visiting"}</span><span><b>Price range</b>{"₱".repeat(d.price_tier)} · {d.placeholder?"Preview only":"Indicative"}</span><span><b>Recommended duration</b>2–3 hours</span></div><h2>Good for</h2><div>{d.tags.map(t=><Tag key={t}>{t}</Tag>)}</div><div className="location-card"><div className="map-field small-map"><div className="map-copy">{d.name}<br/><small>Laguna</small></div><span className="pin nature">⌖</span></div><Button variant="outline" onClick={()=>notify("Opening map preview for this destination.")}><Map size={15}/> View on Map</Button></div></section><aside className="detail-aside"><div className="side-card action-card"><h2>Make it a trip</h2><Button href="/events"><CalendarDays size={16}/> What's on nearby</Button><Button href="/passport" variant="secondary"><Landmark size={16}/> Passport spots</Button><Button href="/ride-guide" variant="secondary"><Navigation size={16}/> How to get here</Button></div><div className="side-card booking-card"><p className="eyebrow">BOOKING</p><h2>Book directly with the venue.</h2><p>El-Biyahe! links you to the venue's own channel and never processes payment.</p><Button variant="outline ochre" onClick={()=>notify("External booking link ready — this will open the venue site.")}><ExternalLink size={15}/> Book / Reserve</Button></div></aside></div></main><BottomNav/></> }
 
 function Modal({title,onClose,children}:{title:string;onClose:()=>void;children:React.ReactNode}) { return <div className="modal-backdrop" onClick={onClose}><div className="modal" onClick={e=>e.stopPropagation()}><div className="modal-head"><h2>{title}</h2><button onClick={onClose} aria-label="Close dialog"><X size={18}/></button></div>{children}</div></div> }
 function Account({savedOnly=false}:{savedOnly?:boolean}) {

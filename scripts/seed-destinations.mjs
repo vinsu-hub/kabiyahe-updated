@@ -5,15 +5,10 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(process.env.VITE_SUPABASE_URL, process.env.SUPABASE_SECRET_KEY);
 
-const IMG = {
-  hero: "/assets/kabiyahe-hero-laguna_e334210c.jpg",
-  lake: "/assets/kabiyahe-calinaya-lake_96b9ff18.jpg",
-  falls: "/assets/kabiyahe-pagsanjan-falls_bd37de01.jpg",
-  sunset: "/assets/kabiyahe-bundles-sunset_99ff267e.jpg",
-  enchantedKingdom: "/assets/enchanted-kingdom_a3aaee52.jpg",
-  alFresco: "/assets/al-fresco-springs_c60eb0da.jpg",
-  laresio: "/assets/laresio-lakeside_049170eb.jpg",
-};
+// NOTE: per-row `image`/`gallery` below are legacy and now ignored — photos are
+// assigned by slug in IMAGE_BY_SLUG further down. Kept only so the raw records
+// stay a verbatim copy of the original App.tsx array.
+const IMG = new Proxy({}, { get: () => "/assets/elbiyahe-hero-losbanos.jpg" });
 
 const slugify = v => v.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
@@ -55,15 +50,62 @@ const raw = [
   { name: "Olivarez Plaza", place: "Los Baños, Laguna", image: IMG.lake, gallery: [IMG.lake, IMG.sunset, IMG.hero], type: "Attractions", icon: "Compass", description: "A central public-space lead surfaced in Los Baños landmark references. Confirm current activity, events, and access before visiting.", tags: ["Community", "Culture", "Budget Friendly"], price: 1 },
 ];
 
-const rows = raw.map(d => ({
-  slug: slugify(d.name),
+// Phase 10: destination photos, sourced from Wikimedia Commons (free licenses).
+// Per-image attribution: scripts/destination-photo-manifest.json. Slugs without an
+// accurate free photo intentionally fall back to a generic Laguna image.
+const A = f => `/assets/elbiyahe-${f}.jpg`;
+const GENERIC = { hero: A("hero-losbanos"), lake: A("laguna-lake"), sunset: A("laguna-sunset") };
+// NB: slugify() does not transliterate "ñ", so "Los Baños ..." rows carry the
+// slug "los-ba-os-..." (matching the original migration) — keys below reflect that.
+const IMAGE_BY_SLUG = {
+  "pagsanjan-falls": A("pagsanjan-falls"),
+  "caliraya-lake": A("caliraya-lake"),
+  "majayjay-church": A("majayjay-church"),
+  "los-ba-os-hot-springs": A("los-banos-hot-springs"),
+  "nuvali-lakeside": A("nuvali-lakeside"),
+  "bato-resort": GENERIC.lake,
+  "danielitos-home-kitchen": GENERIC.sunset,
+  "malayas-cafe": GENERIC.sunset,
+  "rizal-shrine": A("rizal-shrine"),
+  "seven-crater-lakes": A("seven-crater-lakes"),
+  "mount-makiling": A("mount-makiling"),
+  "paete-woodcarving-heritage": A("paete-church"),
+  "enchanted-kingdom": A("enchanted-kingdom"),
+  "seda-nuvali": A("nuvali-lakeside"),
+  "sol-y-viento-hotels-and-resorts": A("los-banos-hot-springs"),
+  "diwata-nature-resort": GENERIC.hero,
+  "splash-mountain-resort": A("los-banos-hot-springs"),
+  "dampalit-falls": A("makiling-trail"),
+  "al-fresco-springs": A("al-fresco-springs"),
+  "laresio-lakeside-resort-spa": A("laresio-lakeside"),
+  "makiling-botanic-gardens": A("makiling-botanic-gardens"),
+  "uplb-museum-of-natural-history": A("uplb-mnh"),
+  "uplb-fertility-tree": A("uplb-fertility-tree"),
+  "sining-makiling-gallery": A("uplb-campus"),
+  "makiling-mud-spring": A("makiling-mud-spring"),
+  "flat-rocks": A("makiling-trail"),
+  "irri-riceworld-museum": A("riceworld-museum"),
+  "philippine-carabao-center-at-uplb": A("uplb-campus"),
+  "diocesan-shrine-of-st-therese-of-the-child-jesus": A("st-therese-church"),
+  "san-antonio-de-padua-parish": A("san-antonio-parish"),
+  "los-ba-os-municipal-hall-history": A("los-banos-municipal-hall"),
+  "los-ba-os-public-market": A("los-banos-public-market"),
+  "olivarez-plaza": GENERIC.hero,
+};
+
+const rows = raw.map(d => {
+  const slug = slugify(d.name);
+  const hero = IMAGE_BY_SLUG[slug] || GENERIC.hero;
+  const gallery = [...new Set([hero, GENERIC.lake, GENERIC.sunset])];
+  return {
+  slug,
   name: d.name,
   place: d.place,
   type: d.type,
   icon_key: d.icon,
   description: d.description,
-  hero_image: d.image,
-  gallery: d.gallery,
+  hero_image: hero,
+  gallery,
   rating: d.rating ? Number(d.rating) : null,
   review_count: d.reviews ? Number(d.reviews) : null,
   tags: d.tags,
@@ -71,7 +113,8 @@ const rows = raw.map(d => ({
   placeholder: Boolean(d.placeholder),
   verified: Boolean(d.verified),
   featured: featuredNames.has(d.name),
-}));
+  };
+});
 
 const { error } = await supabase.from("destinations").upsert(rows, { onConflict: "slug" });
 if (error) { console.error(error.message); process.exitCode = 1; }
