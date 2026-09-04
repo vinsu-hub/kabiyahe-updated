@@ -1,5 +1,17 @@
 # Progress Log
 
+## 2026-09-04 (Phases 11 + 12 of the El-Biyahe! rebrand — QA sweep + batch fix, branch `rebrand/el-biyahe`)
+- Built 4 QA scripts: `qa-responsive.mjs` (24 routes × 7 breakpoints, 150 screenshots, console/network capture), `qa-interactions.mjs` (every control clicked + overlay pass), `qa-writeflows.mjs` (all 5 write flows + DB row checks + RLS), `qa-admin-crud.mjs` (representative create/edit/delete + RLS). `QA-REPORT.md` catalogued 24 findings
+- **All 8 write-flow checks pass** (RSVP on/off, tour reserve, accommodation reserve, passport scan valid+invalid, RLS blocks anon); admin CRUD create/delete + RLS pass; zero image 404s; only real console error was the guest-redirect one (fixed)
+- **Batch fix — 3 commits**, user approved all findings:
+  - `fix: responsive` — Explore's desktop-only layout now stacks ≤1150px and the mobile "Filters" button works (was dead — Tags/Price unreachable <700px); hero contrast in the 701–1050 band; admin nav at 820px
+  - `fix: correctness/a11y/polish` — Account redirect moved to `useEffect` (was setState-in-render); `/saved` shows an honest empty state not a Profile clone; both modals close on Escape + `role=dialog`; passport demo codes `El-Biyahe!YAHE-*` → `ELBIYAHE-*`; passport `/30` → real count; Sign-out button class `button`→`btn`; NotFound quick links; honest no-URL reserve toast; card MapPin alignment; admin dashboard Destinations tile
+  - `fix: scenes + seed data` — stripped baked caption text from all 10 scene SVGs + moved the sun blob off the hero action buttons + dropped leftover Poppins; demo world advanced to Sibol season / Sep 2026 (no more "LIVE NOW" on Feb dates); tour operator "El-Biyahe! Discovery Tours" → "Laguna Discovery Tours"; passport spot "Los Baños Museum" → "Old Los Baños Train Station"; hot-springs copy; accommodation `booking_referral_url`s set; test-account display names off "ELBI Tester"
+- Re-verified: `pnpm check` + `pnpm build` clean; Explore no overflow at 768/900/1024/1200; mobile Filters reveals the rail; scan modal closes on Escape; no console errors; write flows still 8/8
+- **Deferred** (documented, not blockers): #9 full save-persistence (SaveButton still local-only — `/saved` now honest); #22 dead-CSS cleanup (~55% of index.css, out-of-scope risk); #24 "Explore Los Baños" vs regional-Laguna-destinations framing (product call, pre-existing)
+- Merged `rebrand/el-biyahe` → `main` and deployed to Vercel
+
+
 ## 2026-09-04 (Phase 10 of the El-Biyahe! rebrand — photo sourcing, on branch `rebrand/el-biyahe`)
 - `gh auth` for `vinsu-hub` is now valid (user re-logged in), so Phase 10 unblocked
 - Sourced **21 accurately-representative destination photos** from Wikimedia Commons (all free licenses: CC BY / CC BY-SA / CC0 / Public Domain) via the Commons API, replacing the 7 generic stock photos that had been shared across all 33 destinations. Destinations with no accurate free photo (bato-resort, the 2 placeholder cafes, diwata, splash-mountain, dampalit, sol-y-viento, olivarez) deliberately keep a generic Laguna image rather than a fabricated match — sol-y-viento/splash-mountain reuse the real Los Baños hot-spring photo since they are hot-spring resorts
