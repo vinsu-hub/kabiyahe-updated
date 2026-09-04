@@ -12,8 +12,10 @@ Start the app with `pnpm dev`. The fetcher downloads 26 web-sized JPEGs (21 dest
 photos plus 5 generic Laguna images) into `client/public/assets/`. The local asset
 directory is intentionally gitignored so deployment does not package duplicate binaries.
 
-Source: the public GitHub Release [El-Biyahe! stock images v2.0.0](https://github.com/vinsu-hub/el-biyahe-stock-images/releases/tag/v2.0.0)
-(`el-biyahe-stock-images-v2.0.0.zip`, SHA-256 `de37a30255bb755baa16e44c158cb669bf5f66bf7002c04433d5810c1128adac`).
+Source: the individual `.jpg` assets on the public GitHub Release
+[El-Biyahe! stock images v2.0.0](https://github.com/vinsu-hub/el-biyahe-stock-images/releases/tag/v2.0.0)
+(fetched one-by-one so the Vercel build needs no unzip binary; the bundled
+`el-biyahe-stock-images-v2.0.0.zip`, SHA-256 `de37a30255bb755baa16e44c158cb669bf5f66bf7002c04433d5810c1128adac`, is also attached).
 Every destination photo is from Wikimedia Commons under a free licence (CC BY, CC BY-SA,
 CC0, or Public Domain); per-image attribution is in
 [`scripts/destination-photo-manifest.json`](scripts/destination-photo-manifest.json) and

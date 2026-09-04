@@ -1,25 +1,21 @@
 /**
  * Downloads the web-sized stock photos into the gitignored `client/public/assets/`
- * directory so a fresh clone has imagery without packaging binaries in the repo.
+ * directory so a fresh clone (and the Vercel build) has imagery without packaging
+ * binaries in the repo.
  *
- * Source: the public GitHub Release `v2.0.0` for vinsu-hub/el-biyahe-stock-images.
- * Per-image attribution lives in scripts/destination-photo-manifest.json.
- * (The old vinsu-hub/kabiyahe-updated `v1.0.0-stock-images` release is kept as a
- * documented fallback but is no longer used.)
+ * Source: the individual assets on the public GitHub Release `v2.0.0` for
+ * vinsu-hub/el-biyahe-stock-images. Per-image attribution lives in
+ * scripts/destination-photo-manifest.json. Downloading files individually (rather
+ * than one zip) keeps this platform-independent — no unzip binary required.
  *
  *   pnpm assets:download
  */
-import { createHash } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { execFileSync } from "node:child_process";
-import os from "node:os";
-import { existsSync, rmSync } from "node:fs";
 
-const RELEASE_ZIP =
-  process.env.ELBIYAHE_ASSET_ZIP_URL ||
-  "https://github.com/vinsu-hub/el-biyahe-stock-images/releases/download/v2.0.0/el-biyahe-stock-images-v2.0.0.zip";
-const ZIP_SHA256 = "de37a30255bb755baa16e44c158cb669bf5f66bf7002c04433d5810c1128adac";
+const RELEASE_BASE =
+  process.env.ELBIYAHE_ASSET_BASE_URL ||
+  "https://github.com/vinsu-hub/el-biyahe-stock-images/releases/download/v2.0.0";
 const outputDir = path.resolve(process.env.ELBIYAHE_LOCAL_ASSET_DIR || "./client/public/assets");
 
 const FILES = [
@@ -51,55 +47,34 @@ const FILES = [
   "elbiyahe-laresio-lakeside.jpg",
 ];
 
-const tmp = path.join(os.tmpdir(), `kabiyahe-stock-${Date.now()}`);
+async function fetchWithRetry(url, tries = 3) {
+  for (let i = 1; i <= tries; i++) {
+    try {
+      const res = await fetch(url, { redirect: "follow" });
+      if (res.ok) return Buffer.from(await res.arrayBuffer());
+      if (res.status < 500 && res.status !== 429) throw new Error(`${res.status} ${res.statusText}`);
+    } catch (e) {
+      if (i === tries) throw e;
+    }
+    await new Promise(r => setTimeout(r, 800 * i));
+  }
+  throw new Error("unreachable");
+}
 
 async function main() {
   await mkdir(outputDir, { recursive: true });
-  await mkdir(tmp, { recursive: true });
-  const zipPath = path.join(tmp, "stock.zip");
-
-  console.log(`Downloading ${RELEASE_ZIP}`);
-  const res = await fetch(RELEASE_ZIP, { redirect: "follow" });
-  if (!res.ok) throw new Error(`Download failed: ${res.status} ${res.statusText}`);
-  const buf = Buffer.from(await res.arrayBuffer());
-
-  const sha = createHash("sha256").update(buf).digest("hex");
-  if (sha !== ZIP_SHA256) throw new Error(`Checksum mismatch:\n  expected ${ZIP_SHA256}\n  got      ${sha}`);
-  console.log(`SHA-256 verified: ${sha}`);
-  await writeFile(zipPath, buf);
-
-  // Extract with a platform-native unzipper.
-  if (process.platform === "win32") {
-    execFileSync(
-      "powershell",
-      ["-NoProfile", "-Command", `Expand-Archive -LiteralPath '${zipPath}' -DestinationPath '${tmp}' -Force`],
-      { stdio: "inherit" },
-    );
-  } else {
-    try {
-      execFileSync("unzip", ["-o", "-q", zipPath, "-d", tmp], { stdio: "inherit" });
-    } catch {
-      execFileSync("tar", ["-xf", zipPath, "-C", tmp], { stdio: "inherit" });
-    }
-  }
-
-  const imagesDir = path.join(tmp, "el-biyahe-stock-release", "images");
+  let ok = 0;
   for (const file of FILES) {
-    const src = path.join(imagesDir, file);
-    if (!existsSync(src)) throw new Error(`Missing ${file} in archive`);
-    await writeFile(path.join(outputDir, file), await (await import("node:fs/promises")).readFile(src));
-    console.log(`  ✓ ${file}`);
+    const buf = await fetchWithRetry(`${RELEASE_BASE}/${file}`);
+    if (buf.length < 1024) throw new Error(`${file}: suspiciously small (${buf.length} bytes)`);
+    await writeFile(path.join(outputDir, file), buf);
+    ok++;
+    console.log(`  ✓ ${file} (${(buf.length / 1024).toFixed(0)} KB)`);
   }
-  console.log(`\nSaved ${FILES.length} assets to ${outputDir}`);
+  console.log(`\nSaved ${ok}/${FILES.length} assets to ${outputDir}`);
 }
 
-main()
-  .catch((err) => {
-    console.error(err.message || err);
-    process.exitCode = 1;
-  })
-  .finally(() => {
-    try {
-      rmSync(tmp, { recursive: true, force: true });
-    } catch {}
-  });
+main().catch(err => {
+  console.error(err.message || err);
+  process.exitCode = 1;
+});

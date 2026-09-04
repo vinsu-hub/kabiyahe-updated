@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "node scripts/fetch-local-assets.mjs && vite build",
+  "buildCommand": "node scripts/fetch-local-assets.mjs && vite build", "installCommand": "pnpm install --no-frozen-lockfile",
   "outputDirectory": "dist/public",
   "rewrites": [{ "source": "/((?!assets/|brand/|scenes/|__manus__/).*)", "destination": "/index.html" }]
 }

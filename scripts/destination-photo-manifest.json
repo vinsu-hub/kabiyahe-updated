@@ -3,12 +3,15 @@
   "release": {
     "repo": "vinsu-hub/el-biyahe-stock-images",
     "tag": "v2.0.0",
-    "archiveRoot": "el-biyahe-stock-release/images"
+    "archiveRoot": "el-biyahe-stock-release/images",
+    "archiveNote": "individual assets on the v2.0.0 release"
   },
   "images": [
     {
       "file": "elbiyahe-pagsanjan-falls.jpg",
-      "destinations": ["pagsanjan-falls"],
+      "destinations": [
+        "pagsanjan-falls"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:Pagsanjan_Falls,_Laguna,_Philippines_-_panoramio.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/a/af/Pagsanjan_Falls%2C_Laguna%2C_Philippines_-_panoramio.jpg",
       "title": "Pagsanjan Falls, Laguna, Philippines",
@@ -18,7 +21,9 @@
     },
     {
       "file": "elbiyahe-caliraya-lake.jpg",
-      "destinations": ["caliraya-lake"],
+      "destinations": [
+        "caliraya-lake"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:Caliraya,_Laguna.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Caliraya%2C_Laguna.jpg",
       "title": "Caliraya, Laguna",
@@ -28,7 +33,9 @@
     },
     {
       "file": "elbiyahe-majayjay-church.jpg",
-      "destinations": ["majayjay-church"],
+      "destinations": [
+        "majayjay-church"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:Majayjay_Church,_Laguna,_Jul_2024.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Majayjay_Church%2C_Laguna%2C_Jul_2024.jpg",
       "title": "Majayjay Church, Laguna, Jul 2024",
@@ -38,7 +45,9 @@
     },
     {
       "file": "elbiyahe-los-banos-hot-springs.jpg",
-      "destinations": ["los-banos-hot-springs"],
+      "destinations": [
+        "los-banos-hot-springs"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:Pansoljf8615_08.JPG",
       "source": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Pansoljf8615_08.JPG",
       "title": "Pansol hot spring resort area, Laguna",
@@ -48,7 +57,10 @@
     },
     {
       "file": "elbiyahe-nuvali-lakeside.jpg",
-      "destinations": ["nuvali-lakeside", "seda-nuvali"],
+      "destinations": [
+        "nuvali-lakeside",
+        "seda-nuvali"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:The_wake_park_at_Nuvali_near_Santa_Rosa,_Laguna.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/6/6a/The_wake_park_at_Nuvali_near_Santa_Rosa%2C_Laguna.jpg",
       "title": "The wake park at Nuvali near Santa Rosa, Laguna",
@@ -58,7 +70,9 @@
     },
     {
       "file": "elbiyahe-rizal-shrine.jpg",
-      "destinations": ["rizal-shrine"],
+      "destinations": [
+        "rizal-shrine"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:Rizal_Shrine_Calamba.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Rizal_Shrine_Calamba.jpg",
       "title": "Rizal Shrine Calamba",
@@ -68,7 +82,9 @@
     },
     {
       "file": "elbiyahe-seven-crater-lakes.jpg",
-      "destinations": ["seven-crater-lakes"],
+      "destinations": [
+        "seven-crater-lakes"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:Sampaloc_Lake,_Mount_Banahaw_with_balls_(San_Pablo,_Laguna;_10-08-2022).jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/d/d7/Sampaloc_Lake%2C_Mount_Banahaw_with_balls_%28San_Pablo%2C_Laguna%3B_10-08-2022%29.jpg",
       "title": "Sampaloc Lake, Mount Banahaw (San Pablo, Laguna)",
@@ -78,7 +94,9 @@
     },
     {
       "file": "elbiyahe-mount-makiling.jpg",
-      "destinations": ["mount-makiling"],
+      "destinations": [
+        "mount-makiling"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:Mount_Makiling_in_Los_Banos.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/7/73/Mount_Makiling_in_Los_Banos.jpg",
       "title": "Mount Makiling in Los Baños",
@@ -88,7 +106,9 @@
     },
     {
       "file": "elbiyahe-makiling-trail.jpg",
-      "destinations": ["flat-rocks"],
+      "destinations": [
+        "flat-rocks"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:Mt._Makiling_Hiking_Trail.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/5/56/Mt._Makiling_Hiking_Trail.jpg",
       "title": "Mt. Makiling Hiking Trail",
@@ -98,7 +118,9 @@
     },
     {
       "file": "elbiyahe-makiling-mud-spring.jpg",
-      "destinations": ["makiling-mud-spring"],
+      "destinations": [
+        "makiling-mud-spring"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:Mud_Spring,_Mount_Makiling_-_panoramio.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Mud_Spring%2C_Mount_Makiling_-_panoramio.jpg",
       "title": "Mud Spring, Mount Makiling",
@@ -108,7 +130,9 @@
     },
     {
       "file": "elbiyahe-paete-church.jpg",
-      "destinations": ["paete-woodcarving-heritage"],
+      "destinations": [
+        "paete-woodcarving-heritage"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:Saint_James_the_Apostle_Parish_Church_in_Paete,_Laguna.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Saint_James_the_Apostle_Parish_Church_in_Paete%2C_Laguna.jpg",
       "title": "Saint James the Apostle Parish Church in Paete, Laguna",
@@ -118,7 +142,9 @@
     },
     {
       "file": "elbiyahe-enchanted-kingdom.jpg",
-      "destinations": ["enchanted-kingdom"],
+      "destinations": [
+        "enchanted-kingdom"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:Enchanted_Kingdom_PH_Space_Shuttle_2015-04-26.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Enchanted_Kingdom_PH_Space_Shuttle_2015-04-26.jpg",
       "title": "Enchanted Kingdom Space Shuttle ride",
@@ -128,7 +154,9 @@
     },
     {
       "file": "elbiyahe-makiling-botanic-gardens.jpg",
-      "destinations": ["makiling-botanic-gardens"],
+      "destinations": [
+        "makiling-botanic-gardens"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:Makiling_Botanical_Gardens.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/7/75/Makiling_Botanical_Gardens.jpg",
       "title": "Makiling Botanical Gardens",
@@ -138,7 +166,9 @@
     },
     {
       "file": "elbiyahe-uplb-mnh.jpg",
-      "destinations": ["uplb-museum-of-natural-history"],
+      "destinations": [
+        "uplb-museum-of-natural-history"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:Frontage_of_UPLB_MNH.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/8/81/Frontage_of_UPLB_MNH.jpg",
       "title": "Frontage of UPLB Museum of Natural History",
@@ -148,7 +178,9 @@
     },
     {
       "file": "elbiyahe-uplb-fertility-tree.jpg",
-      "destinations": ["uplb-fertility-tree"],
+      "destinations": [
+        "uplb-fertility-tree"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:UPLB_Fertility_Tree,_June_2023.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/f/f5/UPLB_Fertility_Tree%2C_June_2023.jpg",
       "title": "UPLB Fertility Tree, June 2023",
@@ -158,7 +190,10 @@
     },
     {
       "file": "elbiyahe-uplb-campus.jpg",
-      "destinations": ["sining-makiling-gallery", "philippine-carabao-center-at-uplb"],
+      "destinations": [
+        "sining-makiling-gallery",
+        "philippine-carabao-center-at-uplb"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:University_of_the_Philippines_(UPLB)_-_Freedom_Park_and_Carillon_Tower_(Los_Ba%C3%B1os,_Laguna;_2017-02-16).jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/f/fb/University_of_the_Philippines_%28UPLB%29_-_Freedom_Park_and_Carillon_Tower_%28Los_Ba%C3%B1os%2C_Laguna%3B_2017-02-16%29.jpg",
       "title": "UPLB Freedom Park and Carillon Tower (Los Baños, Laguna)",
@@ -168,7 +203,9 @@
     },
     {
       "file": "elbiyahe-riceworld-museum.jpg",
-      "destinations": ["irri-riceworld-museum"],
+      "destinations": [
+        "irri-riceworld-museum"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:Riceworld_Museum_and_Learning_Center.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/7/79/Riceworld_Museum_and_Learning_Center.jpg",
       "title": "Riceworld Museum and Learning Center",
@@ -178,7 +215,9 @@
     },
     {
       "file": "elbiyahe-st-therese-church.jpg",
-      "destinations": ["diocesan-shrine-of-st-therese-of-the-child-jesus"],
+      "destinations": [
+        "diocesan-shrine-of-st-therese-of-the-child-jesus"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:St._Therese_of_the_Child_Jesus_Parish_Church.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/a/a1/St._Therese_of_the_Child_Jesus_Parish_Church.jpg",
       "title": "St. Therese of the Child Jesus Parish Church",
@@ -188,7 +227,9 @@
     },
     {
       "file": "elbiyahe-san-antonio-parish.jpg",
-      "destinations": ["san-antonio-de-padua-parish"],
+      "destinations": [
+        "san-antonio-de-padua-parish"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:San_Antonio_de_Padua_Parish_Los_Banos.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/d/d0/San_Antonio_de_Padua_Parish_Los_Banos.jpg",
       "title": "San Antonio de Padua Parish, Los Baños",
@@ -198,7 +239,9 @@
     },
     {
       "file": "elbiyahe-los-banos-municipal-hall.jpg",
-      "destinations": ["los-banos-municipal-hall-history"],
+      "destinations": [
+        "los-banos-municipal-hall-history"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:Los_Ba%C3%B1os_Municipal_Hall,_Laguna,_June_2023.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/3/39/Los_Ba%C3%B1os_Municipal_Hall%2C_Laguna%2C_June_2023.jpg",
       "title": "Los Baños Municipal Hall, Laguna, June 2023",
@@ -208,7 +251,9 @@
     },
     {
       "file": "elbiyahe-los-banos-public-market.jpg",
-      "destinations": ["los-banos-public-market"],
+      "destinations": [
+        "los-banos-public-market"
+      ],
       "commonsPage": "https://commons.wikimedia.org/wiki/File:Los_Ba%C3%B1os_Public_Market,_Laguna,_June_2023.jpg",
       "source": "https://upload.wikimedia.org/wikipedia/commons/d/db/Los_Ba%C3%B1os_Public_Market%2C_Laguna%2C_June_2023.jpg",
       "title": "Los Baños Public Market, Laguna, June 2023",
@@ -219,10 +264,22 @@
   ],
   "keptGeneric": {
     "note": "No accurately-representative free-licensed photo was found for these; they intentionally keep a generic Laguna stock image rather than a fabricated match.",
-    "destinations": ["bato-resort", "danielitos-home-kitchen", "malayas-cafe", "diwata-nature-resort", "splash-mountain-resort", "dampalit-falls", "sol-y-viento-hotels-and-resorts", "olivarez-plaza"]
+    "destinations": [
+      "bato-resort",
+      "danielitos-home-kitchen",
+      "malayas-cafe",
+      "diwata-nature-resort",
+      "splash-mountain-resort",
+      "dampalit-falls",
+      "sol-y-viento-hotels-and-resorts",
+      "olivarez-plaza"
+    ]
   },
   "keptExisting": {
     "note": "Already had an accurate matching photo before Phase 10.",
-    "destinations": ["al-fresco-springs", "laresio-lakeside-resort-spa"]
+    "destinations": [
+      "al-fresco-springs",
+      "laresio-lakeside-resort-spa"
+    ]
   }
 }
