@@ -1,5 +1,25 @@
 # Progress Log
 
+## 2026-09-04 (Events page bug/oddity pass — branch `fix/events-page-oddities`, merged to `main`)
+- Compared the live `/events` + `/events/:slug` pages against a user-supplied reference spec/mockups; user
+  scoped this pass to real bugs/oddities only (no mockup-parity chase — Featured Event card, Newsletter,
+  calendar widget, hero carousel etc. explicitly deferred).
+- `useSeasonName()` now strips the `"El-Biyahe! "` brand prefix from season chip labels (was rendering
+  "El-Biyahe! Makiling Enchanted" etc. verbatim into small tag chips).
+- New `fallbackScene()` maps event category/slug to one of the 9 existing scene SVGs instead of every
+  event falling back to the same generic `elbiyahe-hero.svg`.
+- `EventCard` now shows a clamped description snippet (data was already fetched, just unused) and hides
+  the attendee "going" count for `anytime` events (self-guided events had a meaningless "0 going").
+- `EventsList` gained a search box, a sort control (soonest / most popular), and a results-count line;
+  searching switches to a flat "Search results" list, browsing (no query) keeps the status-grouped view.
+- `EventDetail`: `anytime` events (Heritage Walk, Sunset at the Park) no longer show the RSVP row or a
+  fake going-count — swapped for a "Save for later" action. "Nearby Passport Spots" is now real —
+  distance-sorted cards via `usePassport()` + `distanceKm()` (was a static, non-location-aware teaser
+  banner) — falls back to the old generic banner when an event has no coords or nothing nearby.
+- QA: `pnpm check`/`build` clean; Playwright verified season labels, search/sort, anytime-event RSVP
+  suppression, 3 real nearby-passport cards on the Heritage Walk, RSVP still intact on scheduled events,
+  0 console errors. `qa-writeflows.mjs` 8/8.
+
 ## 2026-09-04 (Explore LB-focus + real Events calendar + Heritage Walk — branch `feat/heritage-walk-events`)
 - **Events tab is now the real Los Baños calendar.** `scripts/seed.mjs` events array rewritten to 11 real
   events (Bañamos Festival & 411th Founding Anniversary Sep 17–19, UPLB Loyalty Day, Flower & Garden Show,
