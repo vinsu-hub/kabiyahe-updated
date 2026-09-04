@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { CalendarDays, Bus, QrCode, LayoutDashboard, ArrowLeft, Loader2, Utensils, BedDouble } from "lucide-react";
+import { CalendarDays, Bus, QrCode, LayoutDashboard, ArrowLeft, Loader2, Utensils, BedDouble, Car } from "lucide-react";
 import { useAuth } from "@/lib/supabase/AuthProvider";
 
 const NAV = [
@@ -9,6 +9,7 @@ const NAV = [
   { href: "/admin/passport", label: "Passport", icon: QrCode },
   { href: "/admin/delicacies", label: "Delicacies", icon: Utensils },
   { href: "/admin/accommodations", label: "Stay & Eat", icon: BedDouble },
+  { href: "/admin/parking", label: "Parking", icon: Car },
 ];
 
 export function RequireAdmin({ children }: { children: React.ReactNode }) {

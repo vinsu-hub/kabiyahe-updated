@@ -13,7 +13,7 @@ export const slugify = (v: string) =>
   v.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
 export async function adminCounts() {
-  const tables = ["events", "tour_packages", "passport_locations", "passport_rewards", "tour_reservations", "profiles", "delicacies", "accommodations"] as const;
+  const tables = ["events", "tour_packages", "passport_locations", "passport_rewards", "tour_reservations", "profiles", "delicacies", "accommodations", "parking_spots"] as const;
   const entries = await Promise.all(
     tables.map(async t => {
       const { count } = await supabase.from(t).select("*", { count: "exact", head: true });

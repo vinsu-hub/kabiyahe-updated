@@ -198,6 +198,22 @@ export interface AccommodationRow {
   featured: boolean;
 }
 
+export interface ParkingSpotRow {
+  id: string;
+  slug: string;
+  name: string;
+  place: string | null;
+  barangay: string | null;
+  lat: number | null;
+  lng: number | null;
+  kind: "free" | "paid";
+  fee_label: string | null;
+  capacity_estimate: string | null;
+  hours_label: string | null;
+  notes: string | null;
+  hero_image: string | null;
+}
+
 export interface ScanResult {
   ok: boolean;
   reason?: "auth" | "not_found" | "rate_limited" | "too_far" | "already";

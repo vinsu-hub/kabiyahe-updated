@@ -3,8 +3,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "./client";
 import { useAuth } from "./AuthProvider";
 import type {
-  AccommodationRow, DelicacyRow, EventDetailRow, EventRow, PassportLocationPublic, PassportReward, RideRoute, RideTip,
-  ScanResult, Season, TourPackageDetail, TourPackageRow,
+  AccommodationRow, DelicacyRow, EventDetailRow, EventRow, ParkingSpotRow, PassportLocationPublic, PassportReward,
+  RideRoute, RideTip, ScanResult, Season, TourPackageDetail, TourPackageRow,
 } from "./types";
 
 const throwIf = <T>({ data, error }: { data: T; error: { message: string } | null }): T => {
@@ -257,6 +257,16 @@ export function useReserveAccommodation() {
       if (stay.booking_referral_url) window.open(stay.booking_referral_url, "_blank", "noopener");
       return true;
     },
+  });
+}
+
+/* --------------------------------------------------------------- parking */
+export function useParkingSpots() {
+  return useQuery({
+    queryKey: ["parking-spots"],
+    queryFn: async () =>
+      throwIf(await supabase.from("parking_spots").select("*").order("name")) as ParkingSpotRow[],
+    staleTime: 5 * 60_000,
   });
 }
 

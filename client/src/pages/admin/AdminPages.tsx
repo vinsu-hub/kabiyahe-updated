@@ -7,7 +7,8 @@ import { supabase } from "@/lib/supabase/client";
 import { adminCounts, deleteRow, listAdmin, replaceChildren, slugify, uploadMedia, upsertRow } from "@/lib/supabase/admin";
 import { AdminShell } from "./AdminShell";
 import type {
-  AccommodationRow, DelicacyRow, EventDetailRow, PassportLocationPublic, PassportReward, Season, TourOperator, TourPackageDetail,
+  AccommodationRow, DelicacyRow, EventDetailRow, ParkingSpotRow, PassportLocationPublic, PassportReward, Season,
+  TourOperator, TourPackageDetail,
 } from "@/lib/supabase/types";
 
 /* ------------------------------------------------------------------ helpers */
@@ -93,6 +94,7 @@ export function AdminDashboard() {
             ["Rewards", data!.passport_rewards, "/admin/passport"],
             ["Delicacies", data!.delicacies, "/admin/delicacies"],
             ["Accommodations", data!.accommodations, "/admin/accommodations"],
+            ["Parking spots", data!.parking_spots, "/admin/parking"],
             ["Tour reservations", data!.tour_reservations, null],
             ["Registered users", data!.profiles, null],
           ].map(([label, n, href]) => {
@@ -751,6 +753,108 @@ export function AdminAccommodations() {
             <Field label="Review count"><input value={form.review_count} onChange={e => setForm({ ...form, review_count: e.target.value })} /></Field>
           </div>
           <Field label="Featured"><input type="checkbox" checked={form.featured} onChange={e => setForm({ ...form, featured: e.target.checked })} /></Field>
+        </Drawer>
+      )}
+    </AdminShell>
+  );
+}
+
+/* ------------------------------------------------------------------ parking */
+
+const EMPTY_PARKING = {
+  id: "", slug: "", name: "", place: "", barangay: "", lat: "", lng: "", kind: "free",
+  fee_label: "", capacity_estimate: "", hours_label: "", notes: "", hero_image: "",
+};
+type ParkingForm = typeof EMPTY_PARKING;
+
+export function AdminParkingSpots() {
+  const qc = useQueryClient();
+  const { data: rows, isLoading } = useQuery({
+    queryKey: ["admin", "parking-spots"],
+    queryFn: () => listAdmin<ParkingSpotRow>("parking_spots", "*", "name"),
+  });
+  const [form, setForm] = useState<ParkingForm | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  const open = (row?: ParkingSpotRow) => setForm(row ? {
+    ...EMPTY_PARKING, ...row,
+    place: row.place ?? "", barangay: row.barangay ?? "", lat: String(row.lat ?? ""), lng: String(row.lng ?? ""),
+    fee_label: row.fee_label ?? "", capacity_estimate: row.capacity_estimate ?? "",
+    hours_label: row.hours_label ?? "", notes: row.notes ?? "", hero_image: row.hero_image ?? "",
+  } : { ...EMPTY_PARKING });
+
+  const save = async () => {
+    if (!form) return;
+    setSaving(true);
+    try {
+      const { id, ...f } = form;
+      const row = {
+        ...(id ? { id } : {}),
+        ...f,
+        slug: f.slug || slugify(f.name),
+        place: f.place || null, barangay: f.barangay || null,
+        lat: f.lat ? Number(f.lat) : null, lng: f.lng ? Number(f.lng) : null,
+        fee_label: f.fee_label || null, capacity_estimate: f.capacity_estimate || null,
+        hours_label: f.hours_label || null, notes: f.notes || null, hero_image: f.hero_image || null,
+      };
+      await upsertRow<any>("parking_spots", row);
+      qc.invalidateQueries({ queryKey: ["admin", "parking-spots"] });
+      qc.invalidateQueries({ queryKey: ["parking-spots"] });
+      setForm(null);
+    } catch (e) { alert((e as Error).message); }
+    setSaving(false);
+  };
+
+  const remove = async (id: string) => {
+    if (!confirm("Delete this parking spot?")) return;
+    await deleteRow("parking_spots", id);
+    qc.invalidateQueries({ queryKey: ["admin", "parking-spots"] });
+    qc.invalidateQueries({ queryKey: ["parking-spots"] });
+  };
+
+  return (
+    <AdminShell title="Parking" actions={<button className="btn primary" onClick={() => open()}><Plus size={15} /> New spot</button>}>
+      {isLoading ? <Loader2 className="elbiyahe-spin" /> : (
+        <table className="admin-table">
+          <thead><tr><th>Name</th><th>Kind</th><th>Place</th><th /></tr></thead>
+          <tbody>
+            {(rows ?? []).map(r => (
+              <tr key={r.id}>
+                <td><button className="admin-link" onClick={() => open(r)}>{r.name}</button></td>
+                <td>{r.kind}</td><td>{r.place}</td>
+                <td><button className="admin-row-del" onClick={() => remove(r.id)}><Trash2 size={15} /></button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {form && (
+        <Drawer title={form.id ? "Edit spot" : "New spot"} onClose={() => setForm(null)} onSave={save} saving={saving}>
+          <Field label="Name"><input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} /></Field>
+          <Field label="Slug (blank = auto)"><input value={form.slug} onChange={e => setForm({ ...form, slug: e.target.value })} placeholder={slugify(form.name)} /></Field>
+          <div className="admin-grid2">
+            <Field label="Kind">
+              <select value={form.kind} onChange={e => setForm({ ...form, kind: e.target.value })}>
+                <option value="free">Free</option><option value="paid">Paid</option>
+              </select>
+            </Field>
+            <Field label="Fee label"><input value={form.fee_label} onChange={e => setForm({ ...form, fee_label: e.target.value })} placeholder="₱20/hour" /></Field>
+          </div>
+          <div className="admin-grid2">
+            <Field label="Place"><input value={form.place} onChange={e => setForm({ ...form, place: e.target.value })} /></Field>
+            <Field label="Barangay"><input value={form.barangay} onChange={e => setForm({ ...form, barangay: e.target.value })} /></Field>
+          </div>
+          <div className="admin-grid2">
+            <Field label="Lat"><input value={form.lat} onChange={e => setForm({ ...form, lat: e.target.value })} /></Field>
+            <Field label="Lng"><input value={form.lng} onChange={e => setForm({ ...form, lng: e.target.value })} /></Field>
+          </div>
+          <div className="admin-grid2">
+            <Field label="Capacity estimate"><input value={form.capacity_estimate} onChange={e => setForm({ ...form, capacity_estimate: e.target.value })} placeholder="~40 slots" /></Field>
+            <Field label="Hours"><input value={form.hours_label} onChange={e => setForm({ ...form, hours_label: e.target.value })} placeholder="6 AM - 10 PM" /></Field>
+          </div>
+          <Field label="Notes"><textarea rows={2} value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} /></Field>
+          <Field label="Hero image"><ImageField value={form.hero_image} onChange={url => setForm({ ...form, hero_image: url })} folder="parking" /></Field>
         </Drawer>
       )}
     </AdminShell>

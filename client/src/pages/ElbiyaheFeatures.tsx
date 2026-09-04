@@ -5,16 +5,16 @@
 import { useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
-  ArrowLeft, BadgeCheck, Bookmark, Bus, CalendarDays, Check, ChevronRight,
+  ArrowLeft, BadgeCheck, Bookmark, Bus, CalendarDays, Car, Check, ChevronRight,
   Clock3, Compass, ExternalLink, Heart, List, Loader2, MapPin, Navigation, QrCode,
   Share2, Sparkles, Star, Ticket, Users, Utensils,
 } from "lucide-react";
 import { useAuth } from "@/lib/supabase/AuthProvider";
 import {
-  useAccommodations, useDelicacies, useEvent, useEvents, useMyRsvp, usePassport, useReserveAccommodation,
-  useReserveTour, useRideGuide, useScanPassport, useSeasons, useToggleRsvp, useTour, useTours,
+  useAccommodations, useDelicacies, useEvent, useEvents, useMyRsvp, useParkingSpots, usePassport,
+  useReserveAccommodation, useReserveTour, useRideGuide, useScanPassport, useSeasons, useToggleRsvp, useTour, useTours,
 } from "@/lib/supabase/queries";
-import type { AccommodationRow, DelicacyRow, EventRow, StampCategory } from "@/lib/supabase/types";
+import type { AccommodationRow, DelicacyRow, EventRow, ParkingSpotRow, StampCategory } from "@/lib/supabase/types";
 
 interface Shell {
   Header: React.ComponentType;
@@ -881,6 +881,63 @@ export function StayEat({ Header, BottomNav, Footer }: Shell) {
               <div className="empty-state"><Bookmark size={26} /><h3>No stays listed yet.</h3></div>
             )}
           </section>
+        )}
+      </main>
+      <Footer />
+      <BottomNav />
+    </>
+  );
+}
+
+/* ============================ PARKING ============================ */
+
+const PARKING_FILTERS = ["All", "free", "paid"] as const;
+
+function ParkingCard({ p }: { p: ParkingSpotRow }) {
+  return (
+    <div className="elbiyahe-route-row">
+      <div className="elbiyahe-route-row-head">
+        <b>{p.name}</b>
+        <span className={`tag ${p.kind === "free" ? "" : "ochre"}`}>{p.kind === "free" ? "Free" : "Paid"}</span>
+      </div>
+      <p className="muted"><MapPin size={13} /> {p.place}{p.barangay ? `, Brgy. ${p.barangay}` : ""}</p>
+      <p className="muted">{[p.fee_label, p.capacity_estimate, p.hours_label].filter(Boolean).join(" · ")}</p>
+      {p.notes && <p>{p.notes}</p>}
+    </div>
+  );
+}
+
+export function Parking({ Header, BottomNav, Footer }: Shell) {
+  const { data, isLoading, error } = useParkingSpots();
+  const [filter, setFilter] = useState<(typeof PARKING_FILTERS)[number]>("All");
+  const list = (data ?? []).filter(p => filter === "All" || p.kind === filter);
+
+  return (
+    <>
+      <Header />
+      <main className="container elbiyahe-page">
+        <div className="elbiyahe-page-head">
+          <div>
+            <p className="eyebrow">GET AROUND LIKE A LOCAL</p>
+            <h1>Parking</h1>
+            <p className="muted">Free and paid parking spots around Los Baños, near the places you're actually headed.</p>
+          </div>
+        </div>
+
+        <div className="filter-pills">
+          {PARKING_FILTERS.map(f => (
+            <button key={f} className={filter === f ? "active" : ""} onClick={() => setFilter(f)}>{f === "All" ? "All" : f === "free" ? "Free" : "Paid"}</button>
+          ))}
+        </div>
+
+        {isLoading && <Loading />}
+        {error && <LoadError message={(error as Error).message} />}
+
+        <div className="elbiyahe-route-list">
+          {list.map(p => <ParkingCard p={p} key={p.id} />)}
+        </div>
+        {!isLoading && !error && list.length === 0 && (
+          <div className="empty-state"><Car size={26} /><h3>No parking spots listed yet.</h3></div>
         )}
       </main>
       <Footer />
