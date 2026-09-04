@@ -37,7 +37,7 @@
 .elbiyahe-select select{min-height:36px;border-radius:10px;border:1px solid var(--line);background:var(--paper);padding:0 10px;font-weight:600;color:var(--ink)}
 
 .elbiyahe-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:.08em;background:#e4eee4;color:var(--forest)}
-.elbiyahe-badge.live{background:#c8102e;color:#fff}
+.elbiyahe-badge.live{background:var(--destructive);color:#fff}
 .elbiyahe-badge.grey{background:#6b7280;color:#fff}
 .elbiyahe-badge.ochre{background:var(--ochre);color:#1c1c1c}
 .elbiyahe-badge.sm{font-size:9px;padding:2px 6px}
@@ -69,7 +69,7 @@
 .elbiyahe-detail-hero .elbiyahe-badge{position:absolute;left:14px;top:14px}
 .elbiyahe-detail-hero-actions{position:absolute;right:12px;top:12px;display:flex;gap:8px}
 .elbiyahe-detail-hero-actions button{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;color:var(--forest)}
-.elbiyahe-detail-hero-actions button.on{color:#c8102e}
+.elbiyahe-detail-hero-actions button.on{color:var(--destructive)}
 .elbiyahe-detail-facts{display:flex;flex-direction:column;gap:6px;margin:10px 0 16px;color:var(--muted);font-size:13px}
 .elbiyahe-detail-facts span{display:flex;align-items:center;gap:7px}
 .elbiyahe-rsvp-row{display:flex;gap:10px;margin-bottom:20px}
@@ -111,7 +111,7 @@
 .elbiyahe-tour-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:14px 0}
 .elbiyahe-tour-meta div{background:#eef3ec;border-radius:12px;padding:12px;text-align:center}
 .elbiyahe-tour-meta b{display:block;font-size:18px;color:var(--forest)}
-.elbiyahe-tour-meta b.warn{color:#c8102e}
+.elbiyahe-tour-meta b.warn{color:var(--destructive)}
 .elbiyahe-tour-meta small{font-size:11px;color:var(--muted)}
 .elbiyahe-tour-logistics{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin:14px 0}
 .elbiyahe-tour-logistics h3{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--forest);margin:0 0 6px}
