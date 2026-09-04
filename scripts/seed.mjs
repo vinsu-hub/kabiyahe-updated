@@ -24,6 +24,17 @@ console.log(`✓ seasons (${seasons.length})`);
 
 /* ---------------- events ---------------- */
 const events = [
+  { slug: "banamos-festival-2026", title: "25th Bañamos Festival & 411th Founding Anniversary", category: "Community", season_key: "sibol", status: "live",
+    date_label: "Sep 17–19, 2026", time_label: "All day", venue_name: "Los Baños Town Proper (Poblacion)", barangay: "Timugan / Poblacion",
+    lat: 14.1699, lng: 121.2168, attendee_count: 5000, hero_image: scene("heritage"),
+    organizer: "Municipal Government of Los Baños",
+    description: "The celebration is back, Los Bañenses! Three days of culture, tradition, music, talent, and community spirit for the 25th Bañamos Festival and the 411th Founding Anniversary of Los Baños. This year's theme: \"Honoring Heritage, Sustaining Traditions, Rekindling the Los Baños Spirit.\" This is our heritage. This is our tradition. This is the Los Baños Spirit.",
+    schedule: [
+      { time_label: "Sep 17", item: "Opening parade & civic program", state: "done", sort: 1 },
+      { time_label: "Sep 18", item: "Cultural night, street dancing & talent showcase", state: "live", sort: 2 },
+      { time_label: "Sep 19", item: "Founding anniversary rites & community fair", state: "next", sort: 3 },
+    ],
+    updates: [{ ago_label: "just now", body: "Festival week is here — check the calendar and save the dates. Full schedule at the town plaza." }] },
   { slug: "uplb-feb-fair-2025", title: "UPLB Sibol Fair 2026", category: "Community", season_key: "sibol", status: "live",
     date_label: "Sep 19, 2026", time_label: "5:00 PM", venue_name: "UPLB Freedom Park", barangay: "Batong Malake",
     lat: 14.165, lng: 121.241, attendee_count: 1284, hero_image: scene("market"),
@@ -153,13 +164,28 @@ const tours = [
     ] },
 ];
 
+// Coordinates for the itinerary map (keyed by stop name). Kept here so a re-seed,
+// which deletes+reinserts stop rows, does not drop the coords.
+const STOP_COORDS = {
+  "Makiling Botanic Gardens": [14.1440, 121.2430], "Dampalit Falls": [14.1560, 121.2130],
+  "Lunch — Los Baños poblacion": [14.1760, 121.2180], "Poblacion Heritage Walk": [14.1772, 121.2170],
+  "Tadlac Lake View Deck": [14.1820, 121.2410], "San Antonio de Padua Parish": [14.1772, 121.2170],
+  "Old Los Baños Train Station": [14.1870, 121.2240], "Lunch — campus town": [14.1660, 121.2390],
+  "IRRI Riceworld Museum": [14.1660, 121.2590], "UPLB Museum of Natural History": [14.1630, 121.2380],
+  "UPLB Freedom Park & Carillon": [14.1650, 121.2410], "Buko Pie House": [14.1850, 121.2260],
+  "Baker Hall & Fertility Tree": [14.1640, 121.2400], "Kesong Puti & espasol tasting": [14.1700, 121.2300],
+};
+
 for (const { operator, stops, reviews, ...row } of tours) {
   const { data, error } = await db.from("tour_packages")
     .upsert({ ...row, operator_id: opId[operator] }, { onConflict: "slug" }).select("id").single();
   die(`tour ${row.slug}`, error);
   await db.from("tour_itinerary_stops").delete().eq("package_id", data.id);
   await db.from("tour_reviews").delete().eq("package_id", data.id);
-  die("stops", (await db.from("tour_itinerary_stops").insert(stops.map((s, i) => ({ ...s, sort: i + 1, package_id: data.id })))).error);
+  die("stops", (await db.from("tour_itinerary_stops").insert(stops.map((s, i) => {
+    const c = STOP_COORDS[s.name];
+    return { ...s, sort: i + 1, package_id: data.id, lat: c?.[0] ?? null, lng: c?.[1] ?? null };
+  }))).error);
   die("reviews", (await db.from("tour_reviews").insert(reviews.map(r => ({ ...r, package_id: data.id })))).error);
 }
 console.log(`✓ tour operators (${operators.length}) + packages (${tours.length}) + stops + reviews`);
