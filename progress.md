@@ -1,5 +1,16 @@
 # Progress Log
 
+## 2026-09-04 (Phase 10 of the El-Biyahe! rebrand — photo sourcing, on branch `rebrand/el-biyahe`)
+- `gh auth` for `vinsu-hub` is now valid (user re-logged in), so Phase 10 unblocked
+- Sourced **21 accurately-representative destination photos** from Wikimedia Commons (all free licenses: CC BY / CC BY-SA / CC0 / Public Domain) via the Commons API, replacing the 7 generic stock photos that had been shared across all 33 destinations. Destinations with no accurate free photo (bato-resort, the 2 placeholder cafes, diwata, splash-mountain, dampalit, sol-y-viento, olivarez) deliberately keep a generic Laguna image rather than a fabricated match — sol-y-viento/splash-mountain reuse the real Los Baños hot-spring photo since they are hot-spring resorts
+- `scripts/destination-photo-manifest.json` — per-image source URL + license + author; `scripts/build-destination-photos.mjs` — downloads, resizes via `sharp` (added as devDep), packages the archive
+- New **public repo `vinsu-hub/el-biyahe-stock-images`** + release **`v2.0.0`** (26 files: 21 new + 5 carried-over generics renamed `elbiyahe-*`, archive root `el-biyahe-stock-release/`, zip SHA-256 `de37a30…adac`). Old `kabiyahe-updated` `v1.0.0-stock-images` release kept as documented fallback
+- `fetch-local-assets.mjs` repointed (new URL/SHA/FILES list, archive dir rename); `seed-destinations.mjs` now assigns photos by slug via `IMAGE_BY_SLUG` (legacy per-row image/gallery retained but ignored; note: `slugify()` doesn't transliterate ñ so "Los Baños" rows are `los-ba-os-*`); `App.tsx` `IMG.hero` → `elbiyahe-hero-losbanos.jpg` + new `PHOTO_CREDITS` map renders an attribution line under the destination-detail gallery
+- `destinations` table `hero_image`/`gallery` updated live for all 33 rows; README asset section rewritten
+- `pnpm check` + `pnpm build` clean; dev-server screenshots of `/explore` and `/explore/:slug` confirm distinct real photos load + credit line renders, no console/network errors
+- Commit `f43729e`. **Still open**: minor copy mismatch (Los Baños Hot Springs description says "lush mountain landscape" but photo is a public mineral pool — cosmetic), full Phase 11 QA copy pass, pre-existing Explore tablet overflow (~900px). Branch still not merged to `main`
+
+
 ## 2026-09-04 (Phases 2-9 + partial 11 of the El-Biyahe! rebrand — continued on branch `rebrand/el-biyahe`)
 - **Phase 2 (logos)**: cropped/resized the real logo set from `D:\El-Biyahe!\logos` (horizontal, mark-only, vertical) to web sizes, replaced the placeholder brand files at the same paths Phase 1 already pointed code at
 - **Phase 3 (palette/fonts)**: loaded Plus Jakarta Sans + Space Grotesk via `index.html`, replaced all CSS tokens with the reference repo's confirmed hex values, added the semantic token set + season-accent tokens, swept remaining hardcoded old-palette hex literals (found via `git diff` reflection, not just grep)
