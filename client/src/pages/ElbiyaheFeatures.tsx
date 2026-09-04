@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
   ArrowLeft, BadgeCheck, Bookmark, Bus, CalendarDays, Car, Check, ChevronRight,
-  Clock3, Compass, ExternalLink, Footprints, Heart, List, Loader2, MapPin, Navigation, QrCode,
+  Clock3, Compass, ExternalLink, Footprints, Heart, List, Loader2, MapPin, Navigation, QrCode, Search,
   Share2, Sparkles, Star, Ticket, Users, Utensils,
 } from "lucide-react";
 import { useAuth } from "@/lib/supabase/AuthProvider";
@@ -34,7 +34,29 @@ const peso = (n: number) => `₱${n.toLocaleString("en-PH")}`;
 function useSeasonName() {
   const { data } = useSeasons();
   return (key: string | null | undefined) =>
-    (key && data?.find(s => s.key === key)?.name) || "";
+    (key && data?.find(s => s.key === key)?.name.replace(/^El-Biyahe!\s*/, "")) || "";
+}
+
+/** Category/slug-aware fallback art so every event doesn't render the same generic scene. */
+function fallbackScene(e: Pick<EventRow, "slug" | "category">): string {
+  const bySlug: Record<string, string> = {
+    "los-banos-heritage-walk": "elbiyahe-heritage",
+    "sunset-at-the-park": "elbiyahe-sunset",
+    "flower-and-garden-show": "elbiyahe-lake",
+    "mt-makiling-trail-activities": "elbiyahe-falls",
+    "uplb-loyalty-day": "elbiyahe-campus",
+    "uplb-feb-fair": "elbiyahe-campus",
+    "syensaya": "elbiyahe-campus",
+  };
+  const byCategory: Record<string, string> = {
+    Culture: "elbiyahe-heritage",
+    Food: "elbiyahe-food",
+    Sports: "elbiyahe-falls",
+    Arts: "elbiyahe-market",
+    Community: "elbiyahe-market",
+  };
+  const name = bySlug[e.slug] ?? byCategory[e.category] ?? "elbiyahe-hero";
+  return `/scenes/${name}.svg`;
 }
 
 function Loading() {
@@ -77,7 +99,7 @@ function EventCard({ e, Tag }: { e: EventRow; Tag: Shell["Tag"] }) {
   return (
     <Link href={`/events/${e.slug}`} className="elbiyahe-event-card">
       <div className="elbiyahe-event-card-media">
-        <img src={e.hero_image || "/scenes/elbiyahe-hero.svg"} alt={e.title} />
+        <img src={e.hero_image || fallbackScene(e)} alt={e.title} />
         {e.status === "live" && <span className="elbiyahe-badge live">LIVE NOW</span>}
         {e.status === "recap" && <span className="elbiyahe-badge grey">RECAP</span>}
       </div>
@@ -88,7 +110,8 @@ function EventCard({ e, Tag }: { e: EventRow; Tag: Shell["Tag"] }) {
         </div>
         <h3>{e.title}</h3>
         <p className="muted"><MapPin size={13} /> {e.venue_name}</p>
-        <p className="muted"><Users size={13} /> {e.attendee_count.toLocaleString()} going</p>
+        {e.description && <p className="muted elbiyahe-event-card-desc">{e.description}</p>}
+        {e.status !== "anytime" && <p className="muted"><Users size={13} /> {e.attendee_count.toLocaleString()} going</p>}
       </div>
     </Link>
   );
@@ -100,13 +123,20 @@ export function EventsList({ Header, BottomNav, Footer, Tag }: Shell) {
   const [category, setCategory] = useState<(typeof EVENT_CATEGORIES)[number]>("All");
   const [view, setView] = useState<"list" | "map">("list");
   const [season, setSeason] = useState<string>("all");
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<"soonest" | "popular">("soonest");
+  const isSearching = query.trim() !== "";
 
-  const filtered = useMemo(
-    () => (events ?? []).filter(e =>
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const list = (events ?? []).filter(e =>
       (category === "All" || e.category === category) &&
-      (season === "all" || e.season_key === season)),
-    [events, category, season],
-  );
+      (season === "all" || e.season_key === season) &&
+      (!q || `${e.title} ${e.venue_name ?? ""} ${e.description ?? ""}`.toLowerCase().includes(q)));
+    return [...list].sort((a, b) => sort === "popular"
+      ? b.attendee_count - a.attendee_count
+      : (a.starts_at ? new Date(a.starts_at).getTime() : Infinity) - (b.starts_at ? new Date(b.starts_at).getTime() : Infinity));
+  }, [events, category, season, query, sort]);
 
   return (
     <>
@@ -130,14 +160,27 @@ export function EventsList({ Header, BottomNav, Footer, Tag }: Shell) {
               <button key={c} className={category === c ? "active" : ""} onClick={() => setCategory(c)}>{c}</button>
             ))}
           </div>
+          <div className="searchbox elbiyahe-searchbox">
+            <Search size={15} />
+            <input aria-label="Search events" placeholder="Search events, venues…" value={query} onChange={ev => setQuery(ev.target.value)} />
+          </div>
           <label className="elbiyahe-select">
             Season
             <select value={season} onChange={ev => setSeason(ev.target.value)}>
               <option value="all">All seasons</option>
-              {(seasons ?? []).map(s => <option key={s.key} value={s.key}>{s.quarter} · {s.name}</option>)}
+              {(seasons ?? []).map(s => <option key={s.key} value={s.key}>{s.quarter} · {s.name.replace(/^El-Biyahe!\s*/, "")}</option>)}
+            </select>
+          </label>
+          <label className="elbiyahe-select">
+            Sort by
+            <select value={sort} onChange={ev => setSort(ev.target.value as typeof sort)}>
+              <option value="soonest">Soonest</option>
+              <option value="popular">Most popular</option>
             </select>
           </label>
         </div>
+
+        <p className="elbiyahe-results-count muted">{filtered.length} event{filtered.length === 1 ? "" : "s"} found</p>
 
         {isLoading && <Loading />}
         {error && <LoadError message={(error as Error).message} />}
@@ -147,6 +190,13 @@ export function EventsList({ Header, BottomNav, Footer, Tag }: Shell) {
             points={filtered.filter(e => e.lat != null && e.lng != null).map(e => ({ id: e.id, lat: e.lat!, lng: e.lng!, name: e.title, kind: e.category, href: `/events/${e.slug}`, sub: e.date_label ?? undefined }))}
             fitBounds height={480} ariaLabel="Map of Los Baños events"
           />
+        ) : isSearching ? (
+          <section className="elbiyahe-event-group">
+            <h2>Search results</h2>
+            <div className="elbiyahe-event-grid">
+              {filtered.map(e => <EventCard key={e.id} e={e} Tag={Tag} />)}
+            </div>
+          </section>
         ) : (
           EVENT_GROUPS.map(group => {
             const items = filtered.filter(e => group.key.includes(e.status));
@@ -183,6 +233,7 @@ export function EventDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shel
   const [, navigate] = useLocation();
   const { data: rsvped } = useMyRsvp(e?.id);
   const toggleRsvp = useToggleRsvp(e?.id);
+  const { data: passport } = usePassport();
   const [tab, setTab] = useState<"About" | "Schedule" | "Organizers" | "Updates">("About");
   const [saved, setSaved] = useState(false);
 
@@ -190,8 +241,17 @@ export function EventDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shel
   if (error || !e) return <><Header /><main className="container elbiyahe-detail"><LoadError message={(error as Error)?.message} /></main><Footer /><BottomNav /></>;
 
   const past = e.status === "recap";
+  const anytime = e.status === "anytime";
   const schedule = [...(e.event_schedule_items ?? [])].sort((a, b) => a.sort - b.sort);
   const updates = e.event_updates ?? [];
+  const nearbyPassport = e.lat != null && e.lng != null
+    ? (passport?.locations ?? [])
+        .filter(l => l.lat != null && l.lng != null)
+        .map(l => ({ loc: l, km: distanceKm({ lat: e.lat!, lng: e.lng! }, { lat: l.lat!, lng: l.lng! }) }))
+        .filter(x => x.km <= 5)
+        .sort((a, b) => a.km - b.km)
+        .slice(0, 3)
+    : [];
 
   const onRsvp = () => {
     if (!user) { navigate(`/login?next=/events/${e.slug}`); return; }
@@ -208,7 +268,7 @@ export function EventDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shel
         <Link href="/events" className="back-link"><ArrowLeft size={16} /> Back to Events</Link>
 
         <section className="elbiyahe-detail-hero">
-          <img src={e.hero_image || "/scenes/elbiyahe-hero.svg"} alt={e.title} />
+          <img src={e.hero_image || fallbackScene(e)} alt={e.title} />
           {e.status === "live" && <span className="elbiyahe-badge live">LIVE NOW</span>}
           {past && <span className="elbiyahe-badge grey">EVENT RECAP</span>}
           <div className="elbiyahe-detail-hero-actions">
@@ -227,15 +287,20 @@ export function EventDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shel
         <div className="elbiyahe-detail-facts">
           <span><CalendarDays size={15} /> {e.date_label} · {e.time_label}</span>
           <span><MapPin size={15} /> {e.venue_name}{e.barangay ? `, Brgy. ${e.barangay}` : ""}</span>
-          <span><Users size={15} /> {e.attendee_count.toLocaleString()} going</span>
+          {!anytime && <span><Users size={15} /> {e.attendee_count.toLocaleString()} going</span>}
         </div>
 
-        {!past && (
+        {!past && !anytime && (
           <div className="elbiyahe-rsvp-row">
             <button className={`elbiyahe-rsvp ${rsvped ? "done" : ""}`} disabled={toggleRsvp.isPending} onClick={onRsvp}>
               {rsvped ? <><Check size={17} /> You're going</> : "RSVP to this event"}
             </button>
             <button className="elbiyahe-bookmark" aria-label="Bookmark event" onClick={() => notify("Event bookmarked.")}><Bookmark size={17} /></button>
+          </div>
+        )}
+        {anytime && (
+          <div className="elbiyahe-rsvp-row">
+            <button className="elbiyahe-bookmark wide" onClick={() => notify("Event bookmarked.")}><Bookmark size={17} /> Save for later</button>
           </div>
         )}
 
@@ -295,11 +360,25 @@ export function EventDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shel
           </div>
         </section>
 
-        <Link href="/passport" className="elbiyahe-passport-teaser">
-          <QrCode size={20} />
-          <span><b>Nearby Passport Spots</b><small>Collect stamps around this venue in your Digital LB Passport</small></span>
-          <ChevronRight size={18} />
-        </Link>
+        {nearbyPassport.length > 0 ? (
+          <section className="elbiyahe-location-section">
+            <h2>Nearby Passport Spots</h2>
+            <div className="elbiyahe-nearby-passport-grid">
+              {nearbyPassport.map(({ loc, km }) => (
+                <Link href="/passport" key={loc.id} className="elbiyahe-nearby-passport-card">
+                  <QrCode size={16} />
+                  <div><b>{loc.name}</b><small>{loc.category} · {formatDistance(km)} away</small></div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        ) : (
+          <Link href="/passport" className="elbiyahe-passport-teaser">
+            <QrCode size={20} />
+            <span><b>Passport Spots</b><small>Collect stamps around Los Baños in your Digital LB Passport</small></span>
+            <ChevronRight size={18} />
+          </Link>
+        )}
       </main>
       <Footer />
       <BottomNav />
