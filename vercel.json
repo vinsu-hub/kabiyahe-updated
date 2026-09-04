@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "node scripts/fetch-local-assets.mjs && vite build",
+  "outputDirectory": "dist/public",
+  "rewrites": [{ "source": "/((?!assets/|brand/|scenes/|__manus__/).*)", "destination": "/index.html" }]
+}
