@@ -123,3 +123,4 @@ screenshots/
 scratchpad-build/
 .vercel
 .env*
+!.env.example
