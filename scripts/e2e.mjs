@@ -31,22 +31,22 @@ console.log("signed in, header shows:", await page.locator(".avatar, .header-act
 
 // 2. RSVP an event
 await page.goto(base + "/events/likha-music-arts-festival");
-await page.waitForSelector(".elbi-rsvp");
-await page.click(".elbi-rsvp");
+await page.waitForSelector(".elbiyahe-rsvp");
+await page.click(".elbiyahe-rsvp");
 await page.waitForTimeout(1200);
-console.log("RSVP button now:", (await page.locator(".elbi-rsvp").textContent()).trim());
+console.log("RSVP button now:", (await page.locator(".elbiyahe-rsvp").textContent()).trim());
 await page.screenshot({ path: `${out}/e2e-event-rsvp.png`, fullPage: true });
 
 // 3. passport scan
 await page.goto(base + "/passport");
-await page.waitForSelector(".elbi-scan-btn");
-await page.click(".elbi-scan-btn");
+await page.waitForSelector(".elbiyahe-scan-btn");
+await page.click(".elbiyahe-scan-btn");
 await page.waitForSelector(".modal input");
-await page.fill(".modal input", "ELBI-MUSEUM");
+await page.fill(".modal input", "ELBIYAHE-MUSEUM");
 await page.click(".modal .btn");
 await page.waitForTimeout(2500);
 await page.screenshot({ path: `${out}/e2e-passport-scanned.png`, fullPage: true });
-const success = await page.locator(".elbi-stamp-success").count();
+const success = await page.locator(".elbiyahe-stamp-success").count();
 console.log("passport stamp success block:", success > 0 ? "shown" : "NOT shown");
 
 // 4. admin

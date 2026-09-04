@@ -15,10 +15,10 @@ import os from "node:os";
 import { existsSync, rmSync } from "node:fs";
 
 const RELEASE_ZIP =
-  process.env.KABIYAHE_ASSET_ZIP_URL ||
+  process.env.ELBIYAHE_ASSET_ZIP_URL ||
   "https://github.com/vinsu-hub/kabiyahe-updated/releases/download/v1.0.0-stock-images/kabiyahe-stock-images-v1.0.0.zip";
 const ZIP_SHA256 = "33b1439e525dbc26af1dd80618e932170be8948164a2ca9696c9944b27028b7d";
-const outputDir = path.resolve(process.env.KABIYAHE_LOCAL_ASSET_DIR || "./client/public/assets");
+const outputDir = path.resolve(process.env.ELBIYAHE_LOCAL_ASSET_DIR || "./client/public/assets");
 
 const FILES = [
   "kabiyahe-hero-laguna_e334210c.jpg",
@@ -28,7 +28,6 @@ const FILES = [
   "enchanted-kingdom_a3aaee52.jpg",
   "al-fresco-springs_c60eb0da.jpg",
   "laresio-lakeside_049170eb.jpg",
-  "kabiyahe-emblem_04426ca6.png",
 ];
 
 const tmp = path.join(os.tmpdir(), `kabiyahe-stock-${Date.now()}`);

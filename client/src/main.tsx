@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import { AuthProvider } from "@/lib/supabase/AuthProvider";
 import "./index.css";
-import "./elbi.css";
+import "./elbiyahe.css";
 import "./admin.css";
 
 const queryClient = new QueryClient({

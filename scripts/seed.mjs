@@ -1,4 +1,4 @@
-/* Seed the ELBI Supabase project with the launch content.
+/* Seed the El-Biyahe! Supabase project with the launch content.
    Mirrors client/src/lib/elbiData.ts. Uses the secret key (bypasses RLS).
    Run: node --env-file=.env.local scripts/seed.mjs
    Idempotent: upserts by natural key, clears child tables first. */
@@ -10,11 +10,11 @@ if (!url || !key) throw new Error("Set VITE_SUPABASE_URL and SUPABASE_SECRET_KEY
 const db = createClient(url, key, { auth: { persistSession: false } });
 
 const die = (label, error) => { if (error) { console.error(`✗ ${label}:`, error.message); process.exit(1); } };
-const scene = (n) => `/scenes/elbi-${n}.svg`;
+const scene = (n) => `/scenes/elbiyahe-${n}.svg`;
 
 /* ---------------- seasons ---------------- */
 const seasons = [
-  { key: "banada", quarter: "Q1", name: "ELBI Bañada", months: "February", pillars: "Art · Heritage · Culture", is_current: true, sort: 1 },
+  { key: "banada", quarter: "Q1", name: "El-Biyahe! Bañada", months: "February", pillars: "Art · Heritage · Culture", is_current: true, sort: 1 },
   { key: "sol-open", quarter: "Q2", name: "Sol Open", months: "April", pillars: "Nature · Sport · Wellness", is_current: false, sort: 2 },
   { key: "sibol", quarter: "Q3", name: "Sibol Weekend Market", months: "July", pillars: "Ideas · Innovation · Enterprise", is_current: false, sort: 3 },
   { key: "makiling-enchanted", quarter: "Q4", name: "Makiling Enchanted", months: "December", pillars: "Community · Tradition · Celebration", is_current: false, sort: 4 },
@@ -166,17 +166,17 @@ console.log(`✓ tour operators (${operators.length}) + packages (${tours.length
 
 /* ---------------- passport ---------------- */
 const passportLocations = [
-  { slug: "makiling-botanic-gardens", name: "Makiling Botanic Gardens", category: "Nature", qr_code: "ELBI-MAKILING", lat: 14.1479, lng: 121.2265 },
-  { slug: "los-banos-museum", name: "Los Baños Museum", category: "Culture", qr_code: "ELBI-MUSEUM", lat: 14.1772, lng: 121.2190 },
-  { slug: "buko-pie-house", name: "Buko Pie House", category: "Food", qr_code: "ELBI-BUKOPIE", lat: 14.1701, lng: 121.2405 },
-  { slug: "irri-riceworld", name: "IRRI Riceworld Museum", category: "Science", qr_code: "ELBI-IRRI", lat: 14.1667, lng: 121.2570 },
+  { slug: "makiling-botanic-gardens", name: "Makiling Botanic Gardens", category: "Nature", qr_code: "ELBIYAHE-MAKILING", lat: 14.1479, lng: 121.2265 },
+  { slug: "los-banos-museum", name: "Los Baños Museum", category: "Culture", qr_code: "ELBIYAHE-MUSEUM", lat: 14.1772, lng: 121.2190 },
+  { slug: "buko-pie-house", name: "Buko Pie House", category: "Food", qr_code: "ELBIYAHE-BUKOPIE", lat: 14.1701, lng: 121.2405 },
+  { slug: "irri-riceworld", name: "IRRI Riceworld Museum", category: "Science", qr_code: "ELBIYAHE-IRRI", lat: 14.1667, lng: 121.2570 },
 ];
 die("passport_locations", (await db.from("passport_locations").upsert(passportLocations, { onConflict: "slug" })).error);
 
 await db.from("reward_redemptions").delete().neq("id", "00000000-0000-0000-0000-000000000000");
 await db.from("passport_rewards").delete().neq("id", "00000000-0000-0000-0000-000000000000");
 const rewards = [
-  { title: "10% Off Local Partner Voucher", description: "Redeemable at participating ELBI partners.", tier: "Explorer", required_stamps: 5, active: true },
+  { title: "10% Off Local Partner Voucher", description: "Redeemable at participating El-Biyahe! partners.", tier: "Explorer", required_stamps: 5, active: true },
   { title: "Free buko pie slice — Buko Pie House", description: "Redeem in-store · expires Mar 31", tier: "Explorer", required_stamps: 3, active: true },
 ];
 die("passport_rewards", (await db.from("passport_rewards").insert(rewards)).error);
