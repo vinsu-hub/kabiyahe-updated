@@ -1,0 +1,207 @@
+/* ============================================================
+   ELBI — Come Curious : rebrand shell + priority feature tabs
+   ============================================================ */
+.elbi-topbar{gap:20px}
+.elbi-topbar nav{gap:22px;flex-wrap:nowrap;overflow-x:auto}
+.elbi-topbar nav a{font-size:13px;font-weight:600;white-space:nowrap}
+.elbi-brand{min-width:auto}
+.elbi-brand img{width:auto;height:44px;object-fit:contain}
+.icon-btn{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;color:var(--forest)}
+.icon-btn:hover{background:#eef3ec}
+
+.elbi-page{padding:26px 0 70px}
+.elbi-detail{padding:22px 0 90px;max-width:860px}
+.elbi-page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:18px;flex-wrap:wrap}
+.elbi-page-head h1{font:700 40px/1.05 'Poppins',sans-serif;color:var(--forest);margin:6px 0 4px}
+.elbi-page h2{font:700 22px 'Poppins',sans-serif;color:var(--forest);margin:22px 0 12px}
+.elbi-detail h1{font:700 32px/1.12 'Poppins',sans-serif;color:var(--forest);margin:10px 0 6px}
+.elbi-detail h2{font:700 20px 'Poppins',sans-serif;color:var(--forest);margin:26px 0 12px}
+
+.elbi-view-toggle,.filter-pills{display:flex;gap:8px;flex-wrap:wrap}
+.elbi-view-toggle button,.filter-pills button{min-height:36px;padding:0 14px;border-radius:999px;background:#eef3ec;font-weight:600;display:inline-flex;align-items:center;gap:6px;font-size:13px}
+.elbi-view-toggle button.active,.filter-pills button.active{background:var(--forest);color:#fff}
+.elbi-filter-bar{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
+.elbi-select{display:flex;flex-direction:column;font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--muted);gap:4px}
+.elbi-select select{min-height:36px;border-radius:10px;border:1px solid var(--line);background:var(--paper);padding:0 10px;font-weight:600;color:var(--ink)}
+
+.elbi-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:.08em;background:#e4eee4;color:var(--forest)}
+.elbi-badge.live{background:#c8102e;color:#fff}
+.elbi-badge.grey{background:#6b7280;color:#fff}
+.elbi-badge.ochre{background:var(--ochre);color:#1c1c1c}
+.elbi-badge.sm{font-size:9px;padding:2px 6px}
+.elbi-chip-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0}
+.elbi-chip-row .muted{font-size:12px}
+
+.elbi-event-group{margin-top:8px}
+.elbi-event-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.elbi-event-card{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s}
+.elbi-event-card:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(11,61,46,.12)}
+.elbi-event-card-media{position:relative;height:140px}
+.elbi-event-card-media img{width:100%;height:100%;object-fit:cover}
+.elbi-event-card-media .elbi-badge{position:absolute;left:10px;top:10px}
+.elbi-event-card-body{padding:12px 13px 14px}
+.elbi-event-card-body h3{font-size:15px;font-weight:700;color:var(--forest);margin:6px 0}
+.elbi-event-card-body .muted{font-size:12px;margin:2px 0}
+
+.elbi-map-field{position:relative;height:420px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:linear-gradient(135deg,#d7e6d1,#bfe0d4 50%,#e7edcf)}
+.elbi-map-field.small{height:220px;margin-bottom:14px}
+.elbi-map-field .map-copy{position:absolute;left:18px;top:16px;font-weight:800;color:#3c5a4a}
+.elbi-map-field .pin{position:absolute}
+.map-legend{position:absolute;right:14px;bottom:14px;background:rgba(255,255,255,.94);border-radius:12px;padding:10px 12px;font-size:11px;display:flex;flex-direction:column;gap:5px;font-weight:600}
+.map-legend b{font-size:10px;letter-spacing:.08em;color:var(--muted)}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
+.dot.nature{background:var(--forest)}.dot.food{background:#d17b27}.dot.culture{background:#8B1E3F}.dot.gem{background:var(--ochre)}
+
+.elbi-detail-hero{position:relative;border-radius:16px;overflow:hidden;height:300px;margin-bottom:8px}
+.elbi-detail-hero img{width:100%;height:100%;object-fit:cover}
+.elbi-detail-hero .elbi-badge{position:absolute;left:14px;top:14px}
+.elbi-detail-hero-actions{position:absolute;right:12px;top:12px;display:flex;gap:8px}
+.elbi-detail-hero-actions button{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;color:var(--forest)}
+.elbi-detail-hero-actions button.on{color:#c8102e}
+.elbi-detail-facts{display:flex;flex-direction:column;gap:6px;margin:10px 0 16px;color:var(--muted);font-size:13px}
+.elbi-detail-facts span{display:flex;align-items:center;gap:7px}
+.elbi-rsvp-row{display:flex;gap:10px;margin-bottom:20px}
+.elbi-rsvp{flex:1;min-height:48px;border-radius:12px;background:var(--maroon);color:#fff;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.elbi-rsvp.done{background:var(--forest)}
+.elbi-bookmark{width:48px;border-radius:12px;border:1px solid var(--line);background:var(--paper);display:grid;place-items:center;color:var(--forest)}
+.elbi-tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:14px;overflow-x:auto}
+.elbi-tabs button{padding:9px 12px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
+.elbi-tabs button.active{color:var(--forest);border-color:var(--forest)}
+.elbi-tab-body{line-height:1.6;min-height:60px}
+.elbi-schedule{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:2px}
+.elbi-schedule li{display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px}
+.elbi-schedule li.live{background:#fdecef}
+.elbi-schedule li.done{opacity:.55}
+.elbi-schedule-time{font-weight:700;color:var(--forest);min-width:74px}
+.elbi-organizer{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--forest)}
+.elbi-update{border-left:3px solid var(--ochre);padding:4px 0 4px 12px;margin-bottom:10px}
+.elbi-update b{font-size:12px;color:var(--muted)}
+.elbi-complete-visit{margin-top:28px}
+.elbi-cv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.elbi-cv-item{display:flex;flex-direction:column;gap:8px;padding:16px 14px;border-radius:12px;background:#eef3ec;font-weight:600;color:var(--forest)}
+.elbi-cv-item:hover{background:#e2ebde}
+.elbi-passport-teaser{display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px 16px;border-radius:12px;background:var(--forest);color:var(--cream)}
+.elbi-passport-teaser small{display:block;opacity:.8;font-size:12px}
+.elbi-passport-teaser b{color:#fff}
+
+.elbi-tour-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:16px}
+.elbi-tour-card{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);transition:transform .15s}
+.elbi-tour-card:hover{transform:translateY(-2px)}
+.elbi-tour-card-media{position:relative;height:150px}
+.elbi-tour-card-media img{width:100%;height:100%;object-fit:cover}
+.elbi-tour-card-media .elbi-badge{position:absolute;left:10px;top:10px}
+.elbi-tour-card-body{padding:12px 13px 14px}
+.elbi-tour-card-body h3{font-size:15px;font-weight:700;color:var(--forest);margin:6px 0}
+.elbi-tour-card-body .muted{font-size:12px;flex-wrap:wrap}
+.elbi-tour-card-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.elbi-tour-card-foot b{color:var(--forest);font-size:15px}
+.elbi-tour-card-foot small{font-weight:500;color:var(--muted)}
+.elbi-tour-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:14px 0}
+.elbi-tour-meta div{background:#eef3ec;border-radius:12px;padding:12px;text-align:center}
+.elbi-tour-meta b{display:block;font-size:18px;color:var(--forest)}
+.elbi-tour-meta b.warn{color:#c8102e}
+.elbi-tour-meta small{font-size:11px;color:var(--muted)}
+.elbi-tour-logistics{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin:14px 0}
+.elbi-tour-logistics h3{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--forest);margin:0 0 6px}
+.elbi-tour-logistics ul{margin:0;padding-left:18px;font-size:13px;line-height:1.6}
+.elbi-itinerary ol{list-style:none;padding:0;margin:0}
+.elbi-itinerary li{display:flex;gap:14px;padding:12px 0;border-bottom:1px dashed var(--line)}
+.elbi-itinerary-time{font-weight:700;color:var(--forest);min-width:70px}
+.elbi-reserve-bar{display:flex;justify-content:space-between;align-items:center;gap:14px;background:var(--forest);color:#fff;border-radius:14px;padding:14px 18px;margin-top:22px}
+.elbi-reserve-bar b{font-size:18px}
+.elbi-reserve-bar small{display:block}
+.elbi-reserve-bar .muted{color:#cfe3d8}
+.elbi-referral-note{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin:8px 0 0}
+.elbi-review{border-top:1px solid var(--line);padding:12px 0}
+.elbi-review-head{display:flex;justify-content:space-between;align-items:center}
+
+.elbi-passport-header{display:flex;gap:18px;align-items:center;background:var(--forest);border-radius:18px;padding:18px;color:var(--cream)}
+.elbi-passport-header img{width:110px;height:110px;border-radius:12px;object-fit:cover}
+.elbi-passport-header h1{color:#fff;font:700 26px 'Poppins',sans-serif;margin:8px 0 4px}
+.elbi-passport-header .muted{color:#cfe3d8}
+.elbi-passport-header .progress{margin-top:8px;background:rgba(255,255,255,.25)}
+.elbi-passport-header .progress span{background:var(--ochre)}
+.elbi-scan-btn{width:100%;min-height:52px;border-radius:14px;background:var(--ochre);color:#1c1c1c;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:8px;margin:16px 0}
+.elbi-stamp-success{display:flex;gap:12px;align-items:center;background:#fff7e6;border:1px solid var(--ochre);border-radius:14px;padding:14px;margin-bottom:16px}
+.elbi-stamp-success b{display:block;color:var(--forest)}
+.elbi-stamp-success span{font-weight:700;font-size:13px}
+.elbi-stamp-success small{display:block;color:var(--muted)}
+.elbi-stamp-cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:10px}
+.elbi-stamp-cat{border-radius:12px;padding:14px 10px;text-align:center;color:#fff;font-weight:600}
+.elbi-stamp-cat b{display:block;font-size:22px}
+.elbi-stamp-cat.sage{background:var(--forest)}
+.elbi-stamp-cat.maroon{background:var(--maroon)}
+.elbi-stamp-cat.gold{background:#c9971f}
+.elbi-stamp-cat.teal{background:#2E7D32}
+.elbi-nearby-stamps ul{list-style:none;padding:0;margin:0}
+.elbi-nearby-stamps li{display:flex;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid var(--line)}
+.elbi-nearby-stamps li div{flex:1}
+.elbi-nearby-stamps b{display:block;font-size:14px}
+.elbi-season-track{margin-top:22px;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px}
+.elbi-season-track-head{display:flex;justify-content:space-between;align-items:center}
+.elbi-season-track-head b{font-size:20px;color:var(--forest)}
+.elbi-season-checklist{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.elbi-season-checklist span{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#eef3ec;font-size:12px;font-weight:600}
+.elbi-season-checklist span.done{background:var(--forest);color:#fff}
+.elbi-season-checklist .ring{width:12px;height:12px;border:2px solid var(--muted);border-radius:50%}
+.elbi-rewards{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.elbi-reward{display:flex;align-items:center;gap:10px;padding:12px;border-radius:12px;background:#eef3ec}
+.elbi-reward.locked{opacity:.7}
+.elbi-reward div{flex:1}
+.elbi-reward b{display:block;font-size:13px}
+.elbi-reward small{color:var(--muted)}
+.elbi-reward-state{font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--muted)}
+.elbi-scan-frame{border:2px dashed var(--ochre);border-radius:14px;padding:24px;text-align:center;color:var(--muted);margin:8px 0 14px}
+
+.elbi-route-planner{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px}
+.elbi-route-inputs{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.elbi-route-inputs label{display:flex;flex-direction:column;font-size:11px;font-weight:700;color:var(--muted);gap:4px;flex:1;min-width:160px}
+.elbi-route-inputs input{min-height:40px;border-radius:10px;border:1px solid var(--line);padding:0 10px;font-weight:500;color:var(--ink)}
+.elbi-route-result{display:flex;gap:8px;margin-top:12px;padding:12px;border-radius:10px;background:#eef3ec;line-height:1.5}
+.elbi-route-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.elbi-route-row{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:13px}
+.elbi-route-row-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+.elbi-route-row-head b{color:var(--forest);font-size:14px}
+.elbi-route-row p{margin:3px 0;font-size:13px;line-height:1.45}
+.elbi-tips ul{padding-left:18px;line-height:1.7}
+
+.elbi-hero-section h1{font-weight:700}
+.elbi-hero-section .script{color:#c9971f}
+.elbi-season-banner{display:flex;justify-content:space-between;align-items:center;gap:18px;background:var(--maroon);color:#fff;border-radius:18px;padding:20px 24px;margin:24px auto;flex-wrap:wrap}
+.elbi-season-banner h2{color:#fff;font:700 22px 'Poppins',sans-serif;margin:6px 0}
+.elbi-season-banner .eyebrow{color:var(--ochre)}
+.elbi-season-banner p{opacity:.9;margin:0;max-width:520px}
+.elbi-happening-strip{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,1fr);gap:14px;overflow-x:auto;padding-bottom:6px}
+.elbi-happening-card{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.elbi-happening-card img{width:100%;height:120px;object-fit:cover}
+.elbi-happening-card .elbi-badge{position:absolute;left:10px;top:10px}
+.elbi-happening-card div{padding:11px 12px 13px}
+.elbi-happening-card b{display:block;color:var(--forest);font-size:14px;margin-bottom:5px}
+.elbi-happening-card small{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:12px}
+.elbi-quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px}
+.elbi-quick-item{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 10px;border-radius:14px;background:var(--paper);border:1px solid var(--line);font-weight:600;color:var(--forest);text-align:center}
+.elbi-quick-item:hover{background:#eef3ec}
+.elbi-quick-icon{width:46px;height:46px;border-radius:12px;background:#eef3ec;display:grid;place-items:center;color:var(--forest)}
+.elbi-quick-item small{position:absolute;top:8px;right:8px;font-size:9px;font-weight:800;letter-spacing:.05em;color:var(--muted);text-transform:uppercase}
+.elbi-newsletter{display:flex;justify-content:space-between;align-items:center;gap:20px;background:var(--forest);color:var(--cream);border-radius:18px;padding:24px;margin:28px auto 0;flex-wrap:wrap}
+.elbi-newsletter h2{color:#fff;font:700 22px 'Poppins',sans-serif;margin:6px 0}
+.elbi-newsletter .eyebrow{color:var(--ochre)}
+.elbi-newsletter p{opacity:.85;margin:0}
+.elbi-newsletter form{display:flex;gap:8px}
+.elbi-newsletter input{min-height:44px;border-radius:11px;border:0;padding:0 14px;min-width:220px;background:#fff;color:#1c1c1c}
+
+.elbi-coming-soon{text-align:center;padding:80px 0 120px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.elbi-coming-soon img{width:96px;height:96px;object-fit:contain;margin-bottom:8px}
+.elbi-coming-soon h1{font:700 30px 'Poppins',sans-serif;color:var(--forest);margin:0}
+.elbi-cs-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;justify-content:center}
+
+@media (max-width:900px){
+  .elbi-topbar nav{display:none}
+  .elbi-page-head h1{font-size:32px}
+}
+@media (max-width:640px){
+  .elbi-season-banner,.elbi-newsletter{flex-direction:column;align-items:flex-start}
+  .elbi-newsletter form{width:100%}
+  .elbi-newsletter input{flex:1;min-width:0}
+  .elbi-reserve-bar{flex-direction:column;align-items:stretch;text-align:center}
+}

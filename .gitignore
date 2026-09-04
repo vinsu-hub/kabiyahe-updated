@@ -114,3 +114,6 @@ client/public/__manus__/version.json
 # Optional local image package downloaded for standalone clones
 client/public/assets/
 .project-config.json
+
+# ELBI dev
+screenshots/
