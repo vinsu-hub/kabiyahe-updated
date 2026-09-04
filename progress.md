@@ -1,5 +1,28 @@
 # Progress Log
 
+## 2026-09-05 (Delicacies page rebuild toward the ELBi G! mockup — branch `feat/delicacies-page-mockup`, merged to `main`)
+- Same treatment as the Events page rebuild, applied to `/delicacies` (`D:\El-Biyahe!\website\delecacies.png`
+  + pasted spec). Real content was thin going in: only 4 delicacies existed, none rated, 0 items across
+  most mockup categories.
+- **Researched real, verifiable Los Baños food establishments** (web search, sourced) to responsibly grow
+  the catalog to 14 items — no invented names/ratings/review counts anywhere; Street Food stays at 0 real
+  items (no verifiable named vendor found) rather than padded with filler.
+- Category taxonomy widened to match real coverage — added Cafes & Desserts, Filipino Classics, Healthy
+  Eats, Drinks & Beverages; retired the one-item "Dairy & Desserts" (DTRI moved to Local Favorites).
+- New `dietary_tags` column, tagged only where a source explicitly supports it (Satya Graha's stated vegan
+  menu) — everything else stays untagged since a wrong allergen claim is a real safety issue.
+- New `delicacy_suggestions` table gives "Add a Recommendation" a real (admin-reviewed) capture instead of
+  a fake toast — noted in `todo.md` that there's no admin UI for it yet.
+- Hero (real item-count stat chip, not a fabricated number), 3-column layout: filter rail (search, real
+  per-category counts, price-tier multi-select, dietary checkboxes driven by actual tagged data, location,
+  sort), horizontal category-themed rows (only rendered when non-empty), a merged "More to discover" +
+  LB Passport promo widget rail (replacing the mockup's near-duplicate Trending/Nearby panels per user
+  decision), `DelicacyCard` gains a bookmark heart + opt-in distance.
+- QA: `pnpm check`/`build` clean; Playwright verified real category counts/filters/price/dietary all
+  narrow results correctly, hidden empty rows, suggestion modal round-trips to the DB, 0 console errors.
+  `qa-writeflows.mjs` 8/8; `qa-admin-crud.mjs` create/delete/RLS pass (pre-existing edit-click flakiness,
+  unrelated to this change).
+
 ## 2026-09-04 (Events page rebuild toward the ELBi G! mockup — branch `feat/events-page-mockup`, merged to `main`)
 - User's follow-up ask ("did you actually replicate the mockup?") was answered honestly: no — the prior
   pass was scoped to bugs/oddities only. This pass rebuilds the Events page toward the actual mockup
