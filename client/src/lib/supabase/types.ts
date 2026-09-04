@@ -94,6 +94,8 @@ export interface TourItineraryStop {
   name: string;
   blurb: string | null;
   sort: number;
+  lat: number | null;
+  lng: number | null;
 }
 
 export interface TourReview {
@@ -233,6 +235,8 @@ export interface DestinationRow {
   placeholder: boolean;
   verified: boolean;
   featured: boolean;
+  lat: number | null;
+  lng: number | null;
 }
 
 export interface ScanResult {
