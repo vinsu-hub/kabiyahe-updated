@@ -444,3 +444,10 @@
 - [x] Add an admin Happening management workspace with truthful empty/loading/error states.
 - [x] Add regression tests for timestamp status computation, urgency ordering, admin authorization, notification ownership, and stale-post exclusion.
 - [x] Validate Happening desktop/mobile layouts and document partner submissions, push delivery, payment, and external calendar sync as follow-up boundaries.
+
+## Stock image GitHub delivery
+- [x] Confirm the current repository intentionally excludes binary stock images and document the managed-storage/deployment constraint.
+- [x] Download the eight referenced stock assets into the external static-assets workspace and verify their sizes and content types.
+- [x] Publish a versioned stock-image archive as a public GitHub Release asset after confirming the repository visibility, without adding binaries to the deployment source tree.
+- [x] Update the README with exact GitHub Release download and local setup instructions while preserving the existing asset fetcher.
+- [x] Validate the archive contents, GitHub release availability, and local asset recovery path, then save a checkpoint.
