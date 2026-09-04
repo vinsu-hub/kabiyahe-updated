@@ -214,6 +214,27 @@ export interface ParkingSpotRow {
   hero_image: string | null;
 }
 
+export type DestinationType = "Nature" | "Culture" | "Relaxation" | "Attractions" | "Food" | "Hotels";
+
+export interface DestinationRow {
+  id: string;
+  slug: string;
+  name: string;
+  place: string | null;
+  type: DestinationType;
+  icon_key: string;
+  description: string | null;
+  hero_image: string | null;
+  gallery: string[];
+  rating: number | null;
+  review_count: number | null;
+  tags: string[];
+  price_tier: number;
+  placeholder: boolean;
+  verified: boolean;
+  featured: boolean;
+}
+
 export interface ScanResult {
   ok: boolean;
   reason?: "auth" | "not_found" | "rate_limited" | "too_far" | "already";

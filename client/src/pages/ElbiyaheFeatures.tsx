@@ -952,26 +952,3 @@ export function Parking({ Header, BottomNav, Footer }: Shell) {
   );
 }
 
-/* ============================ COMING SOON ============================ */
-
-export function ComingSoon({ Header, BottomNav, Footer, Button, title }: Shell & { title?: string }) {
-  const [location] = useLocation();
-  const name = title ?? (location.replace("/", "").replace(/-/g, " ") || "This feature");
-  return (
-    <>
-      <Header />
-      <main className="container elbiyahe-coming-soon">
-        <img src="/brand/elbiyahe-mark.png" alt="" />
-        <p className="eyebrow">COMING SOON</p>
-        <h1 style={{ textTransform: "capitalize" }}>{name}</h1>
-        <p className="muted">This El-Biyahe! tab isn't built yet. Events, Bus Tours, Passport, and Ride Guide are live now.</p>
-        <div className="elbiyahe-cs-actions">
-          <Button href="/events"><CalendarDays size={16} /> Browse Events</Button>
-          <Button href="/" variant="secondary">Back home</Button>
-        </div>
-      </main>
-      <Footer />
-      <BottomNav />
-    </>
-  );
-}

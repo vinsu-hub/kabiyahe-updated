@@ -3,8 +3,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "./client";
 import { useAuth } from "./AuthProvider";
 import type {
-  AccommodationRow, DelicacyRow, EventDetailRow, EventRow, ParkingSpotRow, PassportLocationPublic, PassportReward,
-  RideRoute, RideTip, ScanResult, Season, TourPackageDetail, TourPackageRow,
+  AccommodationRow, DelicacyRow, DestinationRow, EventDetailRow, EventRow, ParkingSpotRow, PassportLocationPublic,
+  PassportReward, RideRoute, RideTip, ScanResult, Season, TourPackageDetail, TourPackageRow,
 } from "./types";
 
 const throwIf = <T>({ data, error }: { data: T; error: { message: string } | null }): T => {
@@ -257,6 +257,25 @@ export function useReserveAccommodation() {
       if (stay.booking_referral_url) window.open(stay.booking_referral_url, "_blank", "noopener");
       return true;
     },
+  });
+}
+
+/* ------------------------------------------------------------ destinations */
+export function useDestinations() {
+  return useQuery({
+    queryKey: ["destinations"],
+    queryFn: async () =>
+      throwIf(await supabase.from("destinations").select("*").order("name")) as DestinationRow[],
+    staleTime: 60_000,
+  });
+}
+
+export function useDestination(slug: string | undefined) {
+  return useQuery({
+    enabled: Boolean(slug),
+    queryKey: ["destination", slug],
+    queryFn: async () =>
+      throwIf(await supabase.from("destinations").select("*").eq("slug", slug!).maybeSingle()) as DestinationRow | null,
   });
 }
 

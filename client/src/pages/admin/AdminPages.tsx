@@ -7,8 +7,8 @@ import { supabase } from "@/lib/supabase/client";
 import { adminCounts, deleteRow, listAdmin, replaceChildren, slugify, uploadMedia, upsertRow } from "@/lib/supabase/admin";
 import { AdminShell } from "./AdminShell";
 import type {
-  AccommodationRow, DelicacyRow, EventDetailRow, ParkingSpotRow, PassportLocationPublic, PassportReward, Season,
-  TourOperator, TourPackageDetail,
+  AccommodationRow, DelicacyRow, DestinationRow, EventDetailRow, ParkingSpotRow, PassportLocationPublic, PassportReward,
+  Season, TourOperator, TourPackageDetail,
 } from "@/lib/supabase/types";
 
 /* ------------------------------------------------------------------ helpers */
@@ -855,6 +855,116 @@ export function AdminParkingSpots() {
           </div>
           <Field label="Notes"><textarea rows={2} value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} /></Field>
           <Field label="Hero image"><ImageField value={form.hero_image} onChange={url => setForm({ ...form, hero_image: url })} folder="parking" /></Field>
+        </Drawer>
+      )}
+    </AdminShell>
+  );
+}
+
+/* ------------------------------------------------------------------ destinations */
+
+const EMPTY_DESTINATION = {
+  id: "", slug: "", name: "", place: "", type: "Nature", icon_key: "Compass", description: "",
+  hero_image: "", gallery: "", rating: "", review_count: "", tags: "", price_tier: "1",
+  placeholder: false, verified: false, featured: false,
+};
+type DestinationForm = typeof EMPTY_DESTINATION;
+
+export function AdminDestinations() {
+  const qc = useQueryClient();
+  const { data: rows, isLoading } = useQuery({
+    queryKey: ["admin", "destinations"],
+    queryFn: () => listAdmin<DestinationRow>("destinations", "*", "name"),
+  });
+  const [form, setForm] = useState<DestinationForm | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  const open = (row?: DestinationRow) => setForm(row ? {
+    ...EMPTY_DESTINATION, ...row,
+    place: row.place ?? "", description: row.description ?? "", hero_image: row.hero_image ?? "",
+    gallery: arrToCsv(row.gallery), rating: row.rating != null ? String(row.rating) : "",
+    review_count: row.review_count != null ? String(row.review_count) : "", tags: arrToCsv(row.tags),
+    price_tier: String(row.price_tier),
+  } : { ...EMPTY_DESTINATION });
+
+  const save = async () => {
+    if (!form) return;
+    setSaving(true);
+    try {
+      const { id, gallery, tags, ...f } = form;
+      const row = {
+        ...(id ? { id } : {}),
+        ...f,
+        slug: f.slug || slugify(f.name),
+        place: f.place || null, description: f.description || null, hero_image: f.hero_image || null,
+        gallery: csvToArr(gallery), tags: csvToArr(tags),
+        rating: f.rating ? Number(f.rating) : null,
+        review_count: f.review_count ? Number(f.review_count) : null,
+        price_tier: Number(f.price_tier) || 1,
+      };
+      await upsertRow<any>("destinations", row);
+      qc.invalidateQueries({ queryKey: ["admin", "destinations"] });
+      qc.invalidateQueries({ queryKey: ["destinations"] });
+      setForm(null);
+    } catch (e) { alert((e as Error).message); }
+    setSaving(false);
+  };
+
+  const remove = async (id: string) => {
+    if (!confirm("Delete this destination?")) return;
+    await deleteRow("destinations", id);
+    qc.invalidateQueries({ queryKey: ["admin", "destinations"] });
+    qc.invalidateQueries({ queryKey: ["destinations"] });
+  };
+
+  return (
+    <AdminShell title="Destinations" actions={<button className="btn primary" onClick={() => open()}><Plus size={15} /> New destination</button>}>
+      {isLoading ? <Loader2 className="elbiyahe-spin" /> : (
+        <table className="admin-table">
+          <thead><tr><th>Name</th><th>Type</th><th>Place</th><th>Featured</th><th /></tr></thead>
+          <tbody>
+            {(rows ?? []).map(r => (
+              <tr key={r.id}>
+                <td><button className="admin-link" onClick={() => open(r)}>{r.name}</button></td>
+                <td>{r.type}</td><td>{r.place}</td><td>{r.featured ? "Yes" : ""}</td>
+                <td><button className="admin-row-del" onClick={() => remove(r.id)}><Trash2 size={15} /></button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {form && (
+        <Drawer title={form.id ? "Edit destination" : "New destination"} onClose={() => setForm(null)} onSave={save} saving={saving}>
+          <Field label="Name"><input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} /></Field>
+          <Field label="Slug (blank = auto)"><input value={form.slug} onChange={e => setForm({ ...form, slug: e.target.value })} placeholder={slugify(form.name)} /></Field>
+          <div className="admin-grid2">
+            <Field label="Type">
+              <select value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
+                {["Nature", "Culture", "Relaxation", "Attractions", "Food", "Hotels"].map(c => <option key={c}>{c}</option>)}
+              </select>
+            </Field>
+            <Field label="Icon">
+              <select value={form.icon_key} onChange={e => setForm({ ...form, icon_key: e.target.value })}>
+                {["Mountain", "Landmark", "Sparkles", "Compass", "Utensils", "WalletCards"].map(c => <option key={c}>{c}</option>)}
+              </select>
+            </Field>
+          </div>
+          <Field label="Place"><input value={form.place} onChange={e => setForm({ ...form, place: e.target.value })} /></Field>
+          <Field label="Description"><textarea rows={3} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} /></Field>
+          <Field label="Hero image"><ImageField value={form.hero_image} onChange={url => setForm({ ...form, hero_image: url })} folder="destinations" /></Field>
+          <Field label="Gallery URLs (comma-separated)"><input value={form.gallery} onChange={e => setForm({ ...form, gallery: e.target.value })} /></Field>
+          <div className="admin-grid2">
+            <Field label="Rating"><input value={form.rating} onChange={e => setForm({ ...form, rating: e.target.value })} /></Field>
+            <Field label="Review count"><input value={form.review_count} onChange={e => setForm({ ...form, review_count: e.target.value })} /></Field>
+          </div>
+          <Field label="Tags (comma-separated)"><input value={form.tags} onChange={e => setForm({ ...form, tags: e.target.value })} /></Field>
+          <Field label="Price tier (1-4)"><input value={form.price_tier} onChange={e => setForm({ ...form, price_tier: e.target.value })} /></Field>
+          <div className="admin-grid2">
+            <Field label="Placeholder listing"><input type="checkbox" checked={form.placeholder} onChange={e => setForm({ ...form, placeholder: e.target.checked })} /></Field>
+            <Field label="Research-backed / verified"><input type="checkbox" checked={form.verified} onChange={e => setForm({ ...form, verified: e.target.checked })} /></Field>
+          </div>
+          <Field label="Featured on Home"><input type="checkbox" checked={form.featured} onChange={e => setForm({ ...form, featured: e.target.checked })} /></Field>
         </Drawer>
       )}
     </AdminShell>
