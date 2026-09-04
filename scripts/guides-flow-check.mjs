@@ -29,7 +29,7 @@ for (const [label, viewport] of [["desktop", { width: 1280, height: 900 }], ["mo
 
   await page.getByRole("link", { name: "View guide" }).first().click();
   await page.getByRole("heading", { name: "Kuya Ramon" }).waitFor();
-  const disclaimer = await page.getByText("Kabiyahe does not process guide bookings or payments.").count();
+  const disclaimer = await page.getByText("El-Biyahe! does not process guide bookings or payments.").count();
   const contactUnavailable = await page.getByText(/No direct contact channel is published/).count();
   await page.getByRole("link", { name: "More guides nearby" }).click();
   await page.getByRole("heading", { name: /guide profile/ }).waitFor();

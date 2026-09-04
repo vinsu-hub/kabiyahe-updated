@@ -1,4 +1,4 @@
-/* Hand-authored row types for the ELBI Supabase schema.
+/* Hand-authored row types for the El-Biyahe! Supabase schema.
    (CLI `gen types` needs Docker locally, which isn't available — keep these in
    sync with supabase/migrations/*.sql by hand.) */
 
@@ -154,6 +154,85 @@ export interface Profile {
   role: "user" | "partner" | "admin";
   explorer_level: number;
   xp: number;
+}
+
+export type DelicacyCategory = "Local Favorites" | "Street Food" | "Baked Goods" | "Dairy & Desserts" | "Market Finds";
+
+export interface DelicacyRow {
+  id: string;
+  slug: string;
+  name: string;
+  category: DelicacyCategory;
+  place: string | null;
+  barangay: string | null;
+  lat: number | null;
+  lng: number | null;
+  description: string | null;
+  hero_image: string | null;
+  price_tier: number;
+  rating: number | null;
+  review_count: number;
+  tags: string[];
+  source_url: string | null;
+  featured: boolean;
+}
+
+export type AccommodationCategory = "Hotel" | "Resort" | "Homestay";
+
+export interface AccommodationRow {
+  id: string;
+  slug: string;
+  name: string;
+  category: AccommodationCategory;
+  place: string | null;
+  barangay: string | null;
+  lat: number | null;
+  lng: number | null;
+  price_range: string | null;
+  amenities: string[];
+  description: string | null;
+  hero_image: string | null;
+  booking_referral_url: string | null;
+  rating: number | null;
+  review_count: number;
+  featured: boolean;
+}
+
+export interface ParkingSpotRow {
+  id: string;
+  slug: string;
+  name: string;
+  place: string | null;
+  barangay: string | null;
+  lat: number | null;
+  lng: number | null;
+  kind: "free" | "paid";
+  fee_label: string | null;
+  capacity_estimate: string | null;
+  hours_label: string | null;
+  notes: string | null;
+  hero_image: string | null;
+}
+
+export type DestinationType = "Nature" | "Culture" | "Relaxation" | "Attractions" | "Food" | "Hotels";
+
+export interface DestinationRow {
+  id: string;
+  slug: string;
+  name: string;
+  place: string | null;
+  type: DestinationType;
+  icon_key: string;
+  description: string | null;
+  hero_image: string | null;
+  gallery: string[];
+  rating: number | null;
+  review_count: number | null;
+  tags: string[];
+  price_tier: number;
+  placeholder: boolean;
+  verified: boolean;
+  featured: boolean;
 }
 
 export interface ScanResult {

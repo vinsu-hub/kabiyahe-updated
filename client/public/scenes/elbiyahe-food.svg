@@ -1,17 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" font-family="Poppins,Segoe UI,sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" font-family="system-ui,sans-serif">
   <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#b8860b"/><stop offset="1" stop-color="#FFC629"/></linearGradient></defs>
   <rect width="1200" height="800" fill="url(#sky)"/>
-  <circle cx="960" cy="180" r="70" fill="#0B3D2E" opacity="0.85"/>
+  <circle cx="205" cy="150" r="62" fill="#0B3D2E" opacity="0.85"/>
   <path d="M0 520 L220 300 L360 430 L520 250 L720 470 L900 330 L1200 520 L1200 800 L0 800 Z" fill="#0B3D2E" opacity="0.55"/>
   <path d="M0 600 L260 430 L470 560 L700 400 L950 560 L1200 470 L1200 800 L0 800 Z" fill="#08301F" opacity="0.85"/>
-  
-  
-  
-  
-  
-  
-  
-  <text x="60" y="740" fill="#FFF7E6" font-size="34" font-weight="700" opacity="0.95">ElBi Delicacies</text>
-  <text x="60" y="775" fill="#0B3D2E" font-size="18" font-weight="600" letter-spacing="3">ELBI · COME CURIOUS</text>
 </svg>

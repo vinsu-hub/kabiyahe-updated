@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { CalendarDays, Bus, QrCode, LayoutDashboard, ArrowLeft, Loader2 } from "lucide-react";
+import { CalendarDays, Bus, QrCode, LayoutDashboard, ArrowLeft, Loader2, Utensils, BedDouble, Car, Compass } from "lucide-react";
 import { useAuth } from "@/lib/supabase/AuthProvider";
 
 const NAV = [
@@ -7,19 +7,23 @@ const NAV = [
   { href: "/admin/events", label: "Events", icon: CalendarDays },
   { href: "/admin/tours", label: "Bus Tours", icon: Bus },
   { href: "/admin/passport", label: "Passport", icon: QrCode },
+  { href: "/admin/delicacies", label: "Delicacies", icon: Utensils },
+  { href: "/admin/accommodations", label: "Stay & Eat", icon: BedDouble },
+  { href: "/admin/parking", label: "Parking", icon: Car },
+  { href: "/admin/destinations", label: "Explore", icon: Compass },
 ];
 
 export function RequireAdmin({ children }: { children: React.ReactNode }) {
   const { loading, isAuthenticated, isAdmin } = useAuth();
   const [, navigate] = useLocation();
-  if (loading) return <div className="admin-gate"><Loader2 className="elbi-spin" /> Checking access…</div>;
+  if (loading) return <div className="admin-gate"><Loader2 className="elbiyahe-spin" /> Checking access…</div>;
   if (!isAuthenticated) { navigate("/login?next=/admin"); return null; }
   if (!isAdmin) {
     return (
       <div className="admin-gate">
         <h1>Admin only</h1>
         <p>Your account doesn't have the admin role.</p>
-        <Link href="/" className="btn primary">Back to ELBI</Link>
+        <Link href="/" className="btn primary">Back to El-Biyahe!</Link>
       </div>
     );
   }
@@ -32,7 +36,7 @@ export function AdminShell({ title, children, actions }: { title: string; childr
   return (
     <div className="admin-root">
       <aside className="admin-sidebar">
-        <Link href="/" className="admin-brand"><img src="/brand/elbi-mark.png" alt="" /> <span>ELBI Admin</span></Link>
+        <Link href="/" className="admin-brand"><img src="/brand/elbiyahe-mark.png" alt="" /> <span>El-Biyahe! Admin</span></Link>
         <nav>
           {NAV.map(n => {
             const I = n.icon;

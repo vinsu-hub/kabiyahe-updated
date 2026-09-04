@@ -1,5 +1,5 @@
 /**
- * Generates lightweight themed SVG "photo" placeholders for ELBI until real
+ * Generates lightweight themed SVG "photo" placeholders for El-Biyahe! until real
  * Los Baños photography is dropped into client/public/assets/.
  * Palette: deep green / leaf green / gold / maroon / cream.
  */
@@ -10,16 +10,16 @@ const outDir = path.resolve("./client/public/scenes");
 await mkdir(outDir, { recursive: true });
 
 const scenes = {
-  "elbi-hero.svg":        { sky: ["#0B3D2E", "#2E7D32"], accent: "#FFC629", label: "Mt. Makiling, Los Baños", water: true, sun: true },
-  "elbi-lake.svg":        { sky: ["#125138", "#3f9a6b"], accent: "#FFF7E6", label: "Tadlac Lake", water: true, sun: false },
-  "elbi-falls.svg":       { sky: ["#0B3D2E", "#155C3F"], accent: "#DDEFE4", label: "Dampalit Falls", water: true, sun: false, falls: true },
-  "elbi-sunset.svg":      { sky: ["#8B1E3F", "#FFC629"], accent: "#FFF7E6", label: "Laguna de Bay sunset", water: true, sun: true },
-  "elbi-heritage.svg":    { sky: ["#0B3D2E", "#2E7D32"], accent: "#FFC629", label: "Heritage Los Baños", water: false, sun: true, church: true },
-  "elbi-campus.svg":      { sky: ["#134a34", "#5aa17c"], accent: "#FFF7E6", label: "UPLB Campus", water: false, sun: true, church: false, trees: true },
-  "elbi-market.svg":      { sky: ["#8B1E3F", "#c65a7d"], accent: "#FFC629", label: "ElBi Night Market", water: false, sun: false, tents: true },
-  "elbi-food.svg":        { sky: ["#b8860b", "#FFC629"], accent: "#0B3D2E", label: "ElBi Delicacies", water: false, sun: true },
-  "elbi-passport.svg":    { sky: ["#0B3D2E", "#8B1E3F"], accent: "#FFC629", label: "Digital LB Passport", water: false, sun: false, stamp: true },
-  "elbi-bus.svg":         { sky: ["#0B3D2E", "#2E7D32"], accent: "#FFC629", label: "ELBI Bus Tours", water: false, sun: true, road: true },
+  "elbiyahe-hero.svg":        { sky: ["#0B3D2E", "#2E7D32"], accent: "#FFC629", label: "Mt. Makiling, Los Baños", water: true, sun: true },
+  "elbiyahe-lake.svg":        { sky: ["#125138", "#3f9a6b"], accent: "#FFF7E6", label: "Tadlac Lake", water: true, sun: false },
+  "elbiyahe-falls.svg":       { sky: ["#0B3D2E", "#155C3F"], accent: "#DDEFE4", label: "Dampalit Falls", water: true, sun: false, falls: true },
+  "elbiyahe-sunset.svg":      { sky: ["#8B1E3F", "#FFC629"], accent: "#FFF7E6", label: "Laguna de Bay sunset", water: true, sun: true },
+  "elbiyahe-heritage.svg":    { sky: ["#0B3D2E", "#2E7D32"], accent: "#FFC629", label: "Heritage Los Baños", water: false, sun: true, church: true },
+  "elbiyahe-campus.svg":      { sky: ["#134a34", "#5aa17c"], accent: "#FFF7E6", label: "UPLB Campus", water: false, sun: true, church: false, trees: true },
+  "elbiyahe-market.svg":      { sky: ["#8B1E3F", "#c65a7d"], accent: "#FFC629", label: "El-Biyahe! Night Market", water: false, sun: false, tents: true },
+  "elbiyahe-food.svg":        { sky: ["#b8860b", "#FFC629"], accent: "#0B3D2E", label: "El-Biyahe! Delicacies", water: false, sun: true },
+  "elbiyahe-passport.svg":    { sky: ["#0B3D2E", "#8B1E3F"], accent: "#FFC629", label: "Digital LB Passport", water: false, sun: false, stamp: true },
+  "elbiyahe-bus.svg":         { sky: ["#0B3D2E", "#2E7D32"], accent: "#FFC629", label: "El-Biyahe! Bus Tours", water: false, sun: true, road: true },
 };
 
 const svg = (s) => {
@@ -36,10 +36,10 @@ const svg = (s) => {
   ${s.tents ? `<g>${[["#8B1E3F",180],["#FFC629",430],["#2E7D32",680],["#FFF7E6",930]].map(([c,x])=>`<path d="M${x} 600 l90 -110 l90 110 z" fill="${c}" opacity="0.9"/>`).join("")}</g>` : ""}
   ${s.road ? `<path d="M480 800 L560 500 L640 500 L720 800 Z" fill="#FFF7E6" opacity="0.85"/><rect x="592" y="560" width="16" height="60" fill="#FFC629"/><rect x="592" y="670" width="16" height="60" fill="#FFC629"/>` : ""}
   ${s.falls ? `<rect x="560" y="300" width="80" height="260" fill="#DDEFE4" opacity="0.8"/>` : ""}
-  ${s.stamp ? `<g transform="rotate(-8 600 400)"><rect x="470" y="300" width="260" height="200" rx="10" fill="none" stroke="${s.accent}" stroke-width="10" stroke-dasharray="4 14"/><text x="600" y="415" fill="${s.accent}" font-size="46" font-weight="800" text-anchor="middle">ELBI</text></g>` : ""}
+  ${s.stamp ? `<g transform="rotate(-8 600 400)"><rect x="470" y="300" width="260" height="200" rx="10" fill="none" stroke="${s.accent}" stroke-width="10" stroke-dasharray="4 14"/><text x="600" y="415" fill="${s.accent}" font-size="46" font-weight="800" text-anchor="middle">El-Biyahe!</text></g>` : ""}
   ${s.water ? `<rect y="620" width="1200" height="180" fill="#0B3D2E" opacity="0.4"/><rect y="620" width="1200" height="180" fill="${c2}" opacity="0.3"/>` : ""}
   <text x="60" y="740" fill="#FFF7E6" font-size="34" font-weight="700" opacity="0.95">${s.label}</text>
-  <text x="60" y="775" fill="${s.accent}" font-size="18" font-weight="600" letter-spacing="3">ELBI · COME CURIOUS</text>
+  <text x="60" y="775" fill="${s.accent}" font-size="18" font-weight="600" letter-spacing="3">EL-BIYAHE! · COME CURIOUS</text>
 </svg>`;
 };
 

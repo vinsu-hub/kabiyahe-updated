@@ -1,10 +1,10 @@
-/* React-Query hooks over Supabase for the ELBI feature tabs. */
+/* React-Query hooks over Supabase for the El-Biyahe! feature tabs. */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "./client";
 import { useAuth } from "./AuthProvider";
 import type {
-  EventDetailRow, EventRow, PassportLocationPublic, PassportReward, RideRoute, RideTip,
-  ScanResult, Season, TourPackageDetail, TourPackageRow,
+  AccommodationRow, DelicacyRow, DestinationRow, EventDetailRow, EventRow, ParkingSpotRow, PassportLocationPublic,
+  PassportReward, RideRoute, RideTip, ScanResult, Season, TourPackageDetail, TourPackageRow,
 } from "./types";
 
 const throwIf = <T>({ data, error }: { data: T; error: { message: string } | null }): T => {
@@ -208,6 +208,84 @@ export function useScanPassport() {
     onSuccess: result => {
       if (result.ok) qc.invalidateQueries({ queryKey: ["passport"] });
     },
+  });
+}
+
+/* ---------------------------------------------------------------- delicacies */
+export function useDelicacies() {
+  return useQuery({
+    queryKey: ["delicacies"],
+    queryFn: async () =>
+      throwIf(
+        await supabase.from("delicacies").select("*").order("featured", { ascending: false }).order("name"),
+      ) as DelicacyRow[],
+  });
+}
+
+export function useDelicacy(slug: string | undefined) {
+  return useQuery({
+    enabled: Boolean(slug),
+    queryKey: ["delicacy", slug],
+    queryFn: async () =>
+      throwIf(await supabase.from("delicacies").select("*").eq("slug", slug!).maybeSingle()) as DelicacyRow | null,
+  });
+}
+
+/* ------------------------------------------------------------ accommodations */
+export function useAccommodations() {
+  return useQuery({
+    queryKey: ["accommodations"],
+    queryFn: async () =>
+      throwIf(
+        await supabase.from("accommodations").select("*").order("featured", { ascending: false }).order("name"),
+      ) as AccommodationRow[],
+  });
+}
+
+export function useReserveAccommodation() {
+  const { user } = useAuth();
+  return useMutation({
+    mutationFn: async (stay: { id: string; booking_referral_url: string | null; name: string }) => {
+      if (!user) throw new Error("auth");
+      // Referral-only, mirrors useReserveTour: log the hand-off, never process payment.
+      await supabase.from("referral_events").insert({
+        type: "accommodation_booking",
+        entity_id: stay.id,
+        user_id: user.id,
+        meta: { name: stay.name },
+      });
+      if (stay.booking_referral_url) window.open(stay.booking_referral_url, "_blank", "noopener");
+      return true;
+    },
+  });
+}
+
+/* ------------------------------------------------------------ destinations */
+export function useDestinations() {
+  return useQuery({
+    queryKey: ["destinations"],
+    queryFn: async () =>
+      throwIf(await supabase.from("destinations").select("*").order("name")) as DestinationRow[],
+    staleTime: 60_000,
+  });
+}
+
+export function useDestination(slug: string | undefined) {
+  return useQuery({
+    enabled: Boolean(slug),
+    queryKey: ["destination", slug],
+    queryFn: async () =>
+      throwIf(await supabase.from("destinations").select("*").eq("slug", slug!).maybeSingle()) as DestinationRow | null,
+  });
+}
+
+/* --------------------------------------------------------------- parking */
+export function useParkingSpots() {
+  return useQuery({
+    queryKey: ["parking-spots"],
+    queryFn: async () =>
+      throwIf(await supabase.from("parking_spots").select("*").order("name")) as ParkingSpotRow[],
+    staleTime: 5 * 60_000,
   });
 }
 

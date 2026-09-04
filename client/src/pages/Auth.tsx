@@ -37,14 +37,14 @@ export function Auth({ signup = false }: { signup?: boolean }) {
   return (
     <div className="auth-page">
       <div className="auth-art">
-        <img src="/scenes/elbi-hero.svg" alt="Mt. Makiling, Los Baños" />
+        <img src="/scenes/elbiyahe-hero.svg" alt="Mt. Makiling, Los Baños" />
         <div>
-          <Link href="/" className="brand light"><img src="/brand/elbi-mark.png" alt="" style={{ width: 44, height: 44 }} /><span>ELBI<small>Come Curious</small></span></Link>
+          <Link href="/" className="brand light"><img src="/brand/elbiyahe-mark.png" alt="" style={{ width: 44, height: 44 }} /><span>El-Biyahe!<small>Come Curious</small></span></Link>
           <h1>Discover the many<br />sides of Los Baños.</h1>
         </div>
       </div>
       <section className="auth-card">
-        <Link href="/" className="auth-mark"><img src="/brand/elbi-mark.png" alt="" /></Link>
+        <Link href="/" className="auth-mark"><img src="/brand/elbiyahe-mark.png" alt="" /></Link>
         <p className="eyebrow">{mode === "up" ? "CREATE YOUR ACCOUNT" : "WELCOME BACK"}</p>
         <h1>{mode === "up" ? "Come curious." : "Good to see you again."}</h1>
         <p className="muted">
@@ -78,7 +78,7 @@ export function Auth({ signup = false }: { signup?: boolean }) {
         </form>
 
         <p className="auth-switch">
-          {mode === "up" ? "Already have an account?" : "New to ELBI?"}{" "}
+          {mode === "up" ? "Already have an account?" : "New to El-Biyahe!?"}{" "}
           <button className="link-accent" onClick={() => { setMode(mode === "up" ? "in" : "up"); setMsg(null); setOk(null); }}>
             {mode === "up" ? "Sign in" : "Create an account"}
           </button>

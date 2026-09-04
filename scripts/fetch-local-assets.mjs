@@ -1,9 +1,11 @@
 /**
- * Downloads the eight stock photos into the gitignored `client/public/assets/`
+ * Downloads the web-sized stock photos into the gitignored `client/public/assets/`
  * directory so a fresh clone has imagery without packaging binaries in the repo.
  *
- * Source: the public GitHub Release `v1.0.0-stock-images` for
- * vinsu-hub/kabiyahe-updated (the original Manus `/manus-storage/` host is gone).
+ * Source: the public GitHub Release `v2.0.0` for vinsu-hub/el-biyahe-stock-images.
+ * Per-image attribution lives in scripts/destination-photo-manifest.json.
+ * (The old vinsu-hub/kabiyahe-updated `v1.0.0-stock-images` release is kept as a
+ * documented fallback but is no longer used.)
  *
  *   pnpm assets:download
  */
@@ -15,20 +17,38 @@ import os from "node:os";
 import { existsSync, rmSync } from "node:fs";
 
 const RELEASE_ZIP =
-  process.env.KABIYAHE_ASSET_ZIP_URL ||
-  "https://github.com/vinsu-hub/kabiyahe-updated/releases/download/v1.0.0-stock-images/kabiyahe-stock-images-v1.0.0.zip";
-const ZIP_SHA256 = "33b1439e525dbc26af1dd80618e932170be8948164a2ca9696c9944b27028b7d";
-const outputDir = path.resolve(process.env.KABIYAHE_LOCAL_ASSET_DIR || "./client/public/assets");
+  process.env.ELBIYAHE_ASSET_ZIP_URL ||
+  "https://github.com/vinsu-hub/el-biyahe-stock-images/releases/download/v2.0.0/el-biyahe-stock-images-v2.0.0.zip";
+const ZIP_SHA256 = "de37a30255bb755baa16e44c158cb669bf5f66bf7002c04433d5810c1128adac";
+const outputDir = path.resolve(process.env.ELBIYAHE_LOCAL_ASSET_DIR || "./client/public/assets");
 
 const FILES = [
-  "kabiyahe-hero-laguna_e334210c.jpg",
-  "kabiyahe-calinaya-lake_96b9ff18.jpg",
-  "kabiyahe-pagsanjan-falls_bd37de01.jpg",
-  "kabiyahe-bundles-sunset_99ff267e.jpg",
-  "enchanted-kingdom_a3aaee52.jpg",
-  "al-fresco-springs_c60eb0da.jpg",
-  "laresio-lakeside_049170eb.jpg",
-  "kabiyahe-emblem_04426ca6.png",
+  "elbiyahe-pagsanjan-falls.jpg",
+  "elbiyahe-caliraya-lake.jpg",
+  "elbiyahe-majayjay-church.jpg",
+  "elbiyahe-los-banos-hot-springs.jpg",
+  "elbiyahe-nuvali-lakeside.jpg",
+  "elbiyahe-rizal-shrine.jpg",
+  "elbiyahe-seven-crater-lakes.jpg",
+  "elbiyahe-mount-makiling.jpg",
+  "elbiyahe-makiling-trail.jpg",
+  "elbiyahe-makiling-mud-spring.jpg",
+  "elbiyahe-paete-church.jpg",
+  "elbiyahe-enchanted-kingdom.jpg",
+  "elbiyahe-makiling-botanic-gardens.jpg",
+  "elbiyahe-uplb-mnh.jpg",
+  "elbiyahe-uplb-fertility-tree.jpg",
+  "elbiyahe-uplb-campus.jpg",
+  "elbiyahe-riceworld-museum.jpg",
+  "elbiyahe-st-therese-church.jpg",
+  "elbiyahe-san-antonio-parish.jpg",
+  "elbiyahe-los-banos-municipal-hall.jpg",
+  "elbiyahe-los-banos-public-market.jpg",
+  "elbiyahe-hero-losbanos.jpg",
+  "elbiyahe-laguna-lake.jpg",
+  "elbiyahe-laguna-sunset.jpg",
+  "elbiyahe-al-fresco-springs.jpg",
+  "elbiyahe-laresio-lakeside.jpg",
 ];
 
 const tmp = path.join(os.tmpdir(), `kabiyahe-stock-${Date.now()}`);
@@ -63,7 +83,7 @@ async function main() {
     }
   }
 
-  const imagesDir = path.join(tmp, "kabiyahe-stock-release", "images");
+  const imagesDir = path.join(tmp, "el-biyahe-stock-release", "images");
   for (const file of FILES) {
     const src = path.join(imagesDir, file);
     if (!existsSync(src)) throw new Error(`Missing ${file} in archive`);
