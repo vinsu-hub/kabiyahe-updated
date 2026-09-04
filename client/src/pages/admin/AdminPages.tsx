@@ -95,6 +95,7 @@ export function AdminDashboard() {
             ["Delicacies", data!.delicacies, "/admin/delicacies"],
             ["Accommodations", data!.accommodations, "/admin/accommodations"],
             ["Parking spots", data!.parking_spots, "/admin/parking"],
+            ["Destinations", data!.destinations, "/admin/destinations"],
             ["Tour reservations", data!.tour_reservations, null],
             ["Registered users", data!.profiles, null],
           ].map(([label, n, href]) => {

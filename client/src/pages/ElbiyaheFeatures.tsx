@@ -2,7 +2,7 @@
    shared Coming Soon placeholder. Data comes from Supabase via
    @/lib/supabase/queries. Shared shell (Header/BottomNav/Footer/Button/Tag) is
    passed in from App.tsx. */
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
   ArrowLeft, BadgeCheck, Bookmark, Bus, CalendarDays, Car, Check, ChevronRight,
@@ -492,10 +492,17 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
   const [scanOpen, setScanOpen] = useState(false);
   const [last, setLast] = useState<{ name: string; category: string; total: number } | null>(null);
 
+  useEffect(() => {
+    if (!scanOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setScanOpen(false); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [scanOpen]);
+
   const currentSeason = seasons?.find(s => s.is_current);
-  const total = 30;
+  const total = data && data.locations.length ? data.locations.length : 0;
   const collected = data ? data.scannedLocationIds.length : 0;
-  const pct = Math.round((collected / total) * 100);
+  const pct = total ? Math.round((collected / total) * 100) : 0;
 
   const byCategory = useMemo(() => {
     const counts: Record<string, number> = { Nature: 0, Culture: 0, Food: 0, Science: 0, Event: 0, Community: 0 };
@@ -613,7 +620,7 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
       </main>
 
       {scanOpen && (
-        <div className="modal-backdrop" onClick={() => setScanOpen(false)}>
+        <div className="modal-backdrop" onClick={() => setScanOpen(false)} role="dialog" aria-modal="true" aria-label="Scan Passport">
           <div className="modal" onClick={ev => ev.stopPropagation()}>
             <div className="modal-head"><h2>Scan Passport</h2><button onClick={() => setScanOpen(false)} aria-label="Close">✕</button></div>
             <div className="elbiyahe-scan-frame"><QrCode size={54} /><p>Point your camera at an El-Biyahe! Passport QR around Los Baños.</p></div>
@@ -622,12 +629,13 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
               <input
                 value={code}
                 onChange={ev => setCode(ev.target.value)}
-                placeholder="e.g. El-Biyahe!YAHE-MAKILING"
+                placeholder="e.g. ELBIYAHE-MAKILING"
                 onKeyDown={ev => ev.key === "Enter" && submitCode()}
+                autoFocus
               />
             </label>
             <Button onClick={submitCode} disabled={scan.isPending}>Collect stamp</Button>
-            <p className="muted" style={{ fontSize: 12 }}>Demo codes: El-Biyahe!YAHE-MAKILING · El-Biyahe!YAHE-MUSEUM · El-Biyahe!YAHE-BUKOPIE · El-Biyahe!YAHE-IRRI</p>
+            <p className="muted" style={{ fontSize: 12 }}>Demo codes: ELBIYAHE-MAKILING · ELBIYAHE-MUSEUM · ELBIYAHE-BUKOPIE · ELBIYAHE-IRRI</p>
           </div>
         </div>
       )}
@@ -747,7 +755,7 @@ function DelicacyCard({ d }: { d: DelicacyRow }) {
       <div className="elbiyahe-tour-card-body">
         <div className="elbiyahe-chip-row">{d.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}</div>
         <h3>{d.name}</h3>
-        <p className="muted"><MapPin size={13} /> {d.place}{d.barangay ? `, Brgy. ${d.barangay}` : ""}</p>
+        <p className="muted" style={{ alignItems: "flex-start" }}><MapPin size={13} style={{ flex: "none", marginTop: 2 }} /> <span>{d.place}{d.barangay ? `, Brgy. ${d.barangay}` : ""}</span></p>
         <p className="muted" style={{ fontSize: 12 }}>{d.description}</p>
         <div className="elbiyahe-tour-card-foot">
           <b>{"₱".repeat(d.price_tier)}</b>
@@ -811,7 +819,7 @@ function AccommodationCard({ a, onReserve }: { a: AccommodationRow; onReserve: (
       <div className="elbiyahe-tour-card-body">
         <div className="elbiyahe-chip-row"><span className="tag">{a.category}</span>{a.amenities.slice(0, 2).map(x => <span key={x} className="tag">{x}</span>)}</div>
         <h3>{a.name}</h3>
-        <p className="muted"><MapPin size={13} /> {a.place}{a.barangay ? `, Brgy. ${a.barangay}` : ""}</p>
+        <p className="muted" style={{ alignItems: "flex-start" }}><MapPin size={13} style={{ flex: "none", marginTop: 2 }} /> <span>{a.place}{a.barangay ? `, Brgy. ${a.barangay}` : ""}</span></p>
         <p className="muted" style={{ fontSize: 12 }}>{a.description}</p>
         <div className="elbiyahe-tour-card-foot">
           <b>{a.price_range || "Contact for rates"}</b>
@@ -841,7 +849,9 @@ export function StayEat({ Header, BottomNav, Footer }: Shell) {
     reserve.mutate(
       { id: a.id, booking_referral_url: a.booking_referral_url, name: a.name },
       {
-        onSuccess: () => notify("Opening the venue's own booking channel — El-Biyahe! never processes payment."),
+        onSuccess: () => notify(a.booking_referral_url
+          ? "Opening the venue's own booking channel — El-Biyahe! never processes payment."
+          : "Reservation interest logged. El-Biyahe! never processes payment — contact the venue directly to confirm."),
         onError: err => notify(err.message),
       },
     );

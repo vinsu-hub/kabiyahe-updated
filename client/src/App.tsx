@@ -292,16 +292,33 @@ function DestinationDetail({id}:{id?:string}) {
   const gallery = d.gallery.length ? d.gallery : [d.hero_image || IMG.hero];
   return <><Header/><main className="container detail-page"><Link href="/explore" className="back-link"><ArrowLeft size={16}/> Back to Explore</Link><section className="detail-hero"><img src={gallery[photo]} alt={d.name}/><div className="detail-hero-copy"><div><Tag>{d.type}</Tag>{d.placeholder?<Tag tone="ochre">Placeholder listing</Tag>:d.verified?<Tag tone="ochre">Research-backed</Tag>:<Tag tone="ochre">Curated place</Tag>}</div><h1>{d.name}</h1><p className="muted"><MapPin size={16}/> {d.place} {d.rating&&<><span>·</span> <span className="rating"><Star size={15} fill="currentColor"/> {d.rating} ({d.review_count})</span></>}</p></div><SaveButton label="Save destination"/><button className="share-image" aria-label="Share destination" onClick={()=>notify("Destination link copied to clipboard.")}><Share2 size={18}/></button></section><div className="gallery-strip">{gallery.map((image,i)=><button className={i===photo?"active":""} onClick={()=>setPhoto(i)} key={image}><img src={image} alt={`${d.name} view ${i+1}`}/></button>)}</div>{PHOTO_CREDITS[gallery[photo]]&&<p className="muted" style={{fontSize:12,marginTop:6}}>Photo: {PHOTO_CREDITS[gallery[photo]]}</p>}<div className="detail-layout"><section className="detail-copy"><h2>About</h2><p>{d.description} Experience a place where local stories, fresh air, and a slower pace make room for the moments you remember long after the trip.</p><h2>Details</h2><div className="detail-facts"><span><b>Address</b>{d.place}</span><span><b>Opening hours</b>{d.placeholder?"To be verified":"Check venue before visiting"}</span><span><b>Price range</b>{"₱".repeat(d.price_tier)} · {d.placeholder?"Preview only":"Indicative"}</span><span><b>Recommended duration</b>2–3 hours</span></div><h2>Good for</h2><div>{d.tags.map(t=><Tag key={t}>{t}</Tag>)}</div><div className="location-card"><div className="map-field small-map"><div className="map-copy">{d.name}<br/><small>Laguna</small></div><span className="pin nature">⌖</span></div><Button variant="outline" onClick={()=>notify("Opening map preview for this destination.")}><Map size={15}/> View on Map</Button></div></section><aside className="detail-aside"><div className="side-card action-card"><h2>Make it a trip</h2><Button href="/events"><CalendarDays size={16}/> What's on nearby</Button><Button href="/passport" variant="secondary"><Landmark size={16}/> Passport spots</Button><Button href="/ride-guide" variant="secondary"><Navigation size={16}/> How to get here</Button></div><div className="side-card booking-card"><p className="eyebrow">BOOKING</p><h2>Book directly with the venue.</h2><p>El-Biyahe! links you to the venue's own channel and never processes payment.</p><Button variant="outline ochre" onClick={()=>notify("External booking link ready — this will open the venue site.")}><ExternalLink size={15}/> Book / Reserve</Button></div></aside></div></main><BottomNav/></> }
 
-function Modal({title,onClose,children}:{title:string;onClose:()=>void;children:React.ReactNode}) { return <div className="modal-backdrop" onClick={onClose}><div className="modal" onClick={e=>e.stopPropagation()}><div className="modal-head"><h2>{title}</h2><button onClick={onClose} aria-label="Close dialog"><X size={18}/></button></div>{children}</div></div> }
+function Modal({title,onClose,children}:{title:string;onClose:()=>void;children:React.ReactNode}) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+  return <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-label={title}><div className="modal" onClick={e=>e.stopPropagation()}><div className="modal-head"><h2>{title}</h2><button onClick={onClose} aria-label="Close dialog"><X size={18}/></button></div>{children}</div></div>;
+}
 function Account({savedOnly=false}:{savedOnly?:boolean}) {
   const { profile, user, isAuthenticated, isAdmin, signOut, loading } = useAuth();
   const [, navigate] = useLocation();
-  if (!loading && !isAuthenticated) { navigate("/login?next=/account"); return null; }
+  useEffect(() => {
+    if (!loading && !isAuthenticated) navigate(`/login?next=${savedOnly ? "/saved" : "/account"}`);
+  }, [loading, isAuthenticated, savedOnly, navigate]);
+  if (!loading && !isAuthenticated) return null;
   const name = profile?.display_name ?? "Explorer";
+  if (savedOnly) return <><Header/><main className="container account-page">
+    <div className="account-head">
+      <div className="large-avatar">{name.charAt(0).toUpperCase()}</div>
+      <div><p className="eyebrow">YOUR El-Biyahe!</p><h1>Saved for later</h1><p className="muted">{name}{user?.email ? ` · ${user.email}` : ""}</p></div>
+    </div>
+    <div className="empty-state"><Heart size={26}/><h3>Nothing saved yet.</h3><p>Tap the heart on any destination, event, or stay to keep it here.</p><Button href="/explore">Browse destinations</Button></div>
+  </main><Footer/><BottomNav/></>;
   return <><Header/><main className="container account-page">
     <div className="account-head">
       <div className="large-avatar">{name.charAt(0).toUpperCase()}</div>
-      <div><p className="eyebrow">YOUR El-Biyahe!</p><h1>{savedOnly ? "Saved for later" : "Profile"}</h1><p className="muted">{name}{user?.email ? ` · ${user.email}` : ""}</p></div>
+      <div><p className="eyebrow">YOUR El-Biyahe!</p><h1>Profile</h1><p className="muted">{name}{user?.email ? ` · ${user.email}` : ""}</p></div>
       <Button href="/passport"><Sparkles size={16}/> Open Passport</Button>
     </div>
     <div className="account-grid">
@@ -311,11 +328,11 @@ function Account({savedOnly=false}:{savedOnly?:boolean}) {
     <section className="side-card account-preferences">
       <h2>Account</h2>
       {isAdmin && <Link className="saved-row" href="/admin"><span><b>Admin dashboard</b></span><ChevronRight size={16}/></Link>}
-      <button className="button outline" onClick={async () => { await signOut(); notify("You are signed out."); navigate("/"); }}>Sign out</button>
+      <button className="btn outline" onClick={async () => { await signOut(); notify("You are signed out."); navigate("/"); }}>Sign out</button>
     </section>
   </main><Footer/><BottomNav/></>;
 }
-function NotFound(){return <><Header/><main className="empty-page"><img src={IMG.emblem} alt=""/><h1>That trail is still being mapped.</h1><p>Try one of the routes below.</p><Button href="/">Back home</Button></main><BottomNav/></>}
+function NotFound(){return <><Header/><main className="empty-page"><img src={IMG.emblem} alt=""/><h1>That trail is still being mapped.</h1><p>Try one of these instead:</p><div className="notfound-links">{[["Home","/"],["Events","/events"],["Explore","/explore"],["Delicacies","/delicacies"],["Ride Guide","/ride-guide"],["Passport","/passport"]].map(([l,h])=><Link key={h} href={h} className="link-accent">{l}</Link>)}</div><Button href="/">Back home</Button></main><BottomNav/></>}
 
 const elbiShell = { Header, BottomNav, Footer, Button, Tag };
 function Router(){return <Switch>
