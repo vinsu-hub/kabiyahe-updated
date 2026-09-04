@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "./client";
 import { useAuth } from "./AuthProvider";
 import type {
-  DelicacyRow, EventDetailRow, EventRow, PassportLocationPublic, PassportReward, RideRoute, RideTip,
+  AccommodationRow, DelicacyRow, EventDetailRow, EventRow, PassportLocationPublic, PassportReward, RideRoute, RideTip,
   ScanResult, Season, TourPackageDetail, TourPackageRow,
 } from "./types";
 
@@ -228,6 +228,35 @@ export function useDelicacy(slug: string | undefined) {
     queryKey: ["delicacy", slug],
     queryFn: async () =>
       throwIf(await supabase.from("delicacies").select("*").eq("slug", slug!).maybeSingle()) as DelicacyRow | null,
+  });
+}
+
+/* ------------------------------------------------------------ accommodations */
+export function useAccommodations() {
+  return useQuery({
+    queryKey: ["accommodations"],
+    queryFn: async () =>
+      throwIf(
+        await supabase.from("accommodations").select("*").order("featured", { ascending: false }).order("name"),
+      ) as AccommodationRow[],
+  });
+}
+
+export function useReserveAccommodation() {
+  const { user } = useAuth();
+  return useMutation({
+    mutationFn: async (stay: { id: string; booking_referral_url: string | null; name: string }) => {
+      if (!user) throw new Error("auth");
+      // Referral-only, mirrors useReserveTour: log the hand-off, never process payment.
+      await supabase.from("referral_events").insert({
+        type: "accommodation_booking",
+        entity_id: stay.id,
+        user_id: user.id,
+        meta: { name: stay.name },
+      });
+      if (stay.booking_referral_url) window.open(stay.booking_referral_url, "_blank", "noopener");
+      return true;
+    },
   });
 }
 

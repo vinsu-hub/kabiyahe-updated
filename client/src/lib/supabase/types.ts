@@ -177,6 +177,27 @@ export interface DelicacyRow {
   featured: boolean;
 }
 
+export type AccommodationCategory = "Hotel" | "Resort" | "Homestay";
+
+export interface AccommodationRow {
+  id: string;
+  slug: string;
+  name: string;
+  category: AccommodationCategory;
+  place: string | null;
+  barangay: string | null;
+  lat: number | null;
+  lng: number | null;
+  price_range: string | null;
+  amenities: string[];
+  description: string | null;
+  hero_image: string | null;
+  booking_referral_url: string | null;
+  rating: number | null;
+  review_count: number;
+  featured: boolean;
+}
+
 export interface ScanResult {
   ok: boolean;
   reason?: "auth" | "not_found" | "rate_limited" | "too_far" | "already";

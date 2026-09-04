@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase/client";
 import { adminCounts, deleteRow, listAdmin, replaceChildren, slugify, uploadMedia, upsertRow } from "@/lib/supabase/admin";
 import { AdminShell } from "./AdminShell";
 import type {
-  DelicacyRow, EventDetailRow, PassportLocationPublic, PassportReward, Season, TourOperator, TourPackageDetail,
+  AccommodationRow, DelicacyRow, EventDetailRow, PassportLocationPublic, PassportReward, Season, TourOperator, TourPackageDetail,
 } from "@/lib/supabase/types";
 
 /* ------------------------------------------------------------------ helpers */
@@ -92,6 +92,7 @@ export function AdminDashboard() {
             ["Passport spots", data!.passport_locations, "/admin/passport"],
             ["Rewards", data!.passport_rewards, "/admin/passport"],
             ["Delicacies", data!.delicacies, "/admin/delicacies"],
+            ["Accommodations", data!.accommodations, "/admin/accommodations"],
             ["Tour reservations", data!.tour_reservations, null],
             ["Registered users", data!.profiles, null],
           ].map(([label, n, href]) => {
@@ -638,6 +639,117 @@ export function AdminDelicacies() {
           </div>
           <Field label="Tags (comma-separated)"><input value={form.tags} onChange={e => setForm({ ...form, tags: e.target.value })} /></Field>
           <Field label="Source URL"><input value={form.source_url} onChange={e => setForm({ ...form, source_url: e.target.value })} /></Field>
+          <Field label="Featured"><input type="checkbox" checked={form.featured} onChange={e => setForm({ ...form, featured: e.target.checked })} /></Field>
+        </Drawer>
+      )}
+    </AdminShell>
+  );
+}
+
+/* ------------------------------------------------------------------ accommodations */
+
+const EMPTY_STAY = {
+  id: "", slug: "", name: "", category: "Hotel", place: "", barangay: "", lat: "", lng: "",
+  price_range: "", amenities: "", description: "", hero_image: "", booking_referral_url: "",
+  rating: "", review_count: "0", featured: false,
+};
+type StayForm = typeof EMPTY_STAY;
+
+export function AdminAccommodations() {
+  const qc = useQueryClient();
+  const { data: rows, isLoading } = useQuery({
+    queryKey: ["admin", "accommodations"],
+    queryFn: () => listAdmin<AccommodationRow>("accommodations", "*", "name"),
+  });
+  const [form, setForm] = useState<StayForm | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  const open = (row?: AccommodationRow) => setForm(row ? {
+    ...EMPTY_STAY, ...row,
+    place: row.place ?? "", barangay: row.barangay ?? "", lat: String(row.lat ?? ""), lng: String(row.lng ?? ""),
+    price_range: row.price_range ?? "", amenities: arrToCsv(row.amenities),
+    description: row.description ?? "", hero_image: row.hero_image ?? "",
+    booking_referral_url: row.booking_referral_url ?? "",
+    rating: row.rating != null ? String(row.rating) : "", review_count: String(row.review_count),
+  } : { ...EMPTY_STAY });
+
+  const save = async () => {
+    if (!form) return;
+    setSaving(true);
+    try {
+      const { id, amenities, ...f } = form;
+      const row = {
+        ...(id ? { id } : {}),
+        ...f,
+        slug: f.slug || slugify(f.name),
+        place: f.place || null, barangay: f.barangay || null,
+        lat: f.lat ? Number(f.lat) : null, lng: f.lng ? Number(f.lng) : null,
+        price_range: f.price_range || null, amenities: csvToArr(amenities),
+        description: f.description || null, hero_image: f.hero_image || null,
+        booking_referral_url: f.booking_referral_url || null,
+        rating: f.rating ? Number(f.rating) : null,
+        review_count: Number(f.review_count) || 0,
+      };
+      await upsertRow<any>("accommodations", row);
+      qc.invalidateQueries({ queryKey: ["admin", "accommodations"] });
+      qc.invalidateQueries({ queryKey: ["accommodations"] });
+      setForm(null);
+    } catch (e) { alert((e as Error).message); }
+    setSaving(false);
+  };
+
+  const remove = async (id: string) => {
+    if (!confirm("Delete this stay?")) return;
+    await deleteRow("accommodations", id);
+    qc.invalidateQueries({ queryKey: ["admin", "accommodations"] });
+    qc.invalidateQueries({ queryKey: ["accommodations"] });
+  };
+
+  return (
+    <AdminShell title="Accommodations" actions={<button className="btn primary" onClick={() => open()}><Plus size={15} /> New stay</button>}>
+      {isLoading ? <Loader2 className="elbiyahe-spin" /> : (
+        <table className="admin-table">
+          <thead><tr><th>Name</th><th>Category</th><th>Place</th><th>Featured</th><th /></tr></thead>
+          <tbody>
+            {(rows ?? []).map(r => (
+              <tr key={r.id}>
+                <td><button className="admin-link" onClick={() => open(r)}>{r.name}</button></td>
+                <td>{r.category}</td><td>{r.place}</td><td>{r.featured ? "Yes" : ""}</td>
+                <td><button className="admin-row-del" onClick={() => remove(r.id)}><Trash2 size={15} /></button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {form && (
+        <Drawer title={form.id ? "Edit stay" : "New stay"} onClose={() => setForm(null)} onSave={save} saving={saving}>
+          <Field label="Name"><input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} /></Field>
+          <Field label="Slug (blank = auto)"><input value={form.slug} onChange={e => setForm({ ...form, slug: e.target.value })} placeholder={slugify(form.name)} /></Field>
+          <div className="admin-grid2">
+            <Field label="Category">
+              <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}>
+                {["Hotel", "Resort", "Homestay"].map(c => <option key={c}>{c}</option>)}
+              </select>
+            </Field>
+            <Field label="Price range"><input value={form.price_range} onChange={e => setForm({ ...form, price_range: e.target.value })} placeholder="₱2,500-4,000/night" /></Field>
+          </div>
+          <div className="admin-grid2">
+            <Field label="Place"><input value={form.place} onChange={e => setForm({ ...form, place: e.target.value })} /></Field>
+            <Field label="Barangay"><input value={form.barangay} onChange={e => setForm({ ...form, barangay: e.target.value })} /></Field>
+          </div>
+          <div className="admin-grid2">
+            <Field label="Lat"><input value={form.lat} onChange={e => setForm({ ...form, lat: e.target.value })} /></Field>
+            <Field label="Lng"><input value={form.lng} onChange={e => setForm({ ...form, lng: e.target.value })} /></Field>
+          </div>
+          <Field label="Description"><textarea rows={3} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} /></Field>
+          <Field label="Hero image"><ImageField value={form.hero_image} onChange={url => setForm({ ...form, hero_image: url })} folder="accommodations" /></Field>
+          <Field label="Amenities (comma-separated)"><input value={form.amenities} onChange={e => setForm({ ...form, amenities: e.target.value })} /></Field>
+          <Field label="Booking referral URL"><input value={form.booking_referral_url} onChange={e => setForm({ ...form, booking_referral_url: e.target.value })} /></Field>
+          <div className="admin-grid2">
+            <Field label="Rating"><input value={form.rating} onChange={e => setForm({ ...form, rating: e.target.value })} /></Field>
+            <Field label="Review count"><input value={form.review_count} onChange={e => setForm({ ...form, review_count: e.target.value })} /></Field>
+          </div>
           <Field label="Featured"><input type="checkbox" checked={form.featured} onChange={e => setForm({ ...form, featured: e.target.checked })} /></Field>
         </Drawer>
       )}

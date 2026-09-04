@@ -2,10 +2,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@/lib/supabase/AuthProvider";
 import { useCurrentSeason, useEvents, useTours } from "@/lib/supabase/queries";
-import { BusTours, ComingSoon, Delicacies, EventDetail, EventsList, Passport, RideGuide, TourDetail } from "@/pages/ElbiyaheFeatures";
+import { BusTours, ComingSoon, Delicacies, EventDetail, EventsList, Passport, RideGuide, StayEat, TourDetail } from "@/pages/ElbiyaheFeatures";
 import { Auth } from "@/pages/Auth";
 import { RequireAdmin } from "@/pages/admin/AdminShell";
-import { AdminDashboard, AdminDelicacies, AdminEvents, AdminPassport, AdminTours } from "@/pages/admin/AdminPages";
+import { AdminAccommodations, AdminDashboard, AdminDelicacies, AdminEvents, AdminPassport, AdminTours } from "@/pages/admin/AdminPages";
 import { Link, Route, Switch, useLocation } from "wouter";
 import {
   ArrowLeft, ArrowRight, Archive, BadgeAlert, Bell, BellRing, Bookmark, CalendarDays, Car, Check, CheckCheck, ChevronDown,
@@ -345,7 +345,7 @@ function Router(){return <Switch>
   <Route path="/ride-guide" component={()=><RideGuide {...elbiShell}/>}/>
   <Route path="/delicacies" component={()=><Delicacies {...elbiShell}/>}/>
   <Route path="/parking" component={()=><ComingSoon {...elbiShell} title="Parking"/>}/>
-  <Route path="/stay-eat" component={()=><ComingSoon {...elbiShell} title="Stay & Eat"/>}/>
+  <Route path="/stay-eat" component={()=><StayEat {...elbiShell}/>}/>
   <Route path="/explore" component={Explore}/>
   <Route path="/explore/:id" component={({params}:any)=><DestinationDetail id={params?.id}/>}/>
   <Route path="/account" component={()=><Account/>}/>
@@ -357,6 +357,7 @@ function Router(){return <Switch>
   <Route path="/admin/tours" component={()=><RequireAdmin><AdminTours/></RequireAdmin>}/>
   <Route path="/admin/passport" component={()=><RequireAdmin><AdminPassport/></RequireAdmin>}/>
   <Route path="/admin/delicacies" component={()=><RequireAdmin><AdminDelicacies/></RequireAdmin>}/>
+  <Route path="/admin/accommodations" component={()=><RequireAdmin><AdminAccommodations/></RequireAdmin>}/>
   <Route component={NotFound}/>
 </Switch>}
 function App(){return <><ScrollToTop/><NoticeHost/><Router/></>}

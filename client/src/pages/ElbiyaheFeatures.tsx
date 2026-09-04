@@ -11,10 +11,10 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/lib/supabase/AuthProvider";
 import {
-  useDelicacies, useEvent, useEvents, useMyRsvp, usePassport, useReserveTour, useRideGuide,
-  useScanPassport, useSeasons, useToggleRsvp, useTour, useTours,
+  useAccommodations, useDelicacies, useEvent, useEvents, useMyRsvp, usePassport, useReserveAccommodation,
+  useReserveTour, useRideGuide, useScanPassport, useSeasons, useToggleRsvp, useTour, useTours,
 } from "@/lib/supabase/queries";
-import type { DelicacyRow, EventRow, StampCategory } from "@/lib/supabase/types";
+import type { AccommodationRow, DelicacyRow, EventRow, StampCategory } from "@/lib/supabase/types";
 
 interface Shell {
   Header: React.ComponentType;
@@ -783,6 +783,104 @@ export function Delicacies({ Header, BottomNav, Footer }: Shell) {
         </div>
         {!isLoading && !error && list.length === 0 && (
           <div className="empty-state"><Utensils size={26} /><h3>No delicacies in that category yet.</h3><p>Try another filter.</p></div>
+        )}
+      </main>
+      <Footer />
+      <BottomNav />
+    </>
+  );
+}
+
+/* ============================ STAY & EAT ============================ */
+
+const STAY_EAT_TABS = ["All", "Eat", "Stay"] as const;
+
+function AccommodationCard({ a, onReserve }: { a: AccommodationRow; onReserve: (a: AccommodationRow) => void }) {
+  return (
+    <article className="elbiyahe-tour-card">
+      <div className="elbiyahe-tour-card-media">
+        <img src={a.hero_image || "/scenes/elbiyahe-hero.svg"} alt={a.name} />
+        {a.featured && <span className="elbiyahe-badge ochre">FEATURED</span>}
+      </div>
+      <div className="elbiyahe-tour-card-body">
+        <div className="elbiyahe-chip-row"><span className="tag">{a.category}</span>{a.amenities.slice(0, 2).map(x => <span key={x} className="tag">{x}</span>)}</div>
+        <h3>{a.name}</h3>
+        <p className="muted"><MapPin size={13} /> {a.place}{a.barangay ? `, Brgy. ${a.barangay}` : ""}</p>
+        <p className="muted" style={{ fontSize: 12 }}>{a.description}</p>
+        <div className="elbiyahe-tour-card-foot">
+          <b>{a.price_range || "Contact for rates"}</b>
+          {a.rating ? <span className="rating"><Star size={13} fill="currentColor" /> {Number(a.rating).toFixed(1)}</span> : <span className="unrated">Reviews coming soon</span>}
+        </div>
+        <button className="btn secondary sm" style={{ marginTop: 10, width: "100%" }} onClick={() => onReserve(a)}>
+          <ExternalLink size={13} /> Book / Reserve
+        </button>
+      </div>
+    </article>
+  );
+}
+
+export function StayEat({ Header, BottomNav, Footer }: Shell) {
+  const { data: delicacies } = useDelicacies();
+  const { data: stays, isLoading, error } = useAccommodations();
+  const { user } = useAuth();
+  const [, navigate] = useLocation();
+  const reserve = useReserveAccommodation();
+  const [tab, setTab] = useState<(typeof STAY_EAT_TABS)[number]>("All");
+
+  const eatPlaces = delicacies ?? [];
+  const stayPlaces = stays ?? [];
+
+  const onReserve = (a: AccommodationRow) => {
+    if (!user) { navigate("/login?next=/stay-eat"); return; }
+    reserve.mutate(
+      { id: a.id, booking_referral_url: a.booking_referral_url, name: a.name },
+      {
+        onSuccess: () => notify("Opening the venue's own booking channel — El-Biyahe! never processes payment."),
+        onError: err => notify(err.message),
+      },
+    );
+  };
+
+  return (
+    <>
+      <Header />
+      <main className="container elbiyahe-page">
+        <div className="elbiyahe-page-head">
+          <div>
+            <p className="eyebrow">DINE. STAY. EXPLORE.</p>
+            <h1>Stay &amp; Eat</h1>
+            <p className="muted">Where to eat and where to stay around Los Baños — book or reserve directly with the venue.</p>
+          </div>
+        </div>
+
+        <div className="filter-pills">
+          {STAY_EAT_TABS.map(t => (
+            <button key={t} className={tab === t ? "active" : ""} onClick={() => setTab(t)}>{t}</button>
+          ))}
+        </div>
+
+        {isLoading && <Loading />}
+        {error && <LoadError message={(error as Error).message} />}
+
+        {(tab === "All" || tab === "Eat") && eatPlaces.length > 0 && (
+          <section className="elbiyahe-event-group">
+            <h2>Eat</h2>
+            <div className="elbiyahe-tour-grid">
+              {eatPlaces.map(d => <DelicacyCard d={d} key={d.id} />)}
+            </div>
+          </section>
+        )}
+
+        {(tab === "All" || tab === "Stay") && (
+          <section className="elbiyahe-event-group">
+            <h2>Stay</h2>
+            <div className="elbiyahe-tour-grid">
+              {stayPlaces.map(a => <AccommodationCard a={a} onReserve={onReserve} key={a.id} />)}
+            </div>
+            {!isLoading && !error && stayPlaces.length === 0 && (
+              <div className="empty-state"><Bookmark size={26} /><h3>No stays listed yet.</h3></div>
+            )}
+          </section>
         )}
       </main>
       <Footer />
