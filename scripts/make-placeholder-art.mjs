@@ -16,8 +16,8 @@ const scenes = {
   "elbiyahe-sunset.svg":      { sky: ["#8B1E3F", "#FFC629"], accent: "#FFF7E6", label: "Laguna de Bay sunset", water: true, sun: true },
   "elbiyahe-heritage.svg":    { sky: ["#0B3D2E", "#2E7D32"], accent: "#FFC629", label: "Heritage Los Baños", water: false, sun: true, church: true },
   "elbiyahe-campus.svg":      { sky: ["#134a34", "#5aa17c"], accent: "#FFF7E6", label: "UPLB Campus", water: false, sun: true, church: false, trees: true },
-  "elbiyahe-market.svg":      { sky: ["#8B1E3F", "#c65a7d"], accent: "#FFC629", label: "ElBi Night Market", water: false, sun: false, tents: true },
-  "elbiyahe-food.svg":        { sky: ["#b8860b", "#FFC629"], accent: "#0B3D2E", label: "ElBi Delicacies", water: false, sun: true },
+  "elbiyahe-market.svg":      { sky: ["#8B1E3F", "#c65a7d"], accent: "#FFC629", label: "El-Biyahe! Night Market", water: false, sun: false, tents: true },
+  "elbiyahe-food.svg":        { sky: ["#b8860b", "#FFC629"], accent: "#0B3D2E", label: "El-Biyahe! Delicacies", water: false, sun: true },
   "elbiyahe-passport.svg":    { sky: ["#0B3D2E", "#8B1E3F"], accent: "#FFC629", label: "Digital LB Passport", water: false, sun: false, stamp: true },
   "elbiyahe-bus.svg":         { sky: ["#0B3D2E", "#2E7D32"], accent: "#FFC629", label: "El-Biyahe! Bus Tours", water: false, sun: true, road: true },
 };

@@ -52,7 +52,7 @@ const events = [
     schedule: [{ time_label: "9:00 AM", item: "Stalls open", sort: 1 }, { time_label: "12:00 NN", item: "Market closes", sort: 2 }], updates: [] },
   { slug: "makiling-trail-run", title: "Makiling Trail Run", category: "Sports", season_key: "sol-open", status: "season",
     date_label: "Apr 12, 2026", time_label: "5:30 AM", venue_name: "UPLB College of Forestry", barangay: "Bagong Silang",
-    lat: 14.148, lng: 121.239, attendee_count: 540, hero_image: scene("campus"), organizer: "Elbi Runners Club",
+    lat: 14.148, lng: 121.239, attendee_count: 540, hero_image: scene("campus"), organizer: "El-Biyahe! Runners Club",
     description: "A 10K and 21K trail race on the lower slopes of Mt. Makiling, opening the Sol Open nature season.",
     schedule: [{ time_label: "5:30 AM", item: "21K gun start", sort: 1 }, { time_label: "6:00 AM", item: "10K gun start", sort: 2 }, { time_label: "9:00 AM", item: "Awarding", sort: 3 }], updates: [] },
   { slug: "bay-heritage-walk", title: "Los Baños Heritage Walk", category: "Culture", season_key: "banada", status: "season",
@@ -62,7 +62,7 @@ const events = [
     schedule: [{ time_label: "8:00 AM", item: "Assembly & briefing", sort: 1 }, { time_label: "8:15 AM", item: "Walk begins", sort: 2 }, { time_label: "10:15 AM", item: "Wrap-up at the museum", sort: 3 }], updates: [] },
   { slug: "sibol-weekend-market", title: "Sibol Weekend Market", category: "Community", season_key: "sibol", status: "season",
     date_label: "Jul 5, 2026", time_label: "4:00 PM", venue_name: "Ruby St., Umali Subdivision", barangay: "Batong Malake",
-    lat: 14.170, lng: 121.240, attendee_count: 320, hero_image: scene("market"), organizer: "ElBi Community Market",
+    lat: 14.170, lng: 121.240, attendee_count: 320, hero_image: scene("market"), organizer: "El-Biyahe! Community Market",
     description: "The recurring weekend market of makers, growers, and student startups that anchors the Sibol enterprise season.",
     schedule: [{ time_label: "4:00 PM", item: "Market opens", sort: 1 }, { time_label: "10:00 PM", item: "Market closes", sort: 2 }], updates: [] },
   { slug: "makiling-enchanted-lantern", title: "Makiling Enchanted Lantern Nights", category: "Community", season_key: "makiling-enchanted", status: "season",
@@ -70,7 +70,7 @@ const events = [
     lat: 14.164, lng: 121.240, attendee_count: 780, hero_image: scene("sunset"), organizer: "UPLB Office for Initiatives in Culture and the Arts",
     description: "Lantern installations, a choir festival, and a community countdown opening the Makiling Enchanted holiday season.",
     schedule: [{ time_label: "6:00 PM", item: "Lantern lighting", sort: 1 }, { time_label: "7:00 PM", item: "Choir festival", sort: 2 }, { time_label: "9:00 PM", item: "Community countdown", sort: 3 }], updates: [] },
-  { slug: "elbi-feb-fair-2024-recap", title: "UPLB Feb Fair 2024 — Recap", category: "Community", season_key: "banada", status: "recap",
+  { slug: "uplb-feb-fair-2024-recap", title: "UPLB Feb Fair 2024 — Recap", category: "Community", season_key: "banada", status: "recap",
     date_label: "Feb 2024", time_label: "—", venue_name: "UPLB Freedom Park", barangay: "Batong Malake",
     lat: 14.165, lng: 121.241, attendee_count: 1284, hero_image: scene("market"), organizer: "UP Los Baños University Student Council",
     description: "Last year's fair drew record crowds across three days — 42 vendors, 18 activities, and a sold-out concert night.",
@@ -90,7 +90,7 @@ console.log(`✓ events (${events.length}) + schedule + updates`);
 /* ---------------- tour operators + packages ---------------- */
 const operators = [
   { key: "laguna-heritage-coaches", name: "Laguna Heritage Coaches" },
-  { key: "elbi-discovery-tours", name: "ElBi Discovery Tours" },
+  { key: "elbi-discovery-tours", name: "El-Biyahe! Discovery Tours" },
 ];
 const opId = {};
 for (const o of operators) {
@@ -125,7 +125,7 @@ const tours = [
     duration: "1 Day", price_per_seat: 1299, rating: 4.7, review_count: 18, featured: false, season_key: "banada",
     origin_pickup_points: ["Manila (Ortigas)", "Sta. Rosa"], departure_schedule: "Second & fourth Sundays, 6:30 AM departure",
     seat_capacity: 35, seats_available: 20, includes: ["Air-conditioned coach", "Licensed tour guide", "IRRI Riceworld arranged visit", "Merienda"],
-    hero_image: scene("heritage"), reserve_url: "https://example.com/elbidiscovery/heritage-science",
+    hero_image: scene("heritage"), reserve_url: "https://example.com/elbiyahediscovery/heritage-science",
     summary: "The town's heritage core paired with its science institutions — the parish and museum in the morning, IRRI and the Museum of Natural History after lunch.",
     stops: [
       { time_label: "9:00 AM", name: "San Antonio de Padua Parish", blurb: "Start of the heritage core walk." },
@@ -139,7 +139,7 @@ const tours = [
     duration: "Half Day", price_per_seat: 899, rating: 4.6, review_count: 24, featured: false, season_key: null,
     origin_pickup_points: ["Calamba Crossing", "Los Baños Grove"], departure_schedule: "Daily, 1:00 PM departure · 6:00 PM return",
     seat_capacity: 30, seats_available: 8, includes: ["Air-conditioned coach", "Licensed guide", "Food tasting at 3 stops"],
-    hero_image: scene("food"), reserve_url: "https://example.com/elbidiscovery/campus-flavors",
+    hero_image: scene("food"), reserve_url: "https://example.com/elbiyahediscovery/campus-flavors",
     summary: "An afternoon campus loop — Freedom Park, the Carillon, the Fertility Tree — threaded with buko pie, espasol, and a kesong puti tasting.",
     stops: [
       { time_label: "1:30 PM", name: "UPLB Freedom Park & Carillon", blurb: "Campus landmarks and the story behind them." },
