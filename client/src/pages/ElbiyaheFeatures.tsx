@@ -667,6 +667,12 @@ export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
           </div>
         </div>
 
+        <div className="elbiyahe-ride-choices">
+          <div><Bus size={22} /><b>Jeepney</b><small>Fixed routes along main roads, flat-ish fares</small></div>
+          <div><Car size={22} /><b>Tricycle</b><small>Door-to-door within town zones</small></div>
+          <div><Navigation size={22} /><b>Walking</b><small>UPLB campus and Poblacion are walkable</small></div>
+        </div>
+
         <section className="elbiyahe-route-planner">
           <h2>Plan your route</h2>
           <div className="elbiyahe-route-inputs">
