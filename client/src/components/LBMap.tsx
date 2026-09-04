@@ -74,6 +74,8 @@ export default function LBMap({
   interactive = true,
   showUser = false,
   userCoords = null,
+  routeLine = false,
+  numbered = false,
   height = 420,
   ariaLabel = "Map of Los Baños",
 }: {
@@ -85,6 +87,8 @@ export default function LBMap({
   interactive?: boolean;
   showUser?: boolean;
   userCoords?: LatLng | null;
+  routeLine?: boolean;
+  numbered?: boolean;
   height?: number;
   ariaLabel?: string;
 }) {
@@ -118,6 +122,16 @@ export default function LBMap({
   };
   useEffect(doFit, [fitBounds, points, reduce]);
 
+  const routeGeo = useMemo(
+    () => ({
+      type: "FeatureCollection" as const,
+      features: routeLine && points.length > 1
+        ? [{ type: "Feature" as const, properties: {}, geometry: { type: "LineString" as const, coordinates: points.map(p => [p.lng, p.lat]) } }]
+        : [],
+    }),
+    [routeLine, points],
+  );
+
   const zoneGeo = useMemo(
     () => ({
       type: "FeatureCollection" as const,
@@ -146,6 +160,13 @@ export default function LBMap({
       >
         {interactive && <NavigationControl position="top-right" showCompass={false} />}
 
+        {routeLine && points.length > 1 && (
+          <Source id="lbmap-route" type="geojson" data={routeGeo}>
+            <Layer id="lbmap-route-line" type="line" layout={{ "line-cap": "round", "line-join": "round" }}
+              paint={{ "line-color": "#6d2740", "line-width": 3, "line-opacity": 0.55, "line-dasharray": [1.5, 1.5] }} />
+          </Source>
+        )}
+
         {zones.length > 0 && (
           <Source id="lbmap-zones" type="geojson" data={zoneGeo}>
             <Layer id="lbmap-zones-fill" type="fill" paint={{ "fill-color": ["get", "color"], "fill-opacity": 0.14 }} />
@@ -158,17 +179,19 @@ export default function LBMap({
           </Marker>
         ))}
 
-        {points.map(p => (
+        {points.map((p, i) => (
           <Marker key={p.id} longitude={p.lng} latitude={p.lat} anchor="bottom">
             <button
               className="lbmap-pin"
               style={{ color: colorFor(p.kind) }}
-              aria-label={p.name}
+              aria-label={numbered ? `${i + 1}. ${p.name}` : p.name}
               onClick={e => { e.stopPropagation(); setSelected(p); }}
             >
-              <svg viewBox="0 0 24 32" width="26" height="34" aria-hidden="true">
+              <svg viewBox="0 0 24 32" width={numbered ? 30 : 26} height={numbered ? 38 : 34} aria-hidden="true">
                 <path d="M12 0C5.4 0 0 5.4 0 12c0 8.4 12 20 12 20s12-11.6 12-20C24 5.4 18.6 0 12 0z" fill="currentColor" />
-                <circle cx="12" cy="12" r="4.5" fill="#fffdf8" />
+                {numbered
+                  ? <text x="12" y="16" textAnchor="middle" fontSize="10" fontWeight="800" fill="#fffdf8">{i + 1}</text>
+                  : <circle cx="12" cy="12" r="4.5" fill="#fffdf8" />}
               </svg>
             </button>
           </Marker>

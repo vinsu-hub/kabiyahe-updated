@@ -39,7 +39,8 @@ await page.waitForTimeout(1200);
 rec("sign in", page.url() === base + "/", page.url());
 
 // RSVP on + off
-await page.goto(base + "/events/likha-music-arts-festival", { waitUntil: "networkidle" });
+await page.goto(base + "/events/banamos-festival-2026", { waitUntil: "load" });
+await page.waitForSelector(".elbiyahe-rsvp", { timeout: 15000 });
 await page.click(".elbiyahe-rsvp"); await page.waitForTimeout(1500);
 let r = await db.from("event_rsvps").select("*").eq("user_id", tester.id);
 rec("event RSVP on", (r.data?.length ?? 0) === 1, `${r.data?.length} row(s)`);
@@ -48,7 +49,8 @@ r = await db.from("event_rsvps").select("*").eq("user_id", tester.id);
 rec("event RSVP off", (r.data?.length ?? 0) === 0, `${r.data?.length} row(s)`);
 
 // tour reserve
-await page.goto(base + "/tours/makiling-explorer-tour", { waitUntil: "networkidle" });
+await page.goto(base + "/tours/makiling-explorer-tour", { waitUntil: "load" });
+await page.waitForSelector('button:has-text("Reserve")', { timeout: 15000 }).catch(() => {});
 const tbtn = await page.$('button:has-text("Reserve"), button:has-text("reserve")');
 if (tbtn) {
   await tbtn.click(); await page.waitForTimeout(1800);
@@ -59,7 +61,7 @@ if (tbtn) {
 } else rec("tour reserve", false, "reserve button not found");
 
 // accommodation reserve
-await page.goto(base + "/stay-eat", { waitUntil: "networkidle" });
+await page.goto(base + "/stay-eat", { waitUntil: "load" });
 await page.waitForTimeout(600);
 const abtn = await page.$('button:has-text("Reserve")');
 if (abtn) {
@@ -70,7 +72,7 @@ if (abtn) {
 } else rec("accommodation reserve", false, "reserve button not found");
 
 // passport scan — valid then invalid
-await page.goto(base + "/passport", { waitUntil: "networkidle" });
+await page.goto(base + "/passport", { waitUntil: "load" });
 await page.click('button:has-text("Scan Passport")'); await page.waitForTimeout(500);
 await page.fill(".modal input, [role=dialog] input", "ELBIYAHE-MUSEUM");
 await page.click(".modal .btn, [role=dialog] .btn"); await page.waitForTimeout(2500);
@@ -78,7 +80,7 @@ let ps = await db.from("passport_scans").select("*").eq("user_id", tester.id);
 rec("passport scan (valid)", (ps.data?.length ?? 0) === 1, `${ps.data?.length} scan(s)`);
 await page.screenshot({ path: `${out}/writeflow__passport-scan.png` });
 // invalid
-await page.goto(base + "/passport", { waitUntil: "networkidle" });
+await page.goto(base + "/passport", { waitUntil: "load" });
 await page.click('button:has-text("Scan Passport")'); await page.waitForTimeout(500);
 await page.fill(".modal input, [role=dialog] input", "NOT-A-REAL-CODE");
 await page.click(".modal .btn, [role=dialog] .btn"); await page.waitForTimeout(2000);

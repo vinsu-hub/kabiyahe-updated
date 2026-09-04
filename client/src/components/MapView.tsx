@@ -17,6 +17,8 @@ type Props = {
   interactive?: boolean;
   showUser?: boolean;
   userCoords?: LatLng | null;
+  routeLine?: boolean;
+  numbered?: boolean;
   height?: number;
   ariaLabel?: string;
 };

@@ -12,81 +12,114 @@ const db = createClient(url, key, { auth: { persistSession: false } });
 const die = (label, error) => { if (error) { console.error(`✗ ${label}:`, error.message); process.exit(1); } };
 const scene = (n) => `/scenes/elbiyahe-${n}.svg`;
 
-/* ---------------- seasons ---------------- */
+/* ---------------- seasons ----------------
+   Four-season programming model (from ELBI-Complete-Context §9). Demo "now" is
+   mid-September, which is Makiling Enchanted's lead-in phase — Bañamos (Sep 17) and
+   UPLB Loyalty Day (Oct) run into the December finale. */
 const seasons = [
   { key: "banada", quarter: "Q1", name: "El-Biyahe! Bañada", months: "February", pillars: "Art · Heritage · Culture", is_current: false, sort: 1 },
-  { key: "sol-open", quarter: "Q2", name: "Sol Open", months: "April", pillars: "Nature · Sport · Wellness", is_current: false, sort: 2 },
-  { key: "sibol", quarter: "Q3", name: "Sibol Weekend Market", months: "September", pillars: "Ideas · Innovation · Enterprise", is_current: true, sort: 3 },
-  { key: "makiling-enchanted", quarter: "Q4", name: "Makiling Enchanted", months: "December", pillars: "Community · Tradition · Celebration", is_current: false, sort: 4 },
+  { key: "sol-open", quarter: "Q2", name: "El-Biyahe! Sol Open", months: "April", pillars: "Nature · Sport · Wellness", is_current: false, sort: 2 },
+  { key: "sibol", quarter: "Q3", name: "El-Biyahe! Sibol Weekend Market", months: "July", pillars: "Ideas · Innovation · Enterprise", is_current: false, sort: 3 },
+  { key: "makiling-enchanted", quarter: "Q4", name: "El-Biyahe! Makiling Enchanted", months: "September – December", pillars: "Community · Tradition · Celebration", is_current: true, sort: 4 },
 ];
 die("seasons", (await db.from("seasons").upsert(seasons, { onConflict: "key" })).error);
 console.log(`✓ seasons (${seasons.length})`);
 
-/* ---------------- events ---------------- */
+/* ---------------- events ----------------
+   The real Los Baños community calendar (from the Municipality's "Discover Los Baños"
+   guide p.9 + ELBI-Complete-Context §9–10). No invented events. */
 const events = [
-  { slug: "banamos-festival-2026", title: "25th Bañamos Festival & 411th Founding Anniversary", category: "Community", season_key: "sibol", status: "live",
+  // ---- Anytime: self-guided / recurring ----
+  { slug: "los-banos-heritage-walk", title: "Los Baños Heritage Walk", category: "Culture", season_key: "banada", status: "anytime",
+    date_label: "Self-guided · anytime", time_label: "~2.5 km on foot", venue_name: "Immaculate Conception Parish, Poblacion", barangay: "Poblacion",
+    lat: 14.1772, lng: 121.2170, attendee_count: 0, hero_image: scene("heritage"), organizer: "Los Baños Tourism Office",
+    description: "A 17-stop self-guided walking tour through the places that shaped Los Baños — from the 1613 Immaculate Conception Parish and the ruins of Agua Santa Resort to the old train station, Baker Hall, and the hot springs that gave the town its name.",
+    schedule: [], updates: [] },
+  { slug: "sunset-at-the-park", title: "Sunset at the Park", category: "Community", season_key: null, status: "anytime",
+    date_label: "Every weekend", time_label: "Late afternoon till evening", venue_name: "Old Pantalan, Los Baños", barangay: "Bayog",
+    lat: 14.1793, lng: 121.2430, attendee_count: 600, hero_image: scene("sunset"), organizer: "Los Baños Tourism Office",
+    description: "The town's newest weekend destination at Old Pantalan on Laguna de Bay — live performances, bazaars, and local products every weekend, year-round.",
+    schedule: [], updates: [] },
+
+  // ---- Now: Makiling Enchanted lead-in ----
+  { slug: "banamos-festival-2026", title: "25th Bañamos Festival & 411th Founding Anniversary", category: "Community", season_key: "makiling-enchanted", status: "live",
     date_label: "Sep 17–19, 2026", time_label: "All day", venue_name: "Los Baños Town Proper (Poblacion)", barangay: "Timugan / Poblacion",
     lat: 14.1699, lng: 121.2168, attendee_count: 5000, hero_image: scene("heritage"),
     organizer: "Municipal Government of Los Baños",
-    description: "The celebration is back, Los Bañenses! Three days of culture, tradition, music, talent, and community spirit for the 25th Bañamos Festival and the 411th Founding Anniversary of Los Baños. This year's theme: \"Honoring Heritage, Sustaining Traditions, Rekindling the Los Baños Spirit.\" This is our heritage. This is our tradition. This is the Los Baños Spirit.",
+    description: "The celebration is back, Los Bañenses! A grand civic parade, street dancing, and science exhibits marking the 25th Bañamos Festival and the 411th Founding Anniversary of Los Baños. This year's theme: \"Honoring Heritage, Sustaining Traditions, Rekindling the Los Baños Spirit.\"",
     schedule: [
       { time_label: "Sep 17", item: "Opening parade & civic program", state: "done", sort: 1 },
-      { time_label: "Sep 18", item: "Cultural night, street dancing & talent showcase", state: "live", sort: 2 },
-      { time_label: "Sep 19", item: "Founding anniversary rites & community fair", state: "next", sort: 3 },
+      { time_label: "Sep 18", item: "Street dancing, cultural night & talent showcase", state: "live", sort: 2 },
+      { time_label: "Sep 19", item: "Founding anniversary rites, science exhibits & community fair", state: "next", sort: 3 },
     ],
-    updates: [{ ago_label: "just now", body: "Festival week is here — check the calendar and save the dates. Full schedule at the town plaza." }] },
-  { slug: "uplb-feb-fair-2025", title: "UPLB Sibol Fair 2026", category: "Community", season_key: "sibol", status: "live",
-    date_label: "Sep 19, 2026", time_label: "5:00 PM", venue_name: "UPLB Freedom Park", barangay: "Batong Malake",
-    lat: 14.165, lng: 121.241, attendee_count: 1284, hero_image: scene("market"),
+    updates: [{ ago_label: "just now", body: "Festival week is here — check the calendar, save the dates, and be part of the celebration. Full schedule at the town plaza." }] },
+
+  // ---- This month: October ----
+  { slug: "uplb-loyalty-day", title: "UPLB Loyalty Day", category: "Community", season_key: "makiling-enchanted", status: "week",
+    date_label: "October 2026", time_label: "Whole day", venue_name: "UPLB Campus", barangay: "Batong Malake",
+    lat: 14.1650, lng: 121.2410, attendee_count: 3000, hero_image: scene("campus"),
+    organizer: "University of the Philippines Los Baños",
+    description: "The annual UPLB alumni homecoming — a campus parade, reunions across the colleges, and the Flower and Garden Show along the university's tree-lined avenues.",
+    schedule: [], updates: [] },
+  { slug: "flower-and-garden-show", title: "Flower & Garden Show", category: "Community", season_key: "makiling-enchanted", status: "week",
+    date_label: "October 2026", time_label: "Daytime", venue_name: "UPLB Campus (with Loyalty Day)", barangay: "Batong Malake",
+    lat: 14.1655, lng: 121.2405, attendee_count: 1500, hero_image: scene("food"),
+    organizer: "Los Baños Horticultural Society (LBHSI)",
+    description: "Organized by the Los Baños Horticultural Society alongside UPLB Loyalty Day — native and exotic ornamental plants, orchids, and gardening supplies from local nurseries.",
+    schedule: [], updates: [] },
+
+  // ---- This season: December finale ----
+  { slug: "makiling-enchanted-holidays", title: "Makiling Enchanted Holidays", category: "Community", season_key: "makiling-enchanted", status: "season",
+    date_label: "December 2026", time_label: "Evenings", venue_name: "UPLB Carillon Plaza & the poblacion", barangay: "Batong Malake",
+    lat: 14.1640, lng: 121.2400, attendee_count: 4000, hero_image: scene("sunset"),
+    organizer: "UPLB OICA · Municipal Government of Los Baños",
+    description: "The Makiling Enchanted season finale — lantern installations, a choir festival, and a community countdown closing out the year around the university carillon and the town plaza.",
+    schedule: [], updates: [] },
+
+  // ---- Past this year / recurring anchors ----
+  { slug: "syensaya", title: "SyenSaya Science Festival", category: "Community", season_key: "sibol", status: "recap",
+    date_label: "July 2026", time_label: "Whole day", venue_name: "UPLB & the Los Baños community", barangay: "Batong Malake",
+    lat: 14.1660, lng: 121.2430, attendee_count: 8000, hero_image: scene("campus"),
+    organizer: "UPLB · Los Baños science community",
+    description: "The Special Science and Nature City's flagship festival — interactive exhibits, technology forums, a grand parade, and open houses across the research institutes that anchor the Sibol season.",
+    schedule: [], updates: [] },
+  { slug: "uplb-feb-fair", title: "UPLB Feb Fair", category: "Community", season_key: "banada", status: "recap",
+    date_label: "February 2026", time_label: "Week-long", venue_name: "UPLB Freedom Park", barangay: "Batong Malake",
+    lat: 14.1650, lng: 121.2410, attendee_count: 15000, hero_image: scene("market"),
     organizer: "UP Los Baños University Student Council",
-    description: "A campus-wide fair for the Sibol enterprise season — student-startup booths, org fundraisers, food stalls, and concert nights across a week of programming at Freedom Park.",
-    schedule: [
-      { time_label: "5:00 PM", item: "Opening Program", state: "done", sort: 1 },
-      { time_label: "6:00 PM", item: "Student Performances", state: "live", sort: 2 },
-      { time_label: "7:30 PM", item: "Band Performance", state: "next", sort: 3 },
-      { time_label: "9:00 PM", item: "Fireworks Show", state: "next", sort: 4 },
-    ],
-    updates: [{ ago_label: "10 mins ago", body: "Program update: Fireworks moved to 9:00 PM due to weather." }] },
-  { slug: "likha-music-arts-festival", title: "Likha Music & Arts Festival", category: "Arts", season_key: "sibol", status: "today",
-    date_label: "Sep 18, 2026", time_label: "7:00 PM", venue_name: "Baker Hall, UPLB", barangay: "Batong Malake",
-    lat: 14.164, lng: 121.239, attendee_count: 430, hero_image: scene("heritage"), organizer: "Likha Collective",
-    description: "An evening of local bands, spoken word, and a pop-up art market celebrating Los Baños creatives.",
-    schedule: [
-      { time_label: "7:00 PM", item: "Art market opens", sort: 1 },
-      { time_label: "8:00 PM", item: "Live sets begin", sort: 2 },
-      { time_label: "10:30 PM", item: "Closing jam", sort: 3 },
-    ], updates: [] },
-  { slug: "art-in-the-park-popup", title: "Art in the Park Pop-up Market", category: "Arts", season_key: "sibol", status: "today",
-    date_label: "Sep 20, 2026", time_label: "9:00 AM", venue_name: "Old Pantalan, Los Baños", barangay: "Bayog",
-    lat: 14.178, lng: 121.243, attendee_count: 210, hero_image: scene("lake"), organizer: "Los Baños Tourism Office",
-    description: "A morning lakeside market with handmade crafts, prints, and merienda from Los Baños makers.",
-    schedule: [{ time_label: "9:00 AM", item: "Stalls open", sort: 1 }, { time_label: "12:00 NN", item: "Market closes", sort: 2 }], updates: [] },
-  { slug: "makiling-trail-run", title: "Makiling Trail Run", category: "Sports", season_key: "sol-open", status: "season",
-    date_label: "Apr 11, 2027", time_label: "5:30 AM", venue_name: "UPLB College of Forestry", barangay: "Bagong Silang",
-    lat: 14.148, lng: 121.239, attendee_count: 540, hero_image: scene("campus"), organizer: "El-Biyahe! Runners Club",
-    description: "A 10K and 21K trail race on the lower slopes of Mt. Makiling, opening the Sol Open nature season.",
-    schedule: [{ time_label: "5:30 AM", item: "21K gun start", sort: 1 }, { time_label: "6:00 AM", item: "10K gun start", sort: 2 }, { time_label: "9:00 AM", item: "Awarding", sort: 3 }], updates: [] },
-  { slug: "bay-heritage-walk", title: "Los Baños Heritage Walk", category: "Culture", season_key: "sibol", status: "week",
-    date_label: "Sep 27, 2026", time_label: "8:00 AM", venue_name: "Meet at San Antonio de Padua Parish", barangay: "Poblacion",
-    lat: 14.177, lng: 121.219, attendee_count: 96, hero_image: scene("heritage"), organizer: "Los Baños Tourism Office",
-    description: "A guided two-hour walk through the town's heritage core — the parish, the old bath houses, and heritage homes along the poblacion.",
-    schedule: [{ time_label: "8:00 AM", item: "Assembly & briefing", sort: 1 }, { time_label: "8:15 AM", item: "Walk begins", sort: 2 }, { time_label: "10:15 AM", item: "Wrap-up at the old train station", sort: 3 }], updates: [] },
-  { slug: "sibol-weekend-market", title: "Sibol Weekend Market", category: "Community", season_key: "sibol", status: "week",
-    date_label: "Every Sat–Sun · through September", time_label: "4:00 PM", venue_name: "Ruby St., Umali Subdivision", barangay: "Batong Malake",
-    lat: 14.170, lng: 121.240, attendee_count: 320, hero_image: scene("market"), organizer: "El-Biyahe! Community Market",
-    description: "The recurring weekend market of makers, growers, and student startups that anchors the Sibol enterprise season.",
-    schedule: [{ time_label: "4:00 PM", item: "Market opens", sort: 1 }, { time_label: "10:00 PM", item: "Market closes", sort: 2 }], updates: [] },
-  { slug: "makiling-enchanted-lantern", title: "Makiling Enchanted Lantern Nights", category: "Community", season_key: "makiling-enchanted", status: "season",
-    date_label: "Dec 12, 2026", time_label: "6:00 PM", venue_name: "UPLB Carillon Plaza", barangay: "Batong Malake",
-    lat: 14.164, lng: 121.240, attendee_count: 780, hero_image: scene("sunset"), organizer: "UPLB Office for Initiatives in Culture and the Arts",
-    description: "Lantern installations, a choir festival, and a community countdown opening the Makiling Enchanted holiday season.",
-    schedule: [{ time_label: "6:00 PM", item: "Lantern lighting", sort: 1 }, { time_label: "7:00 PM", item: "Choir festival", sort: 2 }, { time_label: "9:00 PM", item: "Community countdown", sort: 3 }], updates: [] },
-  { slug: "uplb-feb-fair-2024-recap", title: "UPLB Feb Fair 2024 — Recap", category: "Community", season_key: "banada", status: "recap",
-    date_label: "Feb 2024", time_label: "—", venue_name: "UPLB Freedom Park", barangay: "Batong Malake",
-    lat: 14.165, lng: 121.241, attendee_count: 1284, hero_image: scene("market"), organizer: "UP Los Baños University Student Council",
-    description: "Last year's fair drew record crowds across three days — 42 vendors, 18 activities, and a sold-out concert night.",
+    description: "The biggest campus fair of the year — a week of live music, food stalls, org booths, and a festive atmosphere that opens the Bañada season every February.",
+    schedule: [], updates: [] },
+  { slug: "likha-music-arts-festival", title: "Likha Music & Arts Festival", category: "Arts", season_key: "banada", status: "recap",
+    date_label: "February 2026", time_label: "Evening", venue_name: "Los Baños", barangay: "Batong Malake",
+    lat: 14.1640, lng: 121.2390, attendee_count: 800, hero_image: scene("heritage"), organizer: "Likha Collective",
+    description: "Performances by local musicians, dancers, and visual artists celebrating the Los Baños creative community during Bañada season.",
+    schedule: [], updates: [] },
+  { slug: "los-banos-raid-commemoration", title: "Los Baños Raid Commemoration", category: "Culture", season_key: "banada", status: "recap",
+    date_label: "February 23, 2026", time_label: "Morning ceremony", venue_name: "Baker Hall, UPLB", barangay: "Batong Malake",
+    lat: 14.1642, lng: 121.2401, attendee_count: 500, hero_image: scene("heritage"),
+    organizer: "Municipal Government of Los Baños",
+    description: "A ceremony every February 23 at Baker Hall commemorating the heroic 1945 raid that rescued over 2,000 Allied prisoners of war interned on the UPLB campus.",
+    schedule: [], updates: [] },
+  { slug: "mt-makiling-trail-activities", title: "Mt. Makiling Trail Activities", category: "Sports", season_key: "sol-open", status: "season",
+    date_label: "El-Biyahe! Sol Open · April", time_label: "Best in the cool dry months", venue_name: "Mt. Makiling Forest Reserve", barangay: "Bagong Silang",
+    lat: 14.1350, lng: 121.2000, attendee_count: 0, hero_image: scene("falls"),
+    organizer: "Makiling Center for Mountain Ecosystems (UPLB)",
+    description: "Hiking, biking, and birdwatching across the 10,000-hectare protected forest reserve — visit Magnetic Hill, Flatrocks, Mudspring, and Aguila Base, or hike to Peak Two for a summit view. The anchor of the Sol Open nature season.",
     schedule: [], updates: [] },
 ];
+
+// remove any events no longer in the calendar
+const keepSlugs = events.map(e => e.slug);
+{
+  const { data: stale } = await db.from("events").select("id,slug").not("slug", "in", `(${keepSlugs.join(",")})`);
+  for (const s of stale ?? []) {
+    await db.from("event_schedule_items").delete().eq("event_id", s.id);
+    await db.from("event_updates").delete().eq("event_id", s.id);
+    await db.from("event_rsvps").delete().eq("event_id", s.id);
+    await db.from("events").delete().eq("id", s.id);
+    console.log(`  – removed stale event ${s.slug}`);
+  }
+}
 
 for (const { schedule, updates, ...row } of events) {
   const { data, error } = await db.from("events").upsert(row, { onConflict: "slug" }).select("id").single();

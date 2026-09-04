@@ -1,5 +1,30 @@
 # Progress Log
 
+## 2026-09-04 (Explore LB-focus + real Events calendar + Heritage Walk — branch `feat/heritage-walk-events`)
+- **Events tab is now the real Los Baños calendar.** `scripts/seed.mjs` events array rewritten to 11 real
+  events (Bañamos Festival & 411th Founding Anniversary Sep 17–19, UPLB Loyalty Day, Flower & Garden Show,
+  Makiling Enchanted Holidays, SyenSaya, UPLB Feb Fair, Likha, LB Raid Commemoration, Mt. Makiling trail
+  activities, the Heritage Walk, Sunset at the Park) — 4 invented events dropped; seed now deletes stale
+  slugs (7 removed). Seasons aligned to the doc names + `makiling-enchanted` set `is_current`
+  ("September – December", Bañamos/Loyalty Day are its lead-ins).
+- **New `anytime` event status** — migration `20260907090001_event_status_anytime.sql` (check constraint),
+  `EventStatus` type, `EVENT_GROUPS` gets "Anytime in Los Baños" as the first group, admin status dropdown.
+- **Heritage Walk is a real feature.** Migration `20260907090002_heritage_walk.sql` →
+  `heritage_walk_stops` (public-read RLS). `scripts/seed-heritage-walk.mjs` seeds all 17 stops with
+  verbatim guide blurbs, era groups, hand-sourced coords (17/17), passport flags. New `/heritage-walk`
+  page (`HeritageWalk` in `ElbiyaheFeatures.tsx`): intro, 17-marker numbered map with a dashed route line
+  (`LBMap` gained `routeLine`/`numbered` props), stops grouped by era with Directions links, "Make it a
+  trip" cross-links. The Heritage Walk event detail links to it. `useHeritageWalk()` hook + `HeritageWalkStop` type.
+- **Explore focuses on Los Baños.** Map opens centered on `LB_CENTER` z12.8; `fitBounds` only when the
+  user searches/filters/sorts-nearby. Result list splits into "In Los Baños" then "Nearby Laguna day
+  trips" via new `isLosBanos()` geo helper (~7 km of poblacion). Sub-copy updated.
+- **Explore dead space filled** — new `.explore-map-aside` under the map: a 5-colour marker legend +
+  a Heritage Walk callout card. `.map-field` is now column-flow in map view so the ~180px gap is gone.
+- QA: `pnpm check` + `pnpm build` clean, `maplibre-gl` still a lazy async chunk. Playwright smoke of
+  `/events` `/heritage-walk` `/explore` — all render, 17 markers on the walk map, 0 console errors.
+  `qa-writeflows.mjs` 8/8 (updated: RSVP flow now targets a live event since Likha is a recap;
+  `networkidle` → `load` for the live-map pages).
+
 ## 2026-09-04 (Real maps + Bañamos Festival + backlog — branch `feat/real-maps`, merged to `main`)
 - **Real maps** replace every fake CSS "map" (gradient + randomly-positioned pins):
   - `MapLibre GL JS` + `react-map-gl` v8, basemap = OpenStreetMap standard raster (keyless, no billing;

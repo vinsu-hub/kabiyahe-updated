@@ -3,7 +3,7 @@
    sync with supabase/migrations/*.sql by hand.) */
 
 export type EventCategory = "Culture" | "Sports" | "Arts" | "Community";
-export type EventStatus = "live" | "today" | "week" | "season" | "recap";
+export type EventStatus = "live" | "today" | "week" | "season" | "recap" | "anytime";
 export type StampCategory = "Nature" | "Culture" | "Food" | "Science" | "Event" | "Community";
 
 export interface Season {
@@ -237,6 +237,17 @@ export interface DestinationRow {
   featured: boolean;
   lat: number | null;
   lng: number | null;
+}
+
+export interface HeritageWalkStop {
+  id: string;
+  sort: number;
+  name: string;
+  blurb: string;
+  era_group: string;
+  lat: number | null;
+  lng: number | null;
+  is_passport_spot: boolean;
 }
 
 export interface ScanResult {

@@ -485,6 +485,37 @@ main,.auth-page{animation:page-reveal var(--motion-slow) var(--ease-out) both}.h
   .map-field{height:420px;margin-top:12px;min-height:0}
   .explore-workspace.list .map-field,.explore-workspace.grid .map-field{display:none}
 }
+/* Explore map-field: column flow so the aside sits under the map (kills the dead space) */
+.explore-workspace.map .map-field{display:flex;flex-direction:column;height:auto;overflow:visible;background:none}
+.explore-workspace.map .map-field:before{display:none}
+.explore-workspace.map .map-field .lbmap{flex:0 0 auto;border-radius:0}
+.explore-map-aside{display:flex;flex-wrap:wrap;gap:12px;padding:14px;background:var(--paper);border-top:1px solid var(--line)}
+.explore-map-aside>*{flex:1 1 230px;min-width:0}
+.map-legend-card{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff}
+.map-legend-card h4{margin:0 0 8px;font:700 12px/1.1 Inter,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--forest)}
+.map-legend-card ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.map-legend-card li{display:flex;align-items:center;gap:8px;font:600 12px/1.2 Inter,sans-serif;color:var(--ink)}
+.map-legend-card .dot{width:11px;height:11px;border-radius:999px;flex:0 0 auto}
+.heritage-callout-card{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff;text-decoration:none;color:inherit;transition:border-color .18s var(--ease-out),transform .18s var(--ease-out)}
+.heritage-callout-card:hover{border-color:var(--ochre);transform:translateY(-1px)}
+.heritage-callout-card svg{color:var(--ochre);flex:0 0 auto;margin-top:2px}
+.heritage-callout-card b{display:block;font:700 14px/1.25 Inter,sans-serif;color:var(--forest)}
+.heritage-callout-card small{display:block;margin:3px 0 6px;color:var(--muted);font-size:12px;line-height:1.35}
+.heritage-callout-card .link-accent{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:12px}
+.result-group-head{margin:18px 0 8px;font:700 13px/1.1 Inter,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.result-list>.result-group-head:first-of-type{margin-top:4px}
+
+/* Heritage Walk page */
+.elbiyahe-heritage-era{margin:26px 0}
+.elbiyahe-heritage-era>h2{margin:0 0 12px}
+.elbiyahe-heritage-list{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.elbiyahe-heritage-list>li{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start}
+.elbiyahe-heritage-num{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;background:var(--forest);color:#fff;font:800 13px/1 Inter,sans-serif}
+.elbiyahe-heritage-list b{display:inline}
+.elbiyahe-heritage-list .tag.ochre{margin-left:8px;font-size:11px}
+.elbiyahe-heritage-list p{margin:5px 0 6px}
+@media(max-width:700px){.explore-map-aside>*{flex:1 1 100%}}
+
 /* #14 hero headline contrast in the tablet range (desktop overlay, narrow viewport) */
 @media(max-width:1050px) and (min-width:701px){
   .hero-overlay{background:linear-gradient(90deg,rgba(246,242,232,.97) 0%,rgba(246,242,232,.9) 40%,rgba(246,242,232,.35) 70%,rgba(0,0,0,.06))}

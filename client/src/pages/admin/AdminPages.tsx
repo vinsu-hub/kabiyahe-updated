@@ -199,7 +199,7 @@ export function AdminEvents() {
             </Field>
             <Field label="Status">
               <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })}>
-                {["live", "today", "week", "season", "recap"].map(c => <option key={c}>{c}</option>)}
+                {["live", "today", "week", "season", "recap", "anytime"].map(c => <option key={c}>{c}</option>)}
               </select>
             </Field>
           </div>
