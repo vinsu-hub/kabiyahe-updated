@@ -1,8 +1,8 @@
-/* ELBI ("El-Biyahe") — Come Curious. Los Baños field-companion web app. */
+/* El-Biyahe! — Come Curious. Los Baños field-companion web app. */
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@/lib/supabase/AuthProvider";
 import { useCurrentSeason, useEvents, useTours } from "@/lib/supabase/queries";
-import { BusTours, ComingSoon, EventDetail, EventsList, Passport, RideGuide, TourDetail } from "@/pages/ElbiFeatures";
+import { BusTours, ComingSoon, EventDetail, EventsList, Passport, RideGuide, TourDetail } from "@/pages/ElbiyaheFeatures";
 import { Auth } from "@/pages/Auth";
 import { RequireAdmin } from "@/pages/admin/AdminShell";
 import { AdminDashboard, AdminEvents, AdminPassport, AdminTours } from "@/pages/admin/AdminPages";
@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 // Scenic stock photography lives in the gitignored client/public/assets/ — run
-// `pnpm assets:download` (pulls the verified GitHub-release archive). ELBI logo
+// `pnpm assets:download` (pulls the verified GitHub-release archive). El-Biyahe! logo
 // art is committed under client/public/brand/.
 const IMG = {
   hero: "/assets/kabiyahe-hero-laguna_e334210c.jpg",
@@ -25,11 +25,11 @@ const IMG = {
   enchantedKingdom: "/assets/enchanted-kingdom_a3aaee52.jpg",
   alFresco: "/assets/al-fresco-springs_c60eb0da.jpg",
   laresio: "/assets/laresio-lakeside_049170eb.jpg",
-  emblem: "/brand/elbi-mark.png",
-  logoH: "/brand/elbi-logo-horizontal.png",
+  emblem: "/brand/elbiyahe-mark.png",
+  logoH: "/brand/elbiyahe-logo-horizontal.png",
 };
 const slugify = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-const notify = (message: string) => window.dispatchEvent(new CustomEvent("kabiyahe:notice", { detail: message }));
+const notify = (message: string) => window.dispatchEvent(new CustomEvent("elbiyahe:notice", { detail: message }));
 const fileToBase64 = (file: File) => new Promise<string>((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(",")[1] || ""); reader.onerror = () => reject(reader.error || new Error("Could not read file.")); reader.readAsDataURL(file); });
 const formatFileSize = (bytes: number) => bytes < 1024 * 1024 ? `${Math.max(1, Math.round(bytes / 1024))} KB` : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 
@@ -98,13 +98,13 @@ function NoticeHost() {
       setNotice(message);
       window.setTimeout(() => setNotice(""), 2600);
     };
-    window.addEventListener("kabiyahe:notice", handler);
-    return () => window.removeEventListener("kabiyahe:notice", handler);
+    window.addEventListener("elbiyahe:notice", handler);
+    return () => window.removeEventListener("elbiyahe:notice", handler);
   }, []);
   return notice ? <div className="notice" role="status"><Check size={16}/>{notice}</div> : null;
 }
 
-const ELBI_NAV = [
+const NAV_LINKS = [
   { label: "Events", href: "/events" },
   { label: "Explore", href: "/explore" },
   { label: "Delicacies", href: "/delicacies" },
@@ -121,9 +121,9 @@ function Header() {
   const { isAuthenticated, isAdmin, profile, signOut } = useAuth();
   const initial = (profile?.display_name ?? "?").charAt(0).toUpperCase();
   return <>
-    <header className="topbar elbi-topbar">
-      <Link href="/" className="brand elbi-brand"><img src={IMG.logoH} alt="ELBI — Come Curious"/></Link>
-      <nav>{ELBI_NAV.map(n => <Link key={n.href} className={location.startsWith(n.href) ? "active" : ""} href={n.href}>{n.label}</Link>)}</nav>
+    <header className="topbar elbiyahe-topbar">
+      <Link href="/" className="brand elbiyahe-brand"><img src={IMG.logoH} alt="El-Biyahe! — Come Curious"/></Link>
+      <nav>{NAV_LINKS.map(n => <Link key={n.href} className={location.startsWith(n.href) ? "active" : ""} href={n.href}>{n.label}</Link>)}</nav>
       <div className="header-actions">
         <button className="icon-btn" aria-label="Search" onClick={() => notify("Search across events, places, food, and tours — coming soon.")}><Search size={20}/></button>
         <button className="icon-btn" aria-label="Notifications" onClick={() => notify("You're all caught up.")}><Bell size={20}/></button>
@@ -143,7 +143,7 @@ function Header() {
         )}
       </div>
     </header>
-    {menuOpen && <div className="mobile-drawer-backdrop" onClick={() => setMenuOpen(false)}><div className="mobile-drawer" onClick={e => e.stopPropagation()}><div className="drawer-head"><b>Come curious</b><button onClick={() => setMenuOpen(false)} aria-label="Close navigation"><X size={20}/></button></div><Link href="/" onClick={() => setMenuOpen(false)}>Home<ChevronRight size={16}/></Link>{ELBI_NAV.map(n => <Link key={n.href} href={n.href} onClick={() => setMenuOpen(false)}>{n.label}<ChevronRight size={16}/></Link>)}<Link href="/account" onClick={() => setMenuOpen(false)}>Profile<ChevronRight size={16}/></Link></div></div>}
+    {menuOpen && <div className="mobile-drawer-backdrop" onClick={() => setMenuOpen(false)}><div className="mobile-drawer" onClick={e => e.stopPropagation()}><div className="drawer-head"><b>Come curious</b><button onClick={() => setMenuOpen(false)} aria-label="Close navigation"><X size={20}/></button></div><Link href="/" onClick={() => setMenuOpen(false)}>Home<ChevronRight size={16}/></Link>{NAV_LINKS.map(n => <Link key={n.href} href={n.href} onClick={() => setMenuOpen(false)}>{n.label}<ChevronRight size={16}/></Link>)}<Link href="/account" onClick={() => setMenuOpen(false)}>Profile<ChevronRight size={16}/></Link></div></div>}
   </>;
 }
 function ScrollToTop() { const [location] = useLocation(); useEffect(() => { if (typeof window !== "undefined") window.scrollTo({ top: 0, left: 0, behavior: "auto" }); }, [location]); return null; }
@@ -151,7 +151,7 @@ function BottomNav() { const [location] = useLocation(); const items=[{href:"/",
 function Tag({children, tone="sage"}:{children:React.ReactNode;tone?:string}) { return <span className={`tag ${tone}`}>{children}</span> }
 function Button({children, variant="primary", href, onClick, type="button", disabled=false}:{children:React.ReactNode;variant?:string;href?:string;onClick?:()=>void;type?:"button"|"submit";disabled?:boolean}) { const cls=`btn ${variant}`; return href ? <Link href={href} className={cls} aria-disabled={disabled}>{children}</Link> : <button type={type} onClick={onClick} className={cls} disabled={disabled}>{children}</button> }
 function SectionTitle({eyebrow,title,action}:{eyebrow?:string;title:string;action?:React.ReactNode}) { return <div className="section-title">{eyebrow && <span className="eyebrow">{eyebrow}</span>}<h2>{title}</h2>{action && <div className="section-action">{action}</div>}</div> }
-function Footer() { return <footer className="site-footer"><div className="container footer-inner"><div className="footer-brand"><Link href="/" className="footer-logo"><img src={IMG.emblem} alt="" style={{width:44,height:44}}/><span>ELBI<small>Come Curious</small></span></Link><p>Your field companion for discovering the many sides of Los Baños — events, places, flavors, and stories worth collecting.</p></div><nav className="footer-links" aria-label="Footer navigation"><div><b>Discover</b><Link href="/events">Events</Link><Link href="/explore">Explore</Link><Link href="/delicacies">Delicacies</Link><Link href="/tours">Bus Tours</Link></div><div><b>Get around</b><Link href="/ride-guide">Ride Guide</Link><Link href="/parking">Parking</Link><Link href="/stay-eat">Stay &amp; Eat</Link></div><div><b>Your ELBI</b><Link href="/passport">Digital LB Passport</Link><Link href="/account">Profile</Link></div></nav><div className="footer-bottom"><span>© 2026 ELBI · Los Baños</span><span>Los Baños is calling.</span></div></div></footer> }
+function Footer() { return <footer className="site-footer"><div className="container footer-inner"><div className="footer-brand"><Link href="/" className="footer-logo"><img src={IMG.emblem} alt="" style={{width:44,height:44}}/><span>El-Biyahe!<small>Come Curious</small></span></Link><p>Your field companion for discovering the many sides of Los Baños — events, places, flavors, and stories worth collecting.</p></div><nav className="footer-links" aria-label="Footer navigation"><div><b>Discover</b><Link href="/events">Events</Link><Link href="/explore">Explore</Link><Link href="/delicacies">Delicacies</Link><Link href="/tours">Bus Tours</Link></div><div><b>Get around</b><Link href="/ride-guide">Ride Guide</Link><Link href="/parking">Parking</Link><Link href="/stay-eat">Stay &amp; Eat</Link></div><div><b>Your El-Biyahe!</b><Link href="/passport">Digital LB Passport</Link><Link href="/account">Profile</Link></div></nav><div className="footer-bottom"><span>© 2026 El-Biyahe! · Los Baños</span><span>Los Baños is calling.</span></div></div></footer> }
 function SaveButton({label="Save"}:{label?:string}) { const [saved,setSaved] = useState(false); return <button className={`save ${saved?"saved":""}`} aria-label={saved?"Remove saved item":label} onClick={(e) => {e.preventDefault();e.stopPropagation();setSaved(v=>!v);notify(saved?"Removed from saved":"Saved for later");}}>{saved?<Heart size={17} fill="currentColor"/>:<Heart size={17}/>}</button> }
 function DestinationCard({d, compact=false}:{d:any;compact?:boolean}) { const Icon=d.icon; const href=`/explore/${slugify(d.name)}`; return <article className={`destination-card ${compact?"compact":""}`}><Link href={href} className="image-wrap"><img src={d.image} alt={d.name}/>{d.placeholder&&<Tag tone="ochre">Placeholder listing</Tag>}</Link><SaveButton/><div className="card-body"><div className="card-heading"><Link href={href}><h3>{d.name}</h3></Link><Icon size={16} className="type-icon"/></div><p className="muted"><MapPin size={14}/>{d.place}</p><p className="desc">{d.description}</p><div className="card-footer"><Tag>{d.type}</Tag>{d.rating?<span className="rating"><Star size={14} fill="currentColor"/> {d.rating} <small>({d.reviews})</small></span>:<span className="unrated">Reviews coming soon</span>}</div></div></article> }
 function useLandingMotion() {
@@ -175,7 +175,7 @@ function useLandingMotion() {
   }, []);
 }
 
-const ELBI_QUICK = [
+const QUICK_LINKS = [
   { label: "Events", href: "/events", icon: CalendarDays, live: true },
   { label: "Delicacies", href: "/delicacies", icon: Utensils, live: false },
   { label: "Ride Guide", href: "/ride-guide", icon: Navigation, live: true },
@@ -193,8 +193,8 @@ function Home() {
   const { data: tours } = useTours();
   const happeningNow = (events ?? []).filter(e => e.status === "live" || e.status === "today").slice(0, 6);
   const featuredTours = (tours ?? []).slice(0, 4);
-  return <><Header/><main className="landing-page elbi-home">
-    <section className="hero elbi-hero-section" data-scroll-reveal>
+  return <><Header/><main className="landing-page elbiyahe-home">
+    <section className="hero elbiyahe-hero-section" data-scroll-reveal>
       <img className="hero-image hero-scroll-image" src={IMG.hero} alt="Mt. Makiling, Los Baños"/>
       <div className="hero-overlay"/>
       <div className="hero-copy">
@@ -204,7 +204,7 @@ function Home() {
     </section>
 
     {season && (
-    <section className="container elbi-season-banner scroll-reveal" data-scroll-reveal>
+    <section className="container elbiyahe-season-banner scroll-reveal" data-scroll-reveal>
       <div>
         <span className="eyebrow">{season.quarter} · {season.name.toUpperCase()}</span>
         <h2>{season.pillars}</h2>
@@ -216,11 +216,11 @@ function Home() {
 
     <section className="container home-section scroll-reveal" data-scroll-reveal>
       <SectionTitle eyebrow="LIVE & TODAY" title="Happening Now" action={<Link href="/events" className="link-accent">All events <ChevronRight size={15}/></Link>}/>
-      <div className="elbi-happening-strip">
+      <div className="elbiyahe-happening-strip">
         {happeningNow.map(e => (
-          <Link key={e.id} href={`/events/${e.slug}`} className="elbi-happening-card">
+          <Link key={e.id} href={`/events/${e.slug}`} className="elbiyahe-happening-card">
             <img src={e.hero_image || IMG.hero} alt=""/>
-            {e.status === "live" && <span className="elbi-badge live">LIVE</span>}
+            {e.status === "live" && <span className="elbiyahe-badge live">LIVE</span>}
             <div><b>{e.title}</b><small><CalendarDays size={12}/> {e.date_label} · {e.time_label}</small><small><MapPin size={12}/> {e.venue_name}</small></div>
           </Link>
         ))}
@@ -230,10 +230,10 @@ function Home() {
 
     <section className="container home-section scroll-reveal" data-scroll-reveal>
       <SectionTitle title="Quick Discover"/>
-      <div className="elbi-quick-grid">
-        {ELBI_QUICK.map(q => { const I = q.icon; return (
-          <Link key={q.label} href={q.href} className="elbi-quick-item">
-            <span className="elbi-quick-icon"><I size={22}/></span>
+      <div className="elbiyahe-quick-grid">
+        {QUICK_LINKS.map(q => { const I = q.icon; return (
+          <Link key={q.label} href={q.href} className="elbiyahe-quick-item">
+            <span className="elbiyahe-quick-icon"><I size={22}/></span>
             <span>{q.label}</span>
             {!q.live && <small>soon</small>}
           </Link>
@@ -253,13 +253,13 @@ function Home() {
       <div className="bundle-rail">
         {featuredTours.map((t,i)=>(
           <div className="scroll-stagger" data-stagger={i} key={t.id}>
-            <Link href={`/tours/${t.slug}`} className="elbi-tour-card">
-              <div className="elbi-tour-card-media"><img src={t.hero_image || IMG.hero} alt={t.title}/>{t.featured && <span className="elbi-badge ochre">FEATURED</span>}</div>
-              <div className="elbi-tour-card-body">
-                <div className="elbi-chip-row">{t.tags.map(tag=><span key={tag} className="tag">{tag}</span>)}</div>
+            <Link href={`/tours/${t.slug}`} className="elbiyahe-tour-card">
+              <div className="elbiyahe-tour-card-media"><img src={t.hero_image || IMG.hero} alt={t.title}/>{t.featured && <span className="elbiyahe-badge ochre">FEATURED</span>}</div>
+              <div className="elbiyahe-tour-card-body">
+                <div className="elbiyahe-chip-row">{t.tags.map(tag=><span key={tag} className="tag">{tag}</span>)}</div>
                 <h3>{t.title}</h3>
                 <p className="muted"><Clock3 size={13}/> {t.duration} · {t.operator_name}</p>
-                <div className="elbi-tour-card-foot"><b>₱{t.price_per_seat.toLocaleString("en-PH")}<small> /seat</small></b><span className="rating"><Star size={13} fill="currentColor"/> {Number(t.rating).toFixed(1)}</span></div>
+                <div className="elbiyahe-tour-card-foot"><b>₱{t.price_per_seat.toLocaleString("en-PH")}<small> /seat</small></b><span className="rating"><Star size={13} fill="currentColor"/> {Number(t.rating).toFixed(1)}</span></div>
               </div>
             </Link>
           </div>
@@ -276,7 +276,7 @@ function Home() {
         <a className="btn primary" href={airbnbLosBanosUrl} target="_blank" rel="noreferrer"><ExternalLink size={16}/> View Airbnb stays</a>
         <small className="external-disclaimer">External search · availability and rates may change</small>
       </div>
-      <div className="stay-discovery-note"><WalletCards size={22}/><b>Live search handoff</b><span>ELBI does not reproduce or estimate Airbnb availability, pricing, or ratings.</span></div>
+      <div className="stay-discovery-note"><WalletCards size={22}/><b>Live search handoff</b><span>El-Biyahe! does not reproduce or estimate Airbnb availability, pricing, or ratings.</span></div>
     </section>
 
     <section className="container local-spots-section scroll-reveal" data-scroll-reveal>
@@ -293,9 +293,9 @@ function Home() {
       <div className="mini-map"><div className="map-water"/><div className="map-label one">Calamba City</div><div className="map-label two">Laguna<br/>de Bay</div>{destinations.slice(0,5).map((d,i)=><Link href={`/explore/${slugify(d.name)}`} className={`pin ${["nature","food","culture","stay","gem"][i]}`} style={{left:`${18+i*16}%`,top:`${28+(i%2)*27}%`}} key={d.name}>⌖</Link>)}</div>
     </section>
 
-    <section className="how-section scroll-reveal" data-scroll-reveal><div className="container"><SectionTitle title="The ELBI loop"/><div className="steps">{[["01","Discover","Find events, places, flavors, and stories across Los Baños.",Compass],["02","Go","Real jeep and tricycle routes, parking, and curated bus tours get you there.",Navigation],["03","Collect","Scan QR codes around town, fill your Digital LB Passport, and earn real rewards.",Landmark]].map(([n,t,c,I]:any)=><div className="step scroll-stagger" data-stagger={Number(n)} key={n}><div className="step-icon"><I size={26}/></div><span>{n}</span><h3>{t}</h3><p>{c}</p></div>)}</div></div></section>
+    <section className="how-section scroll-reveal" data-scroll-reveal><div className="container"><SectionTitle title="The El-Biyahe! loop"/><div className="steps">{[["01","Discover","Find events, places, flavors, and stories across Los Baños.",Compass],["02","Go","Real jeep and tricycle routes, parking, and curated bus tours get you there.",Navigation],["03","Collect","Scan QR codes around town, fill your Digital LB Passport, and earn real rewards.",Landmark]].map(([n,t,c,I]:any)=><div className="step scroll-stagger" data-stagger={Number(n)} key={n}><div className="step-icon"><I size={26}/></div><span>{n}</span><h3>{t}</h3><p>{c}</p></div>)}</div></div></section>
 
-    <section className="container elbi-newsletter scroll-reveal" data-scroll-reveal>
+    <section className="container elbiyahe-newsletter scroll-reveal" data-scroll-reveal>
       <div><span className="eyebrow">STAY IN THE LOOP</span><h2>Never miss what's happening in LB.</h2><p>Season announcements, new events, and Passport rewards — straight to your inbox.</p></div>
       <form onSubmit={e => { e.preventDefault(); if (email) { notify("You're subscribed. Come curious!"); setEmail(""); } }}>
         <input type="email" required placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} aria-label="Email address"/>
@@ -307,7 +307,7 @@ function Home() {
 
 function Explore() { const [view,setView]=useState("map"); const [query,setQuery]=useState(""); const [category,setCategory]=useState("All Categories"); const [tag,setTag]=useState(""); const [price,setPrice]=useState(4); const [sort,setSort]=useState("Popular"); const [showFilters,setShowFilters]=useState(false); const [visible,setVisible]=useState(4); const categoryMap:any={"Nature & Parks":"Nature","Attractions":"Attractions","Food & Restaurants":"Food","Hotels & Stays":"Hotels","Accommodations":"Hotels","Guides & Tours":"Guides","Culture & Heritage":"Culture","Hidden Gems":"Hidden Gem"}; const filtered=useMemo(()=>destinations.filter(d=>{const matchQuery=`${d.name} ${d.place} ${d.type} ${d.tags.join(" ")}`.toLowerCase().includes(query.toLowerCase());const matchCategory=category==="All Categories"||(category==="Accommodations"?d.type==="Hotels"&&d.place.includes("Los Baños"):d.type===categoryMap[category]);const matchTag=!tag||d.tags.includes(tag);return matchQuery&&matchCategory&&matchTag&&d.price<=price}).sort((a,b)=>sort==="Name"?a.name.localeCompare(b.name):(Number(b.rating||0)-Number(a.rating||0))),[query,category,tag,price,sort]); return <><Header/><main className="explore-page"><aside className={`filter-rail ${showFilters?"open":""}`}><div className="rail-title"><h3>Categories</h3><ChevronDown size={15}/></div>{["All Categories","Nature & Parks","Attractions","Food & Restaurants","Hotels & Stays","Accommodations","Guides & Tours","Culture & Heritage","Hidden Gems"].map(x=><button className={category===x?"selected":""} onClick={()=>{setCategory(x);setShowFilters(false)}} key={x}><Compass size={16}/>{x}</button>)}<div className="rail-title spaced"><h3>Tags</h3><ChevronDown size={15}/></div><div className="tag-cloud">{["Family Friendly","Adventure","Budget Friendly","Romantic","Relaxation","Waterfalls","Scenic Views"].map(x=><button className={`tag ${tag===x?"chosen":""}`} onClick={()=>setTag(tag===x?"":x)} key={x}>{x}</button>)}</div><div className="rail-title spaced"><h3>Price Range</h3><ChevronDown size={15}/></div><input aria-label="Maximum price range" className="price-range" type="range" min="1" max="4" value={price} onChange={e=>setPrice(Number(e.target.value))}/><div className="price-labels"><span>₱</span><span>₱₱</span><span>₱₱₱</span><span>₱₱₱₱</span></div></aside><section className="explore-content"><div className="page-heading"><div><h1>Explore Los Baños</h1><p>Nature, food, culture, and hidden gems around town.</p></div><div className="search-row"><div className="searchbox"><Search size={18}/><input aria-label="Search destinations" placeholder="Search destinations, places, or activities..." value={query} onChange={e=>setQuery(e.target.value)}/></div><Button variant="secondary" onClick={()=>setShowFilters(v=>!v)}><SlidersHorizontal size={16}/> Filters</Button><div className="view-toggle">{[["map",Map],["list",List],["grid",Grid2X2]].map(([v,I]:any)=><button className={view===v?"active":""} aria-pressed={view===v} aria-label={`Show ${v} view`} onClick={()=>setView(v)} key={v}><I size={16}/><span>{v}</span></button>)}</div></div></div><div className="explore-quick-filters" aria-label="Browse destination categories">{["All Categories","Nature & Parks","Attractions","Food & Restaurants","Hotels & Stays","Accommodations"].map(x=><button className={category===x?"active":""} onClick={()=>{setCategory(x);setVisible(4);setShowFilters(false)}} key={x}>{x}</button>)}</div><div className={`explore-workspace ${view}`}><div className="result-list"><div className="result-count">{category==="Accommodations"?`${filtered.length} Los Baños stays found`:`${filtered.length} destinations found`} <button onClick={()=>setSort(sort==="Popular"?"Name":"Popular")}>Sort by: <b>{sort}</b>⌄</button></div>{category==="Accommodations"&&<a className="airbnb-result-card" href={airbnbLosBanosUrl} target="_blank" rel="noreferrer"><div><span className="eyebrow">EXTERNAL SEARCH</span><h3>More homes around Los Baños</h3><p>Check live Airbnb availability, dates, prices, amenities, and host details on Airbnb.</p></div><ExternalLink size={17}/></a>}{filtered.slice(0,visible).map(d=><DestinationCard d={d} compact key={d.name}/>)}{visible<filtered.length&&<Button variant="soft" onClick={()=>setVisible(v=>v+3)}>Load more destinations <ChevronDown size={16}/></Button>}{filtered.length===0&&<div className="empty-state"><Search size={25}/><h3>No spots found yet.</h3><p>Try a wider search or clear a filter.</p><Button variant="outline" onClick={()=>{setQuery("");setCategory("All Categories");setTag("");setPrice(4)}}>Clear filters</Button></div>}</div><div className="map-field"><div className="map-copy">Laguna<br/><small>de Bay</small></div>{filtered.map((d,i)=><Link href={`/explore/${slugify(d.name)}`} className={`pin ${["nature","food","culture","stay","gem"][i%5]}`} style={{left:`${15+(i*17)%76}%`,top:`${16+(i*19)%70}%`}} key={d.name}>⌖</Link>)}<div className="map-legend"><b>Categories</b>{[[Mountain,"Nature & Parks"],[Landmark,"Attractions"],[Utensils,"Food & Restaurants"],[WalletCards,"Hotels & Stays"]].map(([I,l]:any)=><span key={l}><I size={16}/>{l}</span>)}</div><Button variant="map-button" onClick={()=>notify("Location access is optional. Showing destinations near you instead.")}><Navigation size={15}/> Show near me</Button></div></div></section></main><BottomNav/></> }
 
-function DestinationDetail({id}:{id?:string}) { const d=destinations.find(x=>slugify(x.name)===id)||destinations[0]; const [photo,setPhoto]=useState(0); const [showAdd,setShowAdd]=useState(false); const gallery=d.gallery||[d.image,IMG.hero,IMG.lake]; return <><Header/><main className="container detail-page"><Link href="/explore" className="back-link"><ArrowLeft size={16}/> Back to Explore</Link><section className="detail-hero"><img src={gallery[photo]} alt={d.name}/><div className="detail-hero-copy"><div><Tag>{d.type}</Tag>{d.placeholder?<Tag tone="ochre">Placeholder listing</Tag>:d.verified?<Tag tone="ochre">Research-backed</Tag>:<Tag tone="ochre">Curated place</Tag>}</div><h1>{d.name}</h1><p className="muted"><MapPin size={16}/> {d.place} {d.rating&&<><span>·</span> <span className="rating"><Star size={15} fill="currentColor"/> {d.rating} ({d.reviews})</span></>}</p></div><SaveButton label="Save destination"/><button className="share-image" aria-label="Share destination" onClick={()=>notify("Destination link copied to clipboard.")}><Share2 size={18}/></button></section><div className="gallery-strip">{gallery.map((image,i)=><button className={i===photo?"active":""} onClick={()=>setPhoto(i)} key={image}><img src={image} alt={`${d.name} view ${i+1}`}/></button>)}</div><div className="detail-layout"><section className="detail-copy"><h2>About</h2><p>{d.description} Experience a place where local stories, fresh air, and a slower pace make room for the moments you remember long after the trip.</p><h2>Details</h2><div className="detail-facts"><span><b>Address</b>{d.place}</span><span><b>Opening hours</b>{d.placeholder?"To be verified":"Check venue before visiting"}</span><span><b>Price range</b>{"₱".repeat(d.price)} · {d.placeholder?"Preview only":"Indicative"}</span><span><b>Recommended duration</b>2–3 hours</span></div><h2>Good for</h2><div>{d.tags.map(t=><Tag key={t}>{t}</Tag>)}</div><div className="location-card"><div className="map-field small-map"><div className="map-copy">{d.name}<br/><small>Laguna</small></div><span className="pin nature">⌖</span></div><Button variant="outline" onClick={()=>notify("Opening map preview for this destination.")}><Map size={15}/> View on Map</Button></div></section><aside className="detail-aside"><div className="side-card action-card"><h2>Make it a trip</h2><Button href="/events"><CalendarDays size={16}/> What's on nearby</Button><Button href="/passport" variant="secondary"><Landmark size={16}/> Passport spots</Button><Button href="/ride-guide" variant="secondary"><Navigation size={16}/> How to get here</Button></div><div className="side-card booking-card"><p className="eyebrow">BOOKING</p><h2>Book directly with the venue.</h2><p>ELBI links you to the venue's own channel and never processes payment.</p><Button variant="outline ochre" onClick={()=>notify("External booking link ready — this will open the venue site.")}><ExternalLink size={15}/> Book / Reserve</Button></div></aside></div></main><BottomNav/></> }
+function DestinationDetail({id}:{id?:string}) { const d=destinations.find(x=>slugify(x.name)===id)||destinations[0]; const [photo,setPhoto]=useState(0); const [showAdd,setShowAdd]=useState(false); const gallery=d.gallery||[d.image,IMG.hero,IMG.lake]; return <><Header/><main className="container detail-page"><Link href="/explore" className="back-link"><ArrowLeft size={16}/> Back to Explore</Link><section className="detail-hero"><img src={gallery[photo]} alt={d.name}/><div className="detail-hero-copy"><div><Tag>{d.type}</Tag>{d.placeholder?<Tag tone="ochre">Placeholder listing</Tag>:d.verified?<Tag tone="ochre">Research-backed</Tag>:<Tag tone="ochre">Curated place</Tag>}</div><h1>{d.name}</h1><p className="muted"><MapPin size={16}/> {d.place} {d.rating&&<><span>·</span> <span className="rating"><Star size={15} fill="currentColor"/> {d.rating} ({d.reviews})</span></>}</p></div><SaveButton label="Save destination"/><button className="share-image" aria-label="Share destination" onClick={()=>notify("Destination link copied to clipboard.")}><Share2 size={18}/></button></section><div className="gallery-strip">{gallery.map((image,i)=><button className={i===photo?"active":""} onClick={()=>setPhoto(i)} key={image}><img src={image} alt={`${d.name} view ${i+1}`}/></button>)}</div><div className="detail-layout"><section className="detail-copy"><h2>About</h2><p>{d.description} Experience a place where local stories, fresh air, and a slower pace make room for the moments you remember long after the trip.</p><h2>Details</h2><div className="detail-facts"><span><b>Address</b>{d.place}</span><span><b>Opening hours</b>{d.placeholder?"To be verified":"Check venue before visiting"}</span><span><b>Price range</b>{"₱".repeat(d.price)} · {d.placeholder?"Preview only":"Indicative"}</span><span><b>Recommended duration</b>2–3 hours</span></div><h2>Good for</h2><div>{d.tags.map(t=><Tag key={t}>{t}</Tag>)}</div><div className="location-card"><div className="map-field small-map"><div className="map-copy">{d.name}<br/><small>Laguna</small></div><span className="pin nature">⌖</span></div><Button variant="outline" onClick={()=>notify("Opening map preview for this destination.")}><Map size={15}/> View on Map</Button></div></section><aside className="detail-aside"><div className="side-card action-card"><h2>Make it a trip</h2><Button href="/events"><CalendarDays size={16}/> What's on nearby</Button><Button href="/passport" variant="secondary"><Landmark size={16}/> Passport spots</Button><Button href="/ride-guide" variant="secondary"><Navigation size={16}/> How to get here</Button></div><div className="side-card booking-card"><p className="eyebrow">BOOKING</p><h2>Book directly with the venue.</h2><p>El-Biyahe! links you to the venue's own channel and never processes payment.</p><Button variant="outline ochre" onClick={()=>notify("External booking link ready — this will open the venue site.")}><ExternalLink size={15}/> Book / Reserve</Button></div></aside></div></main><BottomNav/></> }
 
 function Modal({title,onClose,children}:{title:string;onClose:()=>void;children:React.ReactNode}) { return <div className="modal-backdrop" onClick={onClose}><div className="modal" onClick={e=>e.stopPropagation()}><div className="modal-head"><h2>{title}</h2><button onClick={onClose} aria-label="Close dialog"><X size={18}/></button></div>{children}</div></div> }
 function Account({savedOnly=false}:{savedOnly?:boolean}) {
@@ -318,7 +318,7 @@ function Account({savedOnly=false}:{savedOnly?:boolean}) {
   return <><Header/><main className="container account-page">
     <div className="account-head">
       <div className="large-avatar">{name.charAt(0).toUpperCase()}</div>
-      <div><p className="eyebrow">YOUR ELBI</p><h1>{savedOnly ? "Saved for later" : "Profile"}</h1><p className="muted">{name}{user?.email ? ` · ${user.email}` : ""}</p></div>
+      <div><p className="eyebrow">YOUR El-Biyahe!</p><h1>{savedOnly ? "Saved for later" : "Profile"}</h1><p className="muted">{name}{user?.email ? ` · ${user.email}` : ""}</p></div>
       <Button href="/passport"><Sparkles size={16}/> Open Passport</Button>
     </div>
     <div className="account-grid">

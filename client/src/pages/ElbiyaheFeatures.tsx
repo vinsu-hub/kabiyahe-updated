@@ -1,4 +1,4 @@
-/* ELBI priority feature tabs — Events, Bus Tours, Passport, Ride Guide, and a
+/* El-Biyahe! priority feature tabs — Events, Bus Tours, Passport, Ride Guide, and a
    shared Coming Soon placeholder. Data comes from Supabase via
    @/lib/supabase/queries. Shared shell (Header/BottomNav/Footer/Button/Tag) is
    passed in from App.tsx. */
@@ -25,7 +25,7 @@ interface Shell {
 }
 
 const notify = (message: string) =>
-  window.dispatchEvent(new CustomEvent("kabiyahe:notice", { detail: message }));
+  window.dispatchEvent(new CustomEvent("elbiyahe:notice", { detail: message }));
 const peso = (n: number) => `₱${n.toLocaleString("en-PH")}`;
 
 function useSeasonName() {
@@ -36,8 +36,8 @@ function useSeasonName() {
 
 function Loading() {
   return (
-    <div className="elbi-loading" role="status">
-      <Loader2 size={22} className="elbi-spin" /> Loading…
+    <div className="elbiyahe-loading" role="status">
+      <Loader2 size={22} className="elbiyahe-spin" /> Loading…
     </div>
   );
 }
@@ -71,14 +71,14 @@ const EVENT_GROUPS: { key: EventRow["status"][]; label: string }[] = [
 
 function EventCard({ e, Tag }: { e: EventRow; Tag: Shell["Tag"] }) {
   return (
-    <Link href={`/events/${e.slug}`} className="elbi-event-card">
-      <div className="elbi-event-card-media">
-        <img src={e.hero_image || "/scenes/elbi-hero.svg"} alt={e.title} />
-        {e.status === "live" && <span className="elbi-badge live">LIVE NOW</span>}
-        {e.status === "recap" && <span className="elbi-badge grey">RECAP</span>}
+    <Link href={`/events/${e.slug}`} className="elbiyahe-event-card">
+      <div className="elbiyahe-event-card-media">
+        <img src={e.hero_image || "/scenes/elbiyahe-hero.svg"} alt={e.title} />
+        {e.status === "live" && <span className="elbiyahe-badge live">LIVE NOW</span>}
+        {e.status === "recap" && <span className="elbiyahe-badge grey">RECAP</span>}
       </div>
-      <div className="elbi-event-card-body">
-        <div className="elbi-chip-row">
+      <div className="elbiyahe-event-card-body">
+        <div className="elbiyahe-chip-row">
           <Tag>{e.category}</Tag>
           <span className="muted"><CalendarDays size={13} /> {e.date_label} · {e.time_label}</span>
         </div>
@@ -107,26 +107,26 @@ export function EventsList({ Header, BottomNav, Footer, Tag }: Shell) {
   return (
     <>
       <Header />
-      <main className="container elbi-page">
-        <div className="elbi-page-head">
+      <main className="container elbiyahe-page">
+        <div className="elbiyahe-page-head">
           <div>
             <p className="eyebrow">WHAT'S HAPPENING IN LB</p>
             <h1>Events</h1>
             <p className="muted">Discover and attend what's on across Los Baños — by season, date, and barangay.</p>
           </div>
-          <div className="elbi-view-toggle">
+          <div className="elbiyahe-view-toggle">
             <button className={view === "list" ? "active" : ""} onClick={() => setView("list")}><List size={15} /> List</button>
             <button className={view === "map" ? "active" : ""} onClick={() => setView("map")}><MapPin size={15} /> Map</button>
           </div>
         </div>
 
-        <div className="elbi-filter-bar">
+        <div className="elbiyahe-filter-bar">
           <div className="filter-pills">
             {EVENT_CATEGORIES.map(c => (
               <button key={c} className={category === c ? "active" : ""} onClick={() => setCategory(c)}>{c}</button>
             ))}
           </div>
-          <label className="elbi-select">
+          <label className="elbiyahe-select">
             Season
             <select value={season} onChange={ev => setSeason(ev.target.value)}>
               <option value="all">All seasons</option>
@@ -139,7 +139,7 @@ export function EventsList({ Header, BottomNav, Footer, Tag }: Shell) {
         {error && <LoadError message={(error as Error).message} />}
 
         {!isLoading && !error && (view === "map" ? (
-          <div className="elbi-map-field">
+          <div className="elbiyahe-map-field">
             <div className="map-copy">Los Baños<br /><small>Laguna</small></div>
             {filtered.map((e, i) => (
               <Link
@@ -162,9 +162,9 @@ export function EventsList({ Header, BottomNav, Footer, Tag }: Shell) {
             const items = filtered.filter(e => group.key.includes(e.status));
             if (!items.length) return null;
             return (
-              <section key={group.label} className="elbi-event-group">
+              <section key={group.label} className="elbiyahe-event-group">
                 <h2>{group.label}</h2>
-                <div className="elbi-event-grid">
+                <div className="elbiyahe-event-grid">
                   {items.map(e => <EventCard key={e.id} e={e} Tag={Tag} />)}
                 </div>
               </section>
@@ -196,8 +196,8 @@ export function EventDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shel
   const [tab, setTab] = useState<"About" | "Schedule" | "Organizers" | "Updates">("About");
   const [saved, setSaved] = useState(false);
 
-  if (isLoading) return <><Header /><main className="container elbi-detail"><Loading /></main><Footer /><BottomNav /></>;
-  if (error || !e) return <><Header /><main className="container elbi-detail"><LoadError message={(error as Error)?.message} /></main><Footer /><BottomNav /></>;
+  if (isLoading) return <><Header /><main className="container elbiyahe-detail"><Loading /></main><Footer /><BottomNav /></>;
+  if (error || !e) return <><Header /><main className="container elbiyahe-detail"><LoadError message={(error as Error)?.message} /></main><Footer /><BottomNav /></>;
 
   const past = e.status === "recap";
   const schedule = [...(e.event_schedule_items ?? [])].sort((a, b) => a.sort - b.sort);
@@ -214,14 +214,14 @@ export function EventDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shel
   return (
     <>
       <Header />
-      <main className="container elbi-detail">
+      <main className="container elbiyahe-detail">
         <Link href="/events" className="back-link"><ArrowLeft size={16} /> Back to Events</Link>
 
-        <section className="elbi-detail-hero">
-          <img src={e.hero_image || "/scenes/elbi-hero.svg"} alt={e.title} />
-          {e.status === "live" && <span className="elbi-badge live">LIVE NOW</span>}
-          {past && <span className="elbi-badge grey">EVENT RECAP</span>}
-          <div className="elbi-detail-hero-actions">
+        <section className="elbiyahe-detail-hero">
+          <img src={e.hero_image || "/scenes/elbiyahe-hero.svg"} alt={e.title} />
+          {e.status === "live" && <span className="elbiyahe-badge live">LIVE NOW</span>}
+          {past && <span className="elbiyahe-badge grey">EVENT RECAP</span>}
+          <div className="elbiyahe-detail-hero-actions">
             <button aria-label="Save event" className={saved ? "on" : ""} onClick={() => { setSaved(v => !v); notify(saved ? "Removed from saved" : "Saved for later"); }}>
               <Heart size={17} fill={saved ? "currentColor" : "none"} />
             </button>
@@ -229,67 +229,67 @@ export function EventDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shel
           </div>
         </section>
 
-        <div className="elbi-chip-row">
+        <div className="elbiyahe-chip-row">
           <Tag>{e.category}</Tag>
           {e.season_key && <Tag tone="ochre">{seasonName(e.season_key)}</Tag>}
         </div>
         <h1>{e.title}</h1>
-        <div className="elbi-detail-facts">
+        <div className="elbiyahe-detail-facts">
           <span><CalendarDays size={15} /> {e.date_label} · {e.time_label}</span>
           <span><MapPin size={15} /> {e.venue_name}{e.barangay ? `, Brgy. ${e.barangay}` : ""}</span>
           <span><Users size={15} /> {e.attendee_count.toLocaleString()} going</span>
         </div>
 
         {!past && (
-          <div className="elbi-rsvp-row">
-            <button className={`elbi-rsvp ${rsvped ? "done" : ""}`} disabled={toggleRsvp.isPending} onClick={onRsvp}>
+          <div className="elbiyahe-rsvp-row">
+            <button className={`elbiyahe-rsvp ${rsvped ? "done" : ""}`} disabled={toggleRsvp.isPending} onClick={onRsvp}>
               {rsvped ? <><Check size={17} /> You're going</> : "RSVP to this event"}
             </button>
-            <button className="elbi-bookmark" aria-label="Bookmark event" onClick={() => notify("Event bookmarked.")}><Bookmark size={17} /></button>
+            <button className="elbiyahe-bookmark" aria-label="Bookmark event" onClick={() => notify("Event bookmarked.")}><Bookmark size={17} /></button>
           </div>
         )}
 
-        <div className="elbi-tabs">
+        <div className="elbiyahe-tabs">
           {(["About", "Schedule", "Organizers", "Updates"] as const).map(t => (
             <button key={t} className={tab === t ? "active" : ""} onClick={() => setTab(t)}>{t}</button>
           ))}
         </div>
 
-        <div className="elbi-tab-body">
+        <div className="elbiyahe-tab-body">
           {tab === "About" && <p>{e.description}</p>}
           {tab === "Schedule" && (
             schedule.length ? (
-              <ol className="elbi-schedule">
+              <ol className="elbiyahe-schedule">
                 {schedule.map(s => (
                   <li key={s.id} className={s.state ?? ""}>
-                    <span className="elbi-schedule-time">{s.time_label}</span>
+                    <span className="elbiyahe-schedule-time">{s.time_label}</span>
                     <span>{s.item}</span>
-                    {s.state === "live" && <span className="elbi-badge live sm">LIVE</span>}
-                    {s.state === "done" && <span className="elbi-badge grey sm">DONE</span>}
+                    {s.state === "live" && <span className="elbiyahe-badge live sm">LIVE</span>}
+                    {s.state === "done" && <span className="elbiyahe-badge grey sm">DONE</span>}
                   </li>
                 ))}
               </ol>
             ) : <p className="muted">Full schedule to be announced.</p>
           )}
-          {tab === "Organizers" && <div className="elbi-organizer"><BadgeCheck size={18} /> <span>{e.organizer}</span></div>}
+          {tab === "Organizers" && <div className="elbiyahe-organizer"><BadgeCheck size={18} /> <span>{e.organizer}</span></div>}
           {tab === "Updates" && (
             updates.length ? updates.map(u => (
-              <div key={u.id} className="elbi-update"><b>{u.ago_label}</b><p>{u.body}</p></div>
+              <div key={u.id} className="elbiyahe-update"><b>{u.ago_label}</b><p>{u.body}</p></div>
             )) : <p className="muted">No updates yet. Check back closer to the date.</p>
           )}
         </div>
 
-        <section className="elbi-complete-visit">
+        <section className="elbiyahe-complete-visit">
           <h2>Complete Your Visit</h2>
-          <div className="elbi-cv-grid">
-            <Link href="/stay-eat" className="elbi-cv-item"><Utensils size={18} /> Eat Nearby</Link>
-            <Link href="/stay-eat" className="elbi-cv-item"><Bookmark size={18} /> Stay Nearby</Link>
-            <Link href="/ride-guide" className="elbi-cv-item"><Navigation size={18} /> How to Get Here</Link>
-            <Link href="/explore" className="elbi-cv-item"><Compass size={18} /> Explore Nearby</Link>
+          <div className="elbiyahe-cv-grid">
+            <Link href="/stay-eat" className="elbiyahe-cv-item"><Utensils size={18} /> Eat Nearby</Link>
+            <Link href="/stay-eat" className="elbiyahe-cv-item"><Bookmark size={18} /> Stay Nearby</Link>
+            <Link href="/ride-guide" className="elbiyahe-cv-item"><Navigation size={18} /> How to Get Here</Link>
+            <Link href="/explore" className="elbiyahe-cv-item"><Compass size={18} /> Explore Nearby</Link>
           </div>
         </section>
 
-        <Link href="/passport" className="elbi-passport-teaser">
+        <Link href="/passport" className="elbiyahe-passport-teaser">
           <QrCode size={20} />
           <span><b>Nearby Passport Spots</b><small>Collect stamps around this venue in your Digital LB Passport</small></span>
           <ChevronRight size={18} />
@@ -313,8 +313,8 @@ export function BusTours({ Header, BottomNav, Footer }: Shell) {
   return (
     <>
       <Header />
-      <main className="container elbi-page">
-        <div className="elbi-page-head">
+      <main className="container elbiyahe-page">
+        <div className="elbiyahe-page-head">
           <div>
             <p className="eyebrow">SEE MORE, STRESS LESS</p>
             <h1>Bus Tours</h1>
@@ -331,18 +331,18 @@ export function BusTours({ Header, BottomNav, Footer }: Shell) {
         {isLoading && <Loading />}
         {error && <LoadError message={(error as Error).message} />}
 
-        <div className="elbi-tour-grid">
+        <div className="elbiyahe-tour-grid">
           {list.map(t => (
-            <Link key={t.id} href={`/tours/${t.slug}`} className="elbi-tour-card">
-              <div className="elbi-tour-card-media">
-                <img src={t.hero_image || "/scenes/elbi-bus.svg"} alt={t.title} />
-                {t.featured && <span className="elbi-badge ochre">FEATURED</span>}
+            <Link key={t.id} href={`/tours/${t.slug}`} className="elbiyahe-tour-card">
+              <div className="elbiyahe-tour-card-media">
+                <img src={t.hero_image || "/scenes/elbiyahe-bus.svg"} alt={t.title} />
+                {t.featured && <span className="elbiyahe-badge ochre">FEATURED</span>}
               </div>
-              <div className="elbi-tour-card-body">
-                <div className="elbi-chip-row">{t.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}</div>
+              <div className="elbiyahe-tour-card-body">
+                <div className="elbiyahe-chip-row">{t.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}</div>
                 <h3>{t.title}</h3>
                 <p className="muted"><Clock3 size={13} /> {t.duration}&nbsp;&nbsp;·&nbsp;&nbsp;<Bus size={13} />&nbsp;{t.operator_name}</p>
-                <div className="elbi-tour-card-foot">
+                <div className="elbiyahe-tour-card-foot">
                   <b>{peso(t.price_per_seat)}<small> /seat</small></b>
                   <span className="rating"><Star size={13} fill="currentColor" /> {Number(t.rating).toFixed(1)} <small>({t.review_count})</small></span>
                 </div>
@@ -367,8 +367,8 @@ export function TourDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shell
   const [, navigate] = useLocation();
   const reserve = useReserveTour();
 
-  if (isLoading) return <><Header /><main className="container elbi-detail"><Loading /></main><Footer /><BottomNav /></>;
-  if (error || !t) return <><Header /><main className="container elbi-detail"><LoadError message={(error as Error)?.message} /></main><Footer /><BottomNav /></>;
+  if (isLoading) return <><Header /><main className="container elbiyahe-detail"><Loading /></main><Footer /><BottomNav /></>;
+  if (error || !t) return <><Header /><main className="container elbiyahe-detail"><LoadError message={(error as Error)?.message} /></main><Footer /><BottomNav /></>;
 
   const stops = [...(t.tour_itinerary_stops ?? [])].sort((a, b) => a.sort - b.sort);
   const reviews = t.tour_reviews ?? [];
@@ -379,7 +379,7 @@ export function TourDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shell
     reserve.mutate(
       { id: t.id, reserve_url: t.reserve_url, title: t.title, operator_name: t.tour_operators?.name },
       {
-        onSuccess: () => notify("Opening the tour operator's booking channel — ELBI never processes payment."),
+        onSuccess: () => notify("Opening the tour operator's booking channel — El-Biyahe! never processes payment."),
         onError: err => notify(err.message),
       },
     );
@@ -388,15 +388,15 @@ export function TourDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shell
   return (
     <>
       <Header />
-      <main className="container elbi-detail">
+      <main className="container elbiyahe-detail">
         <Link href="/tours" className="back-link"><ArrowLeft size={16} /> Back to Bus Tours</Link>
 
-        <section className="elbi-detail-hero">
-          <img src={t.hero_image || "/scenes/elbi-bus.svg"} alt={t.title} />
-          {t.featured && <span className="elbi-badge ochre">FEATURED</span>}
+        <section className="elbiyahe-detail-hero">
+          <img src={t.hero_image || "/scenes/elbiyahe-bus.svg"} alt={t.title} />
+          {t.featured && <span className="elbiyahe-badge ochre">FEATURED</span>}
         </section>
 
-        <div className="elbi-chip-row">
+        <div className="elbiyahe-chip-row">
           {t.tags.map(tag => <Tag key={tag}>{tag}</Tag>)}
           {t.season_key && <Tag tone="ochre">{seasonName(t.season_key)} season</Tag>}
         </div>
@@ -404,14 +404,14 @@ export function TourDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shell
         <p className="muted"><Bus size={14} /> Operated by {t.tour_operators?.name}</p>
         <p>{t.summary}</p>
 
-        <div className="elbi-tour-meta">
+        <div className="elbiyahe-tour-meta">
           <div><b>{peso(t.price_per_seat)}</b><small>per seat</small></div>
           <div><b>{t.duration}</b><small>duration</small></div>
           <div><b>{Number(t.rating).toFixed(1)} ★</b><small>{t.review_count} reviews</small></div>
           <div><b className={soldOutSoon ? "warn" : ""}>{t.seats_available}</b><small>of {t.seat_capacity} seats left</small></div>
         </div>
 
-        <div className="elbi-tour-logistics">
+        <div className="elbiyahe-tour-logistics">
           <div>
             <h3><MapPin size={15} /> Pickup points</h3>
             <ul>{t.origin_pickup_points.map(p => <li key={p}>{p}</li>)}</ul>
@@ -426,32 +426,32 @@ export function TourDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shell
           </div>
         </div>
 
-        <section className="elbi-itinerary">
+        <section className="elbiyahe-itinerary">
           <h2>Itinerary</h2>
           <ol>
             {stops.map(s => (
               <li key={s.id}>
-                <span className="elbi-itinerary-time">{s.time_label}</span>
+                <span className="elbiyahe-itinerary-time">{s.time_label}</span>
                 <div><b>{s.name}</b><p className="muted">{s.blurb}</p></div>
               </li>
             ))}
           </ol>
         </section>
 
-        <div className="elbi-reserve-bar">
+        <div className="elbiyahe-reserve-bar">
           <div>
             <b>{peso(t.price_per_seat)} <small>/ seat</small></b>
             <small className="muted">{t.seats_available} seats left · referral booking</small>
           </div>
           <Button onClick={onReserve} disabled={reserve.isPending}><Ticket size={16} /> Reserve Seat</Button>
         </div>
-        <p className="elbi-referral-note"><ExternalLink size={13} /> Reserving opens {t.tour_operators?.name}'s own booking channel. ELBI logs the referral but never processes payment.</p>
+        <p className="elbiyahe-referral-note"><ExternalLink size={13} /> Reserving opens {t.tour_operators?.name}'s own booking channel. El-Biyahe! logs the referral but never processes payment.</p>
 
-        <section className="elbi-reviews">
+        <section className="elbiyahe-reviews">
           <h2>Reviews</h2>
           {reviews.map(r => (
-            <div key={r.id} className="elbi-review">
-              <div className="elbi-review-head"><b>{r.author_name}</b><Stars value={r.rating} /></div>
+            <div key={r.id} className="elbiyahe-review">
+              <div className="elbiyahe-review-head"><b>{r.author_name}</b><Stars value={r.rating} /></div>
               <p>{r.body}</p>
             </div>
           ))}
@@ -529,18 +529,18 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
   return (
     <>
       <Header />
-      <main className="container elbi-page elbi-passport">
-        <div className="elbi-passport-header">
-          <img src="/scenes/elbi-passport.svg" alt="" />
+      <main className="container elbiyahe-page elbiyahe-passport">
+        <div className="elbiyahe-passport-header">
+          <img src="/scenes/elbiyahe-passport.svg" alt="" />
           <div>
-            <span className="elbi-badge ochre">EXPLORER · LEVEL {data?.explorerLevel ?? 1}</span>
+            <span className="elbiyahe-badge ochre">EXPLORER · LEVEL {data?.explorerLevel ?? 1}</span>
             <h1>Digital LB Passport</h1>
             <p className="muted">{user ? `${collected} / ${total} stamps collected` : "Sign in to start collecting stamps"}</p>
             <div className="progress"><span style={{ width: `${pct}%` }} /></div>
           </div>
         </div>
 
-        <button className="elbi-scan-btn" onClick={() => (user ? setScanOpen(true) : navigate("/login?next=/passport"))}>
+        <button className="elbiyahe-scan-btn" onClick={() => (user ? setScanOpen(true) : navigate("/login?next=/passport"))}>
           <QrCode size={20} /> Scan Passport
         </button>
 
@@ -548,7 +548,7 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
         {error && <LoadError message={(error as Error).message} />}
 
         {last && (
-          <div className="elbi-stamp-success">
+          <div className="elbiyahe-stamp-success">
             <Sparkles size={22} />
             <div>
               <b>New Stamp Collected!</b>
@@ -558,11 +558,11 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
           </div>
         )}
 
-        <section className="elbi-stamp-cats">
+        <section className="elbiyahe-stamp-cats">
           <h2>Stamps by category</h2>
-          <div className="elbi-stamp-cat-grid">
+          <div className="elbiyahe-stamp-cat-grid">
             {(Object.keys(byCategory) as StampCategory[]).map(c => (
-              <div key={c} className={`elbi-stamp-cat ${STAMP_TONE[c]}`}>
+              <div key={c} className={`elbiyahe-stamp-cat ${STAMP_TONE[c]}`}>
                 <b>{byCategory[c]}</b>
                 <span>{c}</span>
               </div>
@@ -570,7 +570,7 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
           </div>
         </section>
 
-        <section className="elbi-nearby-stamps">
+        <section className="elbiyahe-nearby-stamps">
           <h2>Nearby stamps</h2>
           <ul>
             {(data?.locations ?? []).filter(l => !data?.scannedLocationIds.includes(l.id)).slice(0, 6).map(l => (
@@ -587,8 +587,8 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
         </section>
 
         {currentSeason && (
-          <section className="elbi-season-track">
-            <div className="elbi-season-track-head">
+          <section className="elbiyahe-season-track">
+            <div className="elbiyahe-season-track-head">
               <div>
                 <span className="eyebrow">{currentSeason.quarter} · {currentSeason.name.toUpperCase()}</span>
                 <h2>Season Track</h2>
@@ -596,14 +596,14 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
               <b>{Math.min(collected, 6)}/6</b>
             </div>
             <p className="muted">{currentSeason.pillars}</p>
-            <div className="elbi-rewards">
+            <div className="elbiyahe-rewards">
               {(data?.rewards ?? []).map(r => {
                 const unlocked = collected >= r.required_stamps;
                 return (
-                  <div key={r.id} className={`elbi-reward ${unlocked ? "" : "locked"}`}>
+                  <div key={r.id} className={`elbiyahe-reward ${unlocked ? "" : "locked"}`}>
                     <Ticket size={16} />
                     <div><b>{r.title}</b><small>{unlocked ? r.description : `Collect ${r.required_stamps - collected} more stamp(s) to unlock`}</small></div>
-                    <span className="elbi-reward-state">{unlocked ? "Ready" : "Locked"}</span>
+                    <span className="elbiyahe-reward-state">{unlocked ? "Ready" : "Locked"}</span>
                   </div>
                 );
               })}
@@ -616,18 +616,18 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
         <div className="modal-backdrop" onClick={() => setScanOpen(false)}>
           <div className="modal" onClick={ev => ev.stopPropagation()}>
             <div className="modal-head"><h2>Scan Passport</h2><button onClick={() => setScanOpen(false)} aria-label="Close">✕</button></div>
-            <div className="elbi-scan-frame"><QrCode size={54} /><p>Point your camera at an ELBI Passport QR around Los Baños.</p></div>
+            <div className="elbiyahe-scan-frame"><QrCode size={54} /><p>Point your camera at an El-Biyahe! Passport QR around Los Baños.</p></div>
             <label className="modal-field">
               Enter code manually
               <input
                 value={code}
                 onChange={ev => setCode(ev.target.value)}
-                placeholder="e.g. ELBI-MAKILING"
+                placeholder="e.g. El-Biyahe!YAHE-MAKILING"
                 onKeyDown={ev => ev.key === "Enter" && submitCode()}
               />
             </label>
             <Button onClick={submitCode} disabled={scan.isPending}>Collect stamp</Button>
-            <p className="muted" style={{ fontSize: 12 }}>Demo codes: ELBI-MAKILING · ELBI-MUSEUM · ELBI-BUKOPIE · ELBI-IRRI</p>
+            <p className="muted" style={{ fontSize: 12 }}>Demo codes: El-Biyahe!YAHE-MAKILING · El-Biyahe!YAHE-MUSEUM · El-Biyahe!YAHE-BUKOPIE · El-Biyahe!YAHE-IRRI</p>
           </div>
         </div>
       )}
@@ -658,8 +658,8 @@ export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
   return (
     <>
       <Header />
-      <main className="container elbi-page">
-        <div className="elbi-page-head">
+      <main className="container elbiyahe-page">
+        <div className="elbiyahe-page-head">
           <div>
             <p className="eyebrow">GET AROUND LIKE A LOCAL</p>
             <h1>Ride Guide</h1>
@@ -667,14 +667,14 @@ export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
           </div>
         </div>
 
-        <section className="elbi-route-planner">
+        <section className="elbiyahe-route-planner">
           <h2>Plan your route</h2>
-          <div className="elbi-route-inputs">
+          <div className="elbiyahe-route-inputs">
             <label>From<input value={from} onChange={e => setFrom(e.target.value)} /></label>
             <label>To<input value={to} onChange={e => setTo(e.target.value)} /></label>
             <Button onClick={findRoute}><Navigation size={15} /> Find Route</Button>
           </div>
-          {result && <div className="elbi-route-result"><Sparkles size={16} /> <p>{result}</p></div>}
+          {result && <div className="elbiyahe-route-result"><Sparkles size={16} /> <p>{result}</p></div>}
         </section>
 
         {isLoading && <Loading />}
@@ -682,12 +682,12 @@ export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
 
         {data && (
           <>
-            <section className="elbi-routes">
+            <section className="elbiyahe-routes">
               <h2>Popular jeepney routes</h2>
-              <div className="elbi-route-list">
+              <div className="elbiyahe-route-list">
                 {data.jeep.map(r => (
-                  <div key={r.id} className="elbi-route-row">
-                    <div className="elbi-route-row-head"><b>{r.label}</b>{r.mode && <span className="tag">{r.mode}</span>}</div>
+                  <div key={r.id} className="elbiyahe-route-row">
+                    <div className="elbiyahe-route-row-head"><b>{r.label}</b>{r.mode && <span className="tag">{r.mode}</span>}</div>
                     <p className="muted">{[r.fare_text, r.frequency_text].filter(Boolean).join(" · ")}</p>
                     <p>{r.note}</p>
                   </div>
@@ -695,18 +695,18 @@ export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
               </div>
             </section>
 
-            <section className="elbi-routes">
+            <section className="elbiyahe-routes">
               <h2>Tricycle zones</h2>
-              <div className="elbi-map-field small">
+              <div className="elbiyahe-map-field small">
                 <div className="map-copy">Los Baños<br /><small>tricycle zones</small></div>
                 <span className="pin nature" style={{ left: "24%", top: "40%" }}>1</span>
                 <span className="pin culture" style={{ left: "54%", top: "30%" }}>2</span>
                 <span className="pin food" style={{ left: "70%", top: "60%" }}>3</span>
               </div>
-              <div className="elbi-route-list">
+              <div className="elbiyahe-route-list">
                 {data.zones.map(z => (
-                  <div key={z.id} className="elbi-route-row">
-                    <div className="elbi-route-row-head"><b>{z.label}</b></div>
+                  <div key={z.id} className="elbiyahe-route-row">
+                    <div className="elbiyahe-route-row-head"><b>{z.label}</b></div>
                     <p className="muted">{z.fare_text}</p>
                     <p>{z.note}</p>
                   </div>
@@ -714,7 +714,7 @@ export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
               </div>
             </section>
 
-            <section className="elbi-tips">
+            <section className="elbiyahe-tips">
               <h2>Local travel tips</h2>
               <ul>{data.tips.map(t => <li key={t.id}>{t.body}</li>)}</ul>
             </section>
@@ -735,12 +735,12 @@ export function ComingSoon({ Header, BottomNav, Footer, Button, title }: Shell &
   return (
     <>
       <Header />
-      <main className="container elbi-coming-soon">
-        <img src="/brand/elbi-mark.png" alt="" />
+      <main className="container elbiyahe-coming-soon">
+        <img src="/brand/elbiyahe-mark.png" alt="" />
         <p className="eyebrow">COMING SOON</p>
         <h1 style={{ textTransform: "capitalize" }}>{name}</h1>
-        <p className="muted">This ELBI tab isn't built yet. Events, Bus Tours, Passport, and Ride Guide are live now.</p>
-        <div className="elbi-cs-actions">
+        <p className="muted">This El-Biyahe! tab isn't built yet. Events, Bus Tours, Passport, and Ride Guide are live now.</p>
+        <div className="elbiyahe-cs-actions">
           <Button href="/events"><CalendarDays size={16} /> Browse Events</Button>
           <Button href="/" variant="secondary">Back home</Button>
         </div>

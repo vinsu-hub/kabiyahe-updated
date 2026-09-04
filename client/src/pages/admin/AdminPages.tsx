@@ -84,7 +84,7 @@ export function AdminDashboard() {
   const { data, isLoading } = useQuery({ queryKey: ["admin", "counts"], queryFn: adminCounts });
   return (
     <AdminShell title="Dashboard">
-      {isLoading ? <Loader2 className="elbi-spin" /> : (
+      {isLoading ? <Loader2 className="elbiyahe-spin" /> : (
         <div className="admin-stat-grid">
           {[
             ["Events", data!.events, "/admin/events"],
@@ -167,7 +167,7 @@ export function AdminEvents() {
 
   return (
     <AdminShell title="Events" actions={<button className="btn primary" onClick={() => open()}><Plus size={15} /> New event</button>}>
-      {isLoading ? <Loader2 className="elbi-spin" /> : (
+      {isLoading ? <Loader2 className="elbiyahe-spin" /> : (
         <table className="admin-table">
           <thead><tr><th>Title</th><th>Category</th><th>Status</th><th>Date</th><th /></tr></thead>
           <tbody>
@@ -317,7 +317,7 @@ export function AdminTours() {
 
   return (
     <AdminShell title="Bus Tours" actions={<button className="btn primary" onClick={() => open()}><Plus size={15} /> New package</button>}>
-      {isLoading ? <Loader2 className="elbi-spin" /> : (
+      {isLoading ? <Loader2 className="elbiyahe-spin" /> : (
         <table className="admin-table">
           <thead><tr><th>Title</th><th>Operator</th><th>Price</th><th>Seats</th><th>Status</th><th /></tr></thead>
           <tbody>
@@ -406,7 +406,7 @@ function QrThumb({ code }: { code: string }) {
   useEffect(() => { QRCode.toDataURL(code, { width: 240, margin: 1 }).then(setUrl).catch(() => setUrl("")); }, [code]);
   if (!url) return null;
   return (
-    <a href={url} download={`elbi-qr-${code}.png`} className="admin-qr" title={`Download QR for ${code}`}>
+    <a href={url} download={`elbiyahe-qr-${code}.png`} className="admin-qr" title={`Download QR for ${code}`}>
       <img src={url} alt={`QR ${code}`} /><Download size={13} />
     </a>
   );
@@ -431,7 +431,7 @@ export function AdminPassport() {
       await upsertRow("passport_locations", {
         ...(id ? { id } : {}), ...f, slug: f.slug || slugify(f.name),
         lat: f.lat ? Number(f.lat) : null, lng: f.lng ? Number(f.lng) : null,
-        qr_code: f.qr_code || `ELBI-${slugify(f.name).toUpperCase().replace(/-/g, "")}`,
+        qr_code: f.qr_code || `ELBIYAHE-${slugify(f.name).toUpperCase().replace(/-/g, "")}`,
       });
       qc.invalidateQueries({ queryKey: ["admin", "passport-locations"] });
       qc.invalidateQueries({ queryKey: ["passport"] });
@@ -458,7 +458,7 @@ export function AdminPassport() {
       <section className="admin-section">
         <div className="admin-section-head"><h2>Passport spots</h2>
           <button className="btn primary" onClick={() => setLocForm({ ...EMPTY_LOC })}><Plus size={15} /> New spot</button></div>
-        {locations.isLoading ? <Loader2 className="elbi-spin" /> : (
+        {locations.isLoading ? <Loader2 className="elbiyahe-spin" /> : (
           <table className="admin-table">
             <thead><tr><th>Name</th><th>Category</th><th>QR code</th><th>QR</th><th>Active</th><th /></tr></thead>
             <tbody>
@@ -481,7 +481,7 @@ export function AdminPassport() {
       <section className="admin-section">
         <div className="admin-section-head"><h2>Rewards</h2>
           <button className="btn primary" onClick={() => setRewForm({ ...EMPTY_REWARD })}><Plus size={15} /> New reward</button></div>
-        {rewards.isLoading ? <Loader2 className="elbi-spin" /> : (
+        {rewards.isLoading ? <Loader2 className="elbiyahe-spin" /> : (
           <table className="admin-table">
             <thead><tr><th>Title</th><th>Tier</th><th>Stamps</th><th>Active</th><th /></tr></thead>
             <tbody>
@@ -509,7 +509,7 @@ export function AdminPassport() {
               {["Nature", "Culture", "Food", "Science", "Event", "Community"].map(c => <option key={c}>{c}</option>)}
             </select>
           </Field>
-          <Field label="QR code (blank = auto)"><input value={locForm.qr_code} onChange={e => setLocForm({ ...locForm, qr_code: e.target.value })} placeholder="ELBI-MAKILING" /></Field>
+          <Field label="QR code (blank = auto)"><input value={locForm.qr_code} onChange={e => setLocForm({ ...locForm, qr_code: e.target.value })} placeholder="ELBIYAHE-MAKILING" /></Field>
           <div className="admin-grid2">
             <Field label="Lat"><input value={locForm.lat} onChange={e => setLocForm({ ...locForm, lat: e.target.value })} /></Field>
             <Field label="Lng"><input value={locForm.lng} onChange={e => setLocForm({ ...locForm, lng: e.target.value })} /></Field>

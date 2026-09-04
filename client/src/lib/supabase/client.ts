@@ -6,7 +6,7 @@ const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
 if (!url || !key) {
   // Surfaced loudly in dev; the app can't do anything useful without it.
   console.error(
-    "[ELBI] Missing VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY. " +
+    "[El-Biyahe!] Missing VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY. " +
       "Copy .env.example to .env.local and fill them in.",
   );
 }

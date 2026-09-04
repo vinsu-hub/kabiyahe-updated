@@ -1,4 +1,4 @@
-/* Hand-authored row types for the ELBI Supabase schema.
+/* Hand-authored row types for the El-Biyahe! Supabase schema.
    (CLI `gen types` needs Docker locally, which isn't available — keep these in
    sync with supabase/migrations/*.sql by hand.) */
 

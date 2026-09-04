@@ -1,4 +1,4 @@
-/* React-Query hooks over Supabase for the ELBI feature tabs. */
+/* React-Query hooks over Supabase for the El-Biyahe! feature tabs. */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "./client";
 import { useAuth } from "./AuthProvider";

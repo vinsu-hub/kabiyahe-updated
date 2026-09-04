@@ -1,6 +1,6 @@
-/* ELBI Admin — desktop workstation surface. */
-.elbi-spin { animation: elbi-spin 0.9s linear infinite; }
-@keyframes elbi-spin { to { transform: rotate(360deg); } }
+/* El-Biyahe! Admin — desktop workstation surface. */
+.elbiyahe-spin { animation: elbiyahe-spin 0.9s linear infinite; }
+@keyframes elbiyahe-spin { to { transform: rotate(360deg); } }
 
 .admin-gate {
   min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;

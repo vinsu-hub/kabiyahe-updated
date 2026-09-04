@@ -12,14 +12,14 @@ const NAV = [
 export function RequireAdmin({ children }: { children: React.ReactNode }) {
   const { loading, isAuthenticated, isAdmin } = useAuth();
   const [, navigate] = useLocation();
-  if (loading) return <div className="admin-gate"><Loader2 className="elbi-spin" /> Checking access…</div>;
+  if (loading) return <div className="admin-gate"><Loader2 className="elbiyahe-spin" /> Checking access…</div>;
   if (!isAuthenticated) { navigate("/login?next=/admin"); return null; }
   if (!isAdmin) {
     return (
       <div className="admin-gate">
         <h1>Admin only</h1>
         <p>Your account doesn't have the admin role.</p>
-        <Link href="/" className="btn primary">Back to ELBI</Link>
+        <Link href="/" className="btn primary">Back to El-Biyahe!</Link>
       </div>
     );
   }
@@ -32,7 +32,7 @@ export function AdminShell({ title, children, actions }: { title: string; childr
   return (
     <div className="admin-root">
       <aside className="admin-sidebar">
-        <Link href="/" className="admin-brand"><img src="/brand/elbi-mark.png" alt="" /> <span>ELBI Admin</span></Link>
+        <Link href="/" className="admin-brand"><img src="/brand/elbiyahe-mark.png" alt="" /> <span>El-Biyahe! Admin</span></Link>
         <nav>
           {NAV.map(n => {
             const I = n.icon;
