@@ -12,6 +12,7 @@ export interface Season {
   name: string;
   months: string;
   pillars: string;
+  blurb: string | null;
   is_current: boolean;
   sort: number;
 }
@@ -32,6 +33,7 @@ export interface EventRow {
   lat: number | null;
   lng: number | null;
   attendee_count: number;
+  featured: boolean;
   hero_image: string | null;
   organizer: string | null;
   description: string | null;
