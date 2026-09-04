@@ -1,5 +1,30 @@
 # Progress Log
 
+## 2026-09-04 (Events page rebuild toward the ELBi G! mockup — branch `feat/events-page-mockup`, merged to `main`)
+- User's follow-up ask ("did you actually replicate the mockup?") was answered honestly: no — the prior
+  pass was scoped to bugs/oddities only. This pass rebuilds the Events page toward the actual mockup
+  structure, with two authenticity guardrails set by the user: attendee "avatars" are abstract decorative
+  dots (no fabricated people — no public attendee-identity data exists), and the Calendar widget's event
+  dots are real (computed from actual event dates), not decorative.
+- **Data fix**: every seeded event had `starts_at = null` (only `date_label` was populated) — silently
+  broke the "Soonest" sort from the prior pass and blocked a real Date filter/calendar. Backfilled real
+  `starts_at`/`ends_at` for all 9 dated events from their existing date labels; the 2 genuinely dateless
+  "anytime" events (Heritage Walk, Sunset at the Park) intentionally stay null.
+- New `events.featured` + `seasons.blurb` columns (migrations); Bañamos flagged `featured`; each season
+  got a real one-line blurb; admin event form gained a Featured checkbox.
+- **Hero**: intro (script subheading "Join what moves LB!") + auto-rotating carousel through the existing
+  scene SVGs (no new art — real event photos still blocked on Phase 10) + a real "This Season" callout
+  card driven by `useCurrentSeason()`.
+- **Three-column layout**: filter rail (search, real Date radios against `starts_at`, Category, Season,
+  Location-by-barangay, Reset/Apply) | event list (results count, sort, List/Map) | widget rail.
+- Event cards gained a bookmark icon, an explicit "View Details" button, and abstract avatar-dot social
+  proof next to the real going-count. Right rail: Featured Event card, a Newsletter card (same
+  client-only pattern as Home's — no new subscribers table), and a real Event Calendar widget.
+- QA: `pnpm check`/`build` clean; Playwright verified the full layout, working Date/Category/Location
+  filters (This Month correctly narrowed to the real September event), Reset, bookmark/View Details
+  buttons, Featured/Newsletter/Calendar widgets, mobile collapse (filter rail behind a toggle, widget
+  rail stacks below the list), 0 console errors. `qa-writeflows.mjs` 8/8, heritage-walk smoke unaffected.
+
 ## 2026-09-04 (Events page bug/oddity pass — branch `fix/events-page-oddities`, merged to `main`)
 - Compared the live `/events` + `/events/:slug` pages against a user-supplied reference spec/mockups; user
   scoped this pass to real bugs/oddities only (no mockup-parity chase — Featured Event card, Newsletter,
