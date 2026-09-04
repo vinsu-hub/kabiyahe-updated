@@ -117,3 +117,6 @@ client/public/assets/
 
 # ELBI dev
 screenshots/
+
+# scratch
+.tmp/
