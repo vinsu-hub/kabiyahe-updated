@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "./client";
 import { useAuth } from "./AuthProvider";
 import type {
-  EventDetailRow, EventRow, PassportLocationPublic, PassportReward, RideRoute, RideTip,
+  DelicacyRow, EventDetailRow, EventRow, PassportLocationPublic, PassportReward, RideRoute, RideTip,
   ScanResult, Season, TourPackageDetail, TourPackageRow,
 } from "./types";
 
@@ -208,6 +208,26 @@ export function useScanPassport() {
     onSuccess: result => {
       if (result.ok) qc.invalidateQueries({ queryKey: ["passport"] });
     },
+  });
+}
+
+/* ---------------------------------------------------------------- delicacies */
+export function useDelicacies() {
+  return useQuery({
+    queryKey: ["delicacies"],
+    queryFn: async () =>
+      throwIf(
+        await supabase.from("delicacies").select("*").order("featured", { ascending: false }).order("name"),
+      ) as DelicacyRow[],
+  });
+}
+
+export function useDelicacy(slug: string | undefined) {
+  return useQuery({
+    enabled: Boolean(slug),
+    queryKey: ["delicacy", slug],
+    queryFn: async () =>
+      throwIf(await supabase.from("delicacies").select("*").eq("slug", slug!).maybeSingle()) as DelicacyRow | null,
   });
 }
 

@@ -156,6 +156,27 @@ export interface Profile {
   xp: number;
 }
 
+export type DelicacyCategory = "Local Favorites" | "Street Food" | "Baked Goods" | "Dairy & Desserts" | "Market Finds";
+
+export interface DelicacyRow {
+  id: string;
+  slug: string;
+  name: string;
+  category: DelicacyCategory;
+  place: string | null;
+  barangay: string | null;
+  lat: number | null;
+  lng: number | null;
+  description: string | null;
+  hero_image: string | null;
+  price_tier: number;
+  rating: number | null;
+  review_count: number;
+  tags: string[];
+  source_url: string | null;
+  featured: boolean;
+}
+
 export interface ScanResult {
   ok: boolean;
   reason?: "auth" | "not_found" | "rate_limited" | "too_far" | "already";

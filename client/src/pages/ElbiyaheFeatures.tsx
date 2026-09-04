@@ -11,10 +11,10 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/lib/supabase/AuthProvider";
 import {
-  useEvent, useEvents, useMyRsvp, usePassport, useReserveTour, useRideGuide,
+  useDelicacies, useEvent, useEvents, useMyRsvp, usePassport, useReserveTour, useRideGuide,
   useScanPassport, useSeasons, useToggleRsvp, useTour, useTours,
 } from "@/lib/supabase/queries";
-import type { EventRow, StampCategory } from "@/lib/supabase/types";
+import type { DelicacyRow, EventRow, StampCategory } from "@/lib/supabase/types";
 
 interface Shell {
   Header: React.ComponentType;
@@ -719,6 +719,70 @@ export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
               <ul>{data.tips.map(t => <li key={t.id}>{t.body}</li>)}</ul>
             </section>
           </>
+        )}
+      </main>
+      <Footer />
+      <BottomNav />
+    </>
+  );
+}
+
+/* ============================ DELICACIES ============================ */
+
+const DELICACY_CATEGORIES = ["All", "Local Favorites", "Street Food", "Baked Goods", "Dairy & Desserts", "Market Finds"] as const;
+
+function DelicacyCard({ d }: { d: DelicacyRow }) {
+  return (
+    <article className="elbiyahe-tour-card">
+      <div className="elbiyahe-tour-card-media">
+        <img src={d.hero_image || "/scenes/elbiyahe-food.svg"} alt={d.name} />
+        {d.featured && <span className="elbiyahe-badge ochre">FEATURED</span>}
+      </div>
+      <div className="elbiyahe-tour-card-body">
+        <div className="elbiyahe-chip-row">{d.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}</div>
+        <h3>{d.name}</h3>
+        <p className="muted"><MapPin size={13} /> {d.place}{d.barangay ? `, Brgy. ${d.barangay}` : ""}</p>
+        <p className="muted" style={{ fontSize: 12 }}>{d.description}</p>
+        <div className="elbiyahe-tour-card-foot">
+          <b>{"₱".repeat(d.price_tier)}</b>
+          {d.rating ? <span className="rating"><Star size={13} fill="currentColor" /> {Number(d.rating).toFixed(1)} <small>({d.review_count})</small></span> : <span className="unrated">Reviews coming soon</span>}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export function Delicacies({ Header, BottomNav, Footer }: Shell) {
+  const { data, isLoading, error } = useDelicacies();
+  const [category, setCategory] = useState<(typeof DELICACY_CATEGORIES)[number]>("All");
+  const list = (data ?? []).filter(d => category === "All" || d.category === category);
+
+  return (
+    <>
+      <Header />
+      <main className="container elbiyahe-page">
+        <div className="elbiyahe-page-head">
+          <div>
+            <p className="eyebrow">TASTE WHAT'S LOCAL</p>
+            <h1>Delicacies</h1>
+            <p className="muted">Real Los Baños flavors worth the detour — from the buko pie stretch to the public market stalls.</p>
+          </div>
+        </div>
+
+        <div className="filter-pills">
+          {DELICACY_CATEGORIES.map(c => (
+            <button key={c} className={category === c ? "active" : ""} onClick={() => setCategory(c)}>{c}</button>
+          ))}
+        </div>
+
+        {isLoading && <Loading />}
+        {error && <LoadError message={(error as Error).message} />}
+
+        <div className="elbiyahe-tour-grid">
+          {list.map(d => <DelicacyCard d={d} key={d.id} />)}
+        </div>
+        {!isLoading && !error && list.length === 0 && (
+          <div className="empty-state"><Utensils size={26} /><h3>No delicacies in that category yet.</h3><p>Try another filter.</p></div>
         )}
       </main>
       <Footer />

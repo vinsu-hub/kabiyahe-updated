@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase/client";
 import { adminCounts, deleteRow, listAdmin, replaceChildren, slugify, uploadMedia, upsertRow } from "@/lib/supabase/admin";
 import { AdminShell } from "./AdminShell";
 import type {
-  EventDetailRow, PassportLocationPublic, PassportReward, Season, TourOperator, TourPackageDetail,
+  DelicacyRow, EventDetailRow, PassportLocationPublic, PassportReward, Season, TourOperator, TourPackageDetail,
 } from "@/lib/supabase/types";
 
 /* ------------------------------------------------------------------ helpers */
@@ -91,6 +91,7 @@ export function AdminDashboard() {
             ["Tour packages", data!.tour_packages, "/admin/tours"],
             ["Passport spots", data!.passport_locations, "/admin/passport"],
             ["Rewards", data!.passport_rewards, "/admin/passport"],
+            ["Delicacies", data!.delicacies, "/admin/delicacies"],
             ["Tour reservations", data!.tour_reservations, null],
             ["Registered users", data!.profiles, null],
           ].map(([label, n, href]) => {
@@ -527,6 +528,117 @@ export function AdminPassport() {
             <Field label="Required stamps"><input value={rewForm.required_stamps} onChange={e => setRewForm({ ...rewForm, required_stamps: e.target.value })} /></Field>
           </div>
           <Field label="Active"><input type="checkbox" checked={rewForm.active} onChange={e => setRewForm({ ...rewForm, active: e.target.checked })} /></Field>
+        </Drawer>
+      )}
+    </AdminShell>
+  );
+}
+
+/* ------------------------------------------------------------------ delicacies */
+
+const EMPTY_DELICACY = {
+  id: "", slug: "", name: "", category: "Local Favorites", place: "", barangay: "", lat: "", lng: "",
+  description: "", hero_image: "", price_tier: "1", rating: "", review_count: "0", tags: "",
+  source_url: "", featured: false,
+};
+type DelicacyForm = typeof EMPTY_DELICACY;
+
+export function AdminDelicacies() {
+  const qc = useQueryClient();
+  const { data: rows, isLoading } = useQuery({
+    queryKey: ["admin", "delicacies"],
+    queryFn: () => listAdmin<DelicacyRow>("delicacies", "*", "name"),
+  });
+  const [form, setForm] = useState<DelicacyForm | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  const open = (row?: DelicacyRow) => setForm(row ? {
+    ...EMPTY_DELICACY, ...row,
+    place: row.place ?? "", barangay: row.barangay ?? "", lat: String(row.lat ?? ""), lng: String(row.lng ?? ""),
+    description: row.description ?? "", hero_image: row.hero_image ?? "", price_tier: String(row.price_tier),
+    rating: row.rating != null ? String(row.rating) : "", review_count: String(row.review_count),
+    tags: arrToCsv(row.tags), source_url: row.source_url ?? "",
+  } : { ...EMPTY_DELICACY });
+
+  const save = async () => {
+    if (!form) return;
+    setSaving(true);
+    try {
+      const { id, tags, ...f } = form;
+      const row = {
+        ...(id ? { id } : {}),
+        ...f,
+        slug: f.slug || slugify(f.name),
+        place: f.place || null, barangay: f.barangay || null,
+        lat: f.lat ? Number(f.lat) : null, lng: f.lng ? Number(f.lng) : null,
+        description: f.description || null, hero_image: f.hero_image || null,
+        price_tier: Number(f.price_tier) || 1,
+        rating: f.rating ? Number(f.rating) : null,
+        review_count: Number(f.review_count) || 0,
+        tags: csvToArr(tags),
+        source_url: f.source_url || null,
+      };
+      await upsertRow<any>("delicacies", row);
+      qc.invalidateQueries({ queryKey: ["admin", "delicacies"] });
+      qc.invalidateQueries({ queryKey: ["delicacies"] });
+      setForm(null);
+    } catch (e) { alert((e as Error).message); }
+    setSaving(false);
+  };
+
+  const remove = async (id: string) => {
+    if (!confirm("Delete this delicacy?")) return;
+    await deleteRow("delicacies", id);
+    qc.invalidateQueries({ queryKey: ["admin", "delicacies"] });
+    qc.invalidateQueries({ queryKey: ["delicacies"] });
+  };
+
+  return (
+    <AdminShell title="Delicacies" actions={<button className="btn primary" onClick={() => open()}><Plus size={15} /> New delicacy</button>}>
+      {isLoading ? <Loader2 className="elbiyahe-spin" /> : (
+        <table className="admin-table">
+          <thead><tr><th>Name</th><th>Category</th><th>Place</th><th>Featured</th><th /></tr></thead>
+          <tbody>
+            {(rows ?? []).map(r => (
+              <tr key={r.id}>
+                <td><button className="admin-link" onClick={() => open(r)}>{r.name}</button></td>
+                <td>{r.category}</td><td>{r.place}</td><td>{r.featured ? "Yes" : ""}</td>
+                <td><button className="admin-row-del" onClick={() => remove(r.id)}><Trash2 size={15} /></button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {form && (
+        <Drawer title={form.id ? "Edit delicacy" : "New delicacy"} onClose={() => setForm(null)} onSave={save} saving={saving}>
+          <Field label="Name"><input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} /></Field>
+          <Field label="Slug (blank = auto)"><input value={form.slug} onChange={e => setForm({ ...form, slug: e.target.value })} placeholder={slugify(form.name)} /></Field>
+          <div className="admin-grid2">
+            <Field label="Category">
+              <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}>
+                {["Local Favorites", "Street Food", "Baked Goods", "Dairy & Desserts", "Market Finds"].map(c => <option key={c}>{c}</option>)}
+              </select>
+            </Field>
+            <Field label="Price tier (1-4)"><input value={form.price_tier} onChange={e => setForm({ ...form, price_tier: e.target.value })} /></Field>
+          </div>
+          <div className="admin-grid2">
+            <Field label="Place"><input value={form.place} onChange={e => setForm({ ...form, place: e.target.value })} /></Field>
+            <Field label="Barangay"><input value={form.barangay} onChange={e => setForm({ ...form, barangay: e.target.value })} /></Field>
+          </div>
+          <div className="admin-grid2">
+            <Field label="Lat"><input value={form.lat} onChange={e => setForm({ ...form, lat: e.target.value })} /></Field>
+            <Field label="Lng"><input value={form.lng} onChange={e => setForm({ ...form, lng: e.target.value })} /></Field>
+          </div>
+          <Field label="Description"><textarea rows={3} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} /></Field>
+          <Field label="Hero image"><ImageField value={form.hero_image} onChange={url => setForm({ ...form, hero_image: url })} folder="delicacies" /></Field>
+          <div className="admin-grid2">
+            <Field label="Rating"><input value={form.rating} onChange={e => setForm({ ...form, rating: e.target.value })} /></Field>
+            <Field label="Review count"><input value={form.review_count} onChange={e => setForm({ ...form, review_count: e.target.value })} /></Field>
+          </div>
+          <Field label="Tags (comma-separated)"><input value={form.tags} onChange={e => setForm({ ...form, tags: e.target.value })} /></Field>
+          <Field label="Source URL"><input value={form.source_url} onChange={e => setForm({ ...form, source_url: e.target.value })} /></Field>
+          <Field label="Featured"><input type="checkbox" checked={form.featured} onChange={e => setForm({ ...form, featured: e.target.checked })} /></Field>
         </Drawer>
       )}
     </AdminShell>

@@ -2,10 +2,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@/lib/supabase/AuthProvider";
 import { useCurrentSeason, useEvents, useTours } from "@/lib/supabase/queries";
-import { BusTours, ComingSoon, EventDetail, EventsList, Passport, RideGuide, TourDetail } from "@/pages/ElbiyaheFeatures";
+import { BusTours, ComingSoon, Delicacies, EventDetail, EventsList, Passport, RideGuide, TourDetail } from "@/pages/ElbiyaheFeatures";
 import { Auth } from "@/pages/Auth";
 import { RequireAdmin } from "@/pages/admin/AdminShell";
-import { AdminDashboard, AdminEvents, AdminPassport, AdminTours } from "@/pages/admin/AdminPages";
+import { AdminDashboard, AdminDelicacies, AdminEvents, AdminPassport, AdminTours } from "@/pages/admin/AdminPages";
 import { Link, Route, Switch, useLocation } from "wouter";
 import {
   ArrowLeft, ArrowRight, Archive, BadgeAlert, Bell, BellRing, Bookmark, CalendarDays, Car, Check, CheckCheck, ChevronDown,
@@ -343,7 +343,7 @@ function Router(){return <Switch>
   <Route path="/tours/:id" component={({params}:any)=><TourDetail {...elbiShell} id={params?.id}/>}/>
   <Route path="/passport" component={()=><Passport {...elbiShell}/>}/>
   <Route path="/ride-guide" component={()=><RideGuide {...elbiShell}/>}/>
-  <Route path="/delicacies" component={()=><ComingSoon {...elbiShell} title="Delicacies"/>}/>
+  <Route path="/delicacies" component={()=><Delicacies {...elbiShell}/>}/>
   <Route path="/parking" component={()=><ComingSoon {...elbiShell} title="Parking"/>}/>
   <Route path="/stay-eat" component={()=><ComingSoon {...elbiShell} title="Stay & Eat"/>}/>
   <Route path="/explore" component={Explore}/>
@@ -356,6 +356,7 @@ function Router(){return <Switch>
   <Route path="/admin/events" component={()=><RequireAdmin><AdminEvents/></RequireAdmin>}/>
   <Route path="/admin/tours" component={()=><RequireAdmin><AdminTours/></RequireAdmin>}/>
   <Route path="/admin/passport" component={()=><RequireAdmin><AdminPassport/></RequireAdmin>}/>
+  <Route path="/admin/delicacies" component={()=><RequireAdmin><AdminDelicacies/></RequireAdmin>}/>
   <Route component={NotFound}/>
 </Switch>}
 function App(){return <><ScrollToTop/><NoticeHost/><Router/></>}
