@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" font-family="Poppins,Segoe UI,sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" font-family="system-ui,sans-serif">
   <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#0B3D2E"/><stop offset="1" stop-color="#8B1E3F"/></linearGradient></defs>
   <rect width="1200" height="800" fill="url(#sky)"/>
@@ -6,12 +6,5 @@
   <path d="M0 520 L220 300 L360 430 L520 250 L720 470 L900 330 L1200 520 L1200 800 L0 800 Z" fill="#0B3D2E" opacity="0.55"/>
   <path d="M0 600 L260 430 L470 560 L700 400 L950 560 L1200 470 L1200 800 L0 800 Z" fill="#08301F" opacity="0.85"/>
   
-  
-  
-  
-  
-  <g transform="rotate(-8 600 400)"><rect x="470" y="300" width="260" height="200" rx="10" fill="none" stroke="#FFC629" stroke-width="10" stroke-dasharray="4 14"/><text x="600" y="415" fill="#FFC629" font-size="46" font-weight="800" text-anchor="middle">El-Biyahe!</text></g>
-  
-  <text x="60" y="740" fill="#FFF7E6" font-size="34" font-weight="700" opacity="0.95">Digital LB Passport</text>
-  <text x="60" y="775" fill="#FFC629" font-size="18" font-weight="600" letter-spacing="3">EL-BIYAHE! · COME CURIOUS</text>
+  <g transform="rotate(-8 600 400)"><rect x="470" y="300" width="260" height="200" rx="10" fill="none" stroke="#FFC629" stroke-width="10" stroke-dasharray="4 14"/></g>
 </svg>
