@@ -31,6 +31,10 @@ export type LBPoint = {
   kind?: string;
   href?: string;
   sub?: string;
+  /** Short text (e.g. "FREE", "₱20") rendered as a pill pin instead of the plain dot/number. */
+  label?: string;
+  /** Pill background color when `label` is set — defaults to the forest green. */
+  labelColor?: string;
 };
 
 export type ZoneCircle = { center: LatLng; radiusKm: number; label: string; color?: string };
@@ -181,19 +185,30 @@ export default function LBMap({
 
         {points.map((p, i) => (
           <Marker key={p.id} longitude={p.lng} latitude={p.lat} anchor="bottom">
-            <button
-              className="lbmap-pin"
-              style={{ color: colorFor(p.kind) }}
-              aria-label={numbered ? `${i + 1}. ${p.name}` : p.name}
-              onClick={e => { e.stopPropagation(); setSelected(p); }}
-            >
-              <svg viewBox="0 0 24 32" width={numbered ? 30 : 26} height={numbered ? 38 : 34} aria-hidden="true">
-                <path d="M12 0C5.4 0 0 5.4 0 12c0 8.4 12 20 12 20s12-11.6 12-20C24 5.4 18.6 0 12 0z" fill="currentColor" />
-                {numbered
-                  ? <text x="12" y="16" textAnchor="middle" fontSize="10" fontWeight="800" fill="#fffdf8">{i + 1}</text>
-                  : <circle cx="12" cy="12" r="4.5" fill="#fffdf8" />}
-              </svg>
-            </button>
+            {p.label ? (
+              <button
+                className="lbmap-label-pin"
+                style={{ background: p.labelColor ?? colorFor(p.kind) }}
+                aria-label={p.name}
+                onClick={e => { e.stopPropagation(); setSelected(p); }}
+              >
+                {p.label}
+              </button>
+            ) : (
+              <button
+                className="lbmap-pin"
+                style={{ color: colorFor(p.kind) }}
+                aria-label={numbered ? `${i + 1}. ${p.name}` : p.name}
+                onClick={e => { e.stopPropagation(); setSelected(p); }}
+              >
+                <svg viewBox="0 0 24 32" width={numbered ? 30 : 26} height={numbered ? 38 : 34} aria-hidden="true">
+                  <path d="M12 0C5.4 0 0 5.4 0 12c0 8.4 12 20 12 20s12-11.6 12-20C24 5.4 18.6 0 12 0z" fill="currentColor" />
+                  {numbered
+                    ? <text x="12" y="16" textAnchor="middle" fontSize="10" fontWeight="800" fill="#fffdf8">{i + 1}</text>
+                    : <circle cx="12" cy="12" r="4.5" fill="#fffdf8" />}
+                </svg>
+              </button>
+            )}
           </Marker>
         ))}
 

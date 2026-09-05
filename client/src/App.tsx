@@ -138,22 +138,36 @@ function SaveButton({label="Save"}:{label?:string}) { const [saved,setSaved] = u
 function DestinationCard({d, compact=false}:{d:DestinationRow;compact?:boolean}) { const Icon=DESTINATION_ICONS[d.icon_key]||Compass; const href=`/explore/${d.slug}`; return <article className={`destination-card ${compact?"compact":""}`}><Link href={href} className="image-wrap"><img src={d.hero_image||IMG.hero} alt={d.name}/>{d.placeholder&&<Tag tone="ochre">Placeholder listing</Tag>}</Link><SaveButton/><div className="card-body"><div className="card-heading"><Link href={href}><h3>{d.name}</h3></Link><Icon size={16} className="type-icon"/></div><p className="muted"><MapPin size={14}/>{d.place}</p><p className="desc">{d.description}</p><div className="card-footer"><Tag>{d.type}</Tag>{d.rating?<span className="rating"><Star size={14} fill="currentColor"/> {d.rating} <small>({d.review_count})</small></span>:<span className="unrated">Reviews coming soon</span>}</div></div></article> }
 function useLandingMotion() {
   useEffect(() => {
-    const nodes = Array.from(document.querySelectorAll<HTMLElement>("[data-scroll-reveal]"));
-    if (!nodes.length) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
-      nodes.forEach(node => node.classList.add("is-visible"));
-      return;
-    }
-    const observer = new IntersectionObserver(entries => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window);
+    const observer = reduceMotion ? null : new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
+          observer!.unobserve(entry.target);
         }
       });
     }, { threshold: 0.14, rootMargin: "0px 0px -8%" });
-    nodes.forEach(node => observer.observe(node));
-    return () => observer.disconnect();
+
+    // Sections gated on async data (e.g. season, tours) mount after this effect's
+    // initial querySelectorAll — watch for them so they aren't left at opacity:0 forever.
+    const observe = (node: HTMLElement) => {
+      if (reduceMotion) node.classList.add("is-visible");
+      else observer!.observe(node);
+    };
+    document.querySelectorAll<HTMLElement>("[data-scroll-reveal]").forEach(observe);
+
+    const mutationObserver = new MutationObserver(mutations => {
+      for (const m of mutations) {
+        m.addedNodes.forEach(n => {
+          if (!(n instanceof HTMLElement)) return;
+          if (n.matches("[data-scroll-reveal]")) observe(n);
+          n.querySelectorAll?.<HTMLElement>("[data-scroll-reveal]").forEach(observe);
+        });
+      }
+    });
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+
+    return () => { observer?.disconnect(); mutationObserver.disconnect(); };
   }, []);
 }
 
@@ -170,10 +184,10 @@ const QUICK_LINKS = [
 function Home() {
   useLandingMotion();
   const [email, setEmail] = useState("");
-  const { data: events } = useEvents();
-  const { data: season } = useCurrentSeason();
-  const { data: tours } = useTours();
-  const { data: destinations } = useDestinations();
+  const { data: events, error: eventsError } = useEvents();
+  const { data: season, error: seasonError } = useCurrentSeason();
+  const { data: tours, error: toursError } = useTours();
+  const { data: destinations, error: destinationsError } = useDestinations();
   const happeningNow = (events ?? []).filter(e => e.status === "live" || e.status === "today").slice(0, 6);
   const featuredTours = (tours ?? []).slice(0, 4);
   const homeFeaturedDestinations = (destinations ?? []).filter(d => d.featured);
@@ -187,6 +201,11 @@ function Home() {
       </div>
     </section>
 
+    {seasonError && (
+    <section className="container scroll-reveal" data-scroll-reveal>
+      <p className="muted">Couldn't load the current season — check your connection and try again.</p>
+    </section>
+    )}
     {season && (
     <section className="container elbiyahe-season-banner scroll-reveal" data-scroll-reveal>
       <div>
@@ -208,7 +227,8 @@ function Home() {
             <div><b>{e.title}</b><small><CalendarDays size={12}/> {e.date_label} · {e.time_label}</small><small><MapPin size={12}/> {e.venue_name}</small></div>
           </Link>
         ))}
-        {happeningNow.length === 0 && <p className="muted" style={{ padding: "8px 0" }}>Nothing live right now — see all upcoming events.</p>}
+        {eventsError && <p className="muted" style={{ padding: "8px 0" }}>Couldn't load events right now — check your connection and try again.</p>}
+        {!eventsError && happeningNow.length === 0 && <p className="muted" style={{ padding: "8px 0" }}>Nothing live right now — see all upcoming events.</p>}
       </div>
     </section>
 
@@ -227,9 +247,19 @@ function Home() {
 
     <section className="container home-section scroll-reveal" data-scroll-reveal>
       <SectionTitle eyebrow="WORTH THE TRIP" title="Places to explore" action={<Link href="/explore" className="link-accent">⌖ View all places</Link>}/>
-      <div className="destination-grid">{homeFeaturedDestinations.map((d,i)=><div className="scroll-stagger" data-stagger={i} key={d.id}><DestinationCard d={d}/></div>)}</div>
+      {destinationsError ? (
+        <p className="muted" style={{ padding: "8px 0" }}>Couldn't load places to explore right now — check your connection and try again.</p>
+      ) : (
+        <div className="destination-grid">{homeFeaturedDestinations.map((d,i)=><div className="scroll-stagger" data-stagger={i} key={d.id}><DestinationCard d={d}/></div>)}</div>
+      )}
     </section>
 
+    {toursError && (
+    <section className="container home-section scroll-reveal" data-scroll-reveal>
+      <SectionTitle title="Featured Bus Tours"/>
+      <p className="muted">Couldn't load bus tours right now — check your connection and try again.</p>
+    </section>
+    )}
     {featuredTours.length > 0 && (
     <section className="container home-section scroll-reveal" data-scroll-reveal>
       <SectionTitle title="Featured Bus Tours" action={<Link href="/tours" className="link-accent">All packages <ChevronRight size={15}/></Link>}/>

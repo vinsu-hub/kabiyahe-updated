@@ -47,7 +47,7 @@
 .elbiyahe-chip-row .muted{font-size:12px}
 
 .elbiyahe-event-group{margin-top:8px}
-.elbiyahe-event-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.elbiyahe-event-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .elbiyahe-event-card{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s}
 .elbiyahe-event-card:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(11,61,46,.12)}
 .elbiyahe-event-card-media{position:relative;height:140px}
@@ -111,6 +111,9 @@
 .elbiyahe-tour-card-foot b{color:var(--forest);font-size:15px}
 .elbiyahe-tour-card-foot small{font-weight:500;color:var(--muted)}
 .elbiyahe-tour-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:14px 0}
+.elbiyahe-parking-card{min-width:260px;flex:0 0 260px}
+.elbiyahe-parking-card-icon{display:flex;align-items:center;justify-content:space-between;padding:16px;background:#eef3ec;color:var(--forest);height:auto}
+.elbiyahe-parking-card .elbiyahe-tour-card-foot{gap:8px}
 .elbiyahe-tour-meta div{background:#eef3ec;border-radius:12px;padding:12px;text-align:center}
 .elbiyahe-tour-meta b{display:block;font-size:18px;color:var(--forest)}
 .elbiyahe-tour-meta b.warn{color:var(--destructive)}
@@ -181,6 +184,53 @@
 .elbiyahe-route-row-head b{color:var(--forest);font-size:14px}
 .elbiyahe-route-row p{margin:3px 0;font-size:13px;line-height:1.45}
 .elbiyahe-tips ul{padding-left:18px;line-height:1.7}
+.elbiyahe-ride-choices a.link-accent{margin-top:auto;font-size:12px}
+.action-row .step-icon{flex:none}
+
+/* Transpo-style hero */
+.elbiyahe-transpo-hero{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:center;background:var(--forest);color:var(--cream);border-radius:18px;padding:28px;margin-bottom:22px}
+.elbiyahe-transpo-hero h1{color:#fff;font:700 32px/1.15 'Space Grotesk',sans-serif;margin:6px 0}
+.elbiyahe-transpo-hero .searchbox{background:#fff}
+.elbiyahe-transpo-hero-media{position:relative;border-radius:14px;overflow:hidden;height:220px;background:var(--forest-2)}
+.elbiyahe-transpo-hero-media img{width:100%;height:100%;object-fit:cover}
+.elbiyahe-transpo-tip-chip{position:absolute;right:14px;bottom:14px;left:14px;background:rgba(255,255,255,.95);color:var(--forest);border-radius:12px;padding:10px 14px;display:flex;gap:8px;align-items:flex-start;box-shadow:var(--shadow)}
+.elbiyahe-transpo-tip-chip b{display:block;font-size:12px}
+.elbiyahe-transpo-tip-chip span{display:block;font-size:12px;color:var(--muted)}
+
+/* Route cards */
+.elbiyahe-route-card{min-width:260px;flex:0 0 260px}
+.elbiyahe-route-stops{display:flex;flex-direction:column;margin:8px 0}
+.elbiyahe-route-stop{position:relative;padding:0 0 8px 16px;font-size:12px;color:var(--ink)}
+.elbiyahe-route-stop:before{content:'';position:absolute;left:2px;top:4px;width:6px;height:6px;border-radius:50%;background:var(--forest)}
+.elbiyahe-route-stop:not(:last-child):after{content:'';position:absolute;left:4.5px;top:10px;width:1px;height:calc(100% - 8px);background:var(--line)}
+.elbiyahe-route-stats{display:flex;justify-content:space-between;gap:10px;margin-top:8px;padding-top:10px;border-top:1px solid var(--line)}
+.elbiyahe-route-stats div{display:flex;flex-direction:column;gap:2px}
+.elbiyahe-route-stats b{color:var(--forest);font-size:14px}
+.elbiyahe-route-stats small{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.04em}
+
+/* Tricycle fare guide */
+.elbiyahe-fare-guide-row{display:flex;gap:20px;align-items:center;margin-bottom:10px}
+.elbiyahe-fare-guide-icon{width:64px;height:64px;flex:none;border-radius:50%;background:#e4eee4;color:var(--sage);display:grid;place-items:center}
+.elbiyahe-fare-tiers{flex:1;display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line);border-radius:10px}
+.elbiyahe-fare-tiers span{text-align:center;padding:12px 4px;font-size:10px;border-right:1px solid var(--line);color:var(--muted)}
+.elbiyahe-fare-tiers span:last-child{border:0}
+.elbiyahe-fare-tiers b{display:block;font-size:15px;color:var(--forest);margin-bottom:5px}
+.elbiyahe-tip-callout{margin-top:14px}
+
+/* Community CTA value props */
+.elbiyahe-value-props{display:flex;gap:22px;flex-wrap:wrap}
+.elbiyahe-value-props>div{display:flex;gap:10px;align-items:flex-start;flex:1;min-width:180px}
+.elbiyahe-value-props b{display:block;font-size:13px;color:var(--forest)}
+.elbiyahe-value-props p{margin:2px 0 0;font-size:12px}
+
+@media(max-width:900px){
+  .elbiyahe-transpo-hero{grid-template-columns:1fr}
+  .elbiyahe-fare-tiers{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:700px){
+  .elbiyahe-fare-guide-row{flex-direction:column;align-items:flex-start}
+  .elbiyahe-fare-tiers{grid-template-columns:repeat(2,1fr)}
+}
 
 .elbiyahe-hero-section h1{font-weight:700}
 .elbiyahe-hero-section .script{color:#c9971f}
@@ -235,6 +285,8 @@
 .lbmap-pin:focus-visible svg{outline:2px solid var(--forest);outline-offset:2px;border-radius:50%}
 .lbmap-user{display:block;width:16px;height:16px;border-radius:50%;background:#2f6bd8;border:3px solid #fff;box-shadow:0 0 0 4px rgba(47,107,216,.28)}
 .lbmap-zone-label{background:rgba(255,253,248,.92);border:1px solid var(--line);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:800;color:var(--forest);white-space:nowrap}
+.lbmap-label-pin{border:2px solid #fff;border-radius:20px;padding:4px 10px;font-size:11px;font-weight:800;color:#fff;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.28);white-space:nowrap;transition:transform .12s}
+.lbmap-label-pin:hover,.lbmap-label-pin:focus-visible{transform:scale(1.08);outline:none}
 .lbmap-fallback-link{position:absolute;right:10px;bottom:10px;z-index:2;background:rgba(255,253,248,.94);border:1px solid var(--line);border-radius:9px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--forest)}
 .maplibregl-popup.lbmap-popup .maplibregl-popup-content{border-radius:12px;padding:12px 14px;border:1px solid var(--line);box-shadow:var(--shadow);font-family:inherit}
 .lbmap-popup strong{display:block;color:var(--forest);font:700 14px 'Space Grotesk',sans-serif}
@@ -249,6 +301,7 @@
 .elbiyahe-nearby-row{display:contents;color:inherit}
 /* Events list: search box + results count */
 .elbiyahe-filter-bar .elbiyahe-searchbox{width:auto;flex:1 1 220px;min-width:180px;height:38px}
+.elbiyahe-events-filter-rail .elbiyahe-searchbox{width:auto;max-width:100%;min-width:0;flex:1 1 auto}
 .elbiyahe-results-count{margin:-8px 0 14px;font-size:12px;font-weight:600}
 
 /* Event card description snippet — clamp so cards stay a consistent height */
@@ -345,6 +398,7 @@
   .elbiyahe-events-layout{display:block}
   .elbiyahe-widget-rail{margin-top:20px}
   .elbiyahe-filters-toggle{display:inline-flex}
+  .elbiyahe-event-grid{grid-template-columns:repeat(2,1fr)}
 }
 
 /* ===================== Delicacies page: hero + 3-column mockup layout ===================== */
@@ -400,6 +454,7 @@
 }
 @media(max-width:700px){
   .elbiyahe-hrow-arrow{display:none}
+  .elbiyahe-event-grid{grid-template-columns:1fr}
 }
 
 @media (prefers-reduced-motion:reduce){.maplibregl-map *{transition:none!important}}

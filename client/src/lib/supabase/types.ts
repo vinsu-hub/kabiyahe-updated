@@ -144,6 +144,9 @@ export interface RideRoute {
   frequency_text: string | null;
   note: string | null;
   sort: number;
+  image: string | null;
+  stops: string[] | null;
+  travel_time_text: string | null;
 }
 
 export interface RideTip {
@@ -219,6 +222,9 @@ export interface ParkingSpotRow {
   hours_label: string | null;
   notes: string | null;
   hero_image: string | null;
+  category: string | null;
+  access_type: string | null;
+  verified: "verified" | "community_reported";
 }
 
 export type DestinationType = "Nature" | "Culture" | "Relaxation" | "Attractions" | "Food" | "Hotels";

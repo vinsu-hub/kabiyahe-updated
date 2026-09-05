@@ -5,9 +5,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
-  ArrowLeft, ArrowRight, BadgeCheck, Bookmark, Bus, CalendarDays, Car, Check, ChevronLeft, ChevronRight,
-  Clock3, Compass, ExternalLink, Footprints, Heart, List, Loader2, MapPin, Navigation, QrCode, Search,
-  Share2, SlidersHorizontal, Sparkles, Star, Ticket, Users, Utensils, X,
+  ArrowLeft, ArrowRight, BadgeCheck, BedDouble, Bookmark, Bus, CalendarDays, Car, Check, ChevronLeft, ChevronRight,
+  Clock3, Compass, ExternalLink, Footprints, GraduationCap, Heart, Landmark, List, Loader2, LocateFixed, MapPin,
+  Navigation, QrCode, Search, Share2, ShoppingBag, SlidersHorizontal, Sparkles, Star, Store, Ticket, Users,
+  Utensils, X,
 } from "lucide-react";
 import { useAuth } from "@/lib/supabase/AuthProvider";
 import {
@@ -15,7 +16,7 @@ import {
   useReserveAccommodation, useReserveTour, useRideGuide, useScanPassport, useSeasons, useSubmitDelicacySuggestion,
   useToggleRsvp, useTour, useTours, useHeritageWalk,
 } from "@/lib/supabase/queries";
-import type { AccommodationRow, DelicacyRow, EventRow, HeritageWalkStop, ParkingSpotRow, StampCategory } from "@/lib/supabase/types";
+import type { AccommodationRow, DelicacyRow, EventRow, HeritageWalkStop, ParkingSpotRow, RideRoute, StampCategory } from "@/lib/supabase/types";
 import { MapView, type LBPoint, type ZoneCircle } from "@/components/MapView";
 import { LB_CENTER, directionsUrl, distanceKm, formatDistance, getPosition, prefersReducedMotion, useUserLocation } from "@/lib/geo";
 
@@ -998,11 +999,64 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
 
 /* ============================ RIDE GUIDE ============================ */
 
+const TRICYCLE_FARE_TIERS: [string, string][] = [
+  ["0–1 km", "₱14"],
+  ["1–2 km", "₱15"],
+  ["2–3 km", "₱16"],
+  ["3–4 km", "₱17"],
+  ["4 km & beyond", "+₱1.00/km"],
+];
+
+function RouteCard({ r }: { r: RideRoute }) {
+  return (
+    <article className="elbiyahe-tour-card elbiyahe-route-card">
+      <div className="elbiyahe-tour-card-media">
+        <img src={r.image || "/scenes/elbiyahe-bus.svg"} alt="" />
+        <span className="elbiyahe-badge">ROUTE {r.sort}</span>
+      </div>
+      <div className="elbiyahe-tour-card-body">
+        <h3>{r.label}</h3>
+        {r.stops && r.stops.length > 0 && (
+          <div className="elbiyahe-route-stops">
+            {r.stops.map((s, i) => <div key={i} className="elbiyahe-route-stop">{s}</div>)}
+          </div>
+        )}
+        <div className="elbiyahe-route-stats">
+          <div><b>{r.fare_text || "—"}</b><small>Fare</small></div>
+          <div><b>{r.travel_time_text || "—"}</b><small>Est. Travel Time</small></div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function RideFeedbackModal({ onClose }: { onClose: () => void }) {
+  const [body, setBody] = useState("");
+  const onSubmit = (ev: React.FormEvent) => {
+    ev.preventDefault();
+    notify("Thanks — we'll use this to improve the Ride Guide.");
+    onClose();
+  };
+  return (
+    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-label="Give feedback on the Ride Guide">
+      <div className="modal" onClick={ev => ev.stopPropagation()}>
+        <div className="modal-head"><h2>Help improve the Ride Guide</h2><button onClick={onClose} aria-label="Close"><X size={18} /></button></div>
+        <p>Spot a wrong fare, a missing route, or something else? Tell us.</p>
+        <form onSubmit={onSubmit}>
+          <label className="modal-field">Your feedback<textarea required rows={4} value={body} onChange={ev => setBody(ev.target.value)} placeholder="e.g. The Olivarez fare is now ₱12…" /></label>
+          <button className="btn primary" type="submit">Send feedback</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
   const { data, isLoading, error } = useRideGuide();
   const [from, setFrom] = useState("UPLB Freedom Park");
   const [to, setTo] = useState("Los Baños Town Proper");
   const [result, setResult] = useState<string | null>(null);
+  const [showFeedback, setShowFeedback] = useState(false);
 
   const findRoute = () => {
     setResult(
@@ -1013,88 +1067,191 @@ export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
     notify("Route found.");
   };
 
+  const scrollToPlain = (id: string) =>
+    document.getElementById(id)?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
+  const scrollTo = (id: string) => (ev: React.MouseEvent) => {
+    ev.preventDefault();
+    scrollToPlain(id);
+  };
+
+  const heroTip = data?.tips[1]?.body;
+  const calloutTip = data?.tips[0];
+  const restTips = data?.tips.slice(1) ?? [];
+
   return (
     <>
       <Header />
       <main className="container elbiyahe-page">
-        <div className="elbiyahe-page-head">
+        <section className="elbiyahe-transpo-hero">
           <div>
             <p className="eyebrow">GET AROUND LIKE A LOCAL</p>
-            <h1>Ride Guide</h1>
-            <p className="muted">Real jeepney routes, tricycle zones, and the local etiquette that makes them easy.</p>
+            <h1 style={{ color: "#fff" }}>Easy ways to get around <span style={{ color: "var(--ochre)" }}>Los Baños.</span></h1>
+            <p style={{ opacity: .85 }}>Your guide to jeepney, tricycle, and other local transport options in LB.</p>
+            <div className="search-row" style={{ marginTop: 14 }}>
+              <div className="searchbox elbiyahe-searchbox">
+                <MapPin size={15} />
+                <input aria-label="Where are you going?" placeholder="Where are you going?" value={to} onChange={ev => setTo(ev.target.value)} />
+              </div>
+              <Button onClick={() => scrollToPlain("plan-your-ride")}>Find Route <ArrowRight size={15} /></Button>
+            </div>
           </div>
-        </div>
-
-        <div className="elbiyahe-ride-choices">
-          <div><Bus size={22} /><b>Jeepney</b><small>Fixed routes along main roads, flat-ish fares</small></div>
-          <div><Car size={22} /><b>Tricycle</b><small>Door-to-door within town zones</small></div>
-          <div><Navigation size={22} /><b>Walking</b><small>UPLB campus and Poblacion are walkable</small></div>
-        </div>
-
-        <section className="elbiyahe-route-planner">
-          <h2>Plan your route</h2>
-          <div className="elbiyahe-route-inputs">
-            <label>From<input value={from} onChange={e => setFrom(e.target.value)} /></label>
-            <label>To<input value={to} onChange={e => setTo(e.target.value)} /></label>
-            <Button onClick={findRoute}><Navigation size={15} /> Find Route</Button>
+          <div className="elbiyahe-transpo-hero-media">
+            <img src="/scenes/elbiyahe-bus.svg" alt="" />
+            {heroTip && (
+              <div className="elbiyahe-transpo-tip-chip">
+                <Sparkles size={16} />
+                <div><b>Travel Tip</b><span>{heroTip}</span></div>
+              </div>
+            )}
           </div>
-          {result && <div className="elbiyahe-route-result"><Sparkles size={16} /> <p>{result}</p></div>}
         </section>
+
+        <div className="elbiyahe-page-head" style={{ marginTop: 0 }}>
+          <div><p className="eyebrow">CHOOSE YOUR RIDE</p></div>
+        </div>
+        <div className="elbiyahe-ride-choices">
+          <div>
+            <Bus size={22} /><b>Jeepney</b><small>Fixed routes along main roads, flat-ish fares</small>
+            <a href="#jeepney-routes" className="link-accent" onClick={scrollTo("jeepney-routes")}>View Jeepney Routes <ArrowRight size={13} /></a>
+          </div>
+          <div>
+            <Car size={22} /><b>Tricycle</b><small>Door-to-door within town zones</small>
+            <a href="#tricycle-fare-guide" className="link-accent" onClick={scrollTo("tricycle-fare-guide")}>View Tricycle Guide <ArrowRight size={13} /></a>
+          </div>
+          <div>
+            <Footprints size={22} /><b>Walking</b><small>UPLB campus and Poblacion are walkable</small>
+            <a href="#local-tips" className="link-accent" onClick={scrollTo("local-tips")}>View Walking Tips <ArrowRight size={13} /></a>
+          </div>
+        </div>
 
         {isLoading && <Loading />}
         {error && <LoadError message={(error as Error).message} />}
 
         {data && (
-          <>
-            <section className="elbiyahe-routes">
-              <h2>Popular jeepney routes</h2>
-              <div className="elbiyahe-route-list">
-                {data.jeep.map(r => (
-                  <div key={r.id} className="elbiyahe-route-row">
-                    <div className="elbiyahe-route-row-head"><b>{r.label}</b>{r.mode && <span className="tag">{r.mode}</span>}</div>
-                    <p className="muted">{[r.fare_text, r.frequency_text].filter(Boolean).join(" · ")}</p>
-                    <p>{r.note}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
+          <div className="detail-layout">
+            <div className="detail-copy" style={{ padding: 0 }}>
+              <section className="elbiyahe-routes" id="jeepney-routes">
+                <div className="elbiyahe-row-head"><h2>Popular jeepney routes</h2></div>
+                <HScrollRow>
+                  {data.jeep.map(r => <RouteCard r={r} key={r.id} />)}
+                </HScrollRow>
+              </section>
 
-            <section className="elbiyahe-routes">
-              <h2>Tricycle zones</h2>
-              <MapView
-                center={LB_CENTER}
-                zoom={13}
-                interactive
-                height={320}
-                ariaLabel="Los Baños tricycle zones map"
-                zones={data.zones.slice(0, 3).map((z, i) => (
-                  [
-                    { center: { lat: 14.166, lng: 121.238 }, radiusKm: 1.1, label: `Z1 · ${z.fare_text}`, color: "#0e543c" },
-                    { center: { lat: 14.177, lng: 121.217 }, radiusKm: 1.0, label: `Z2 · ${z.fare_text}`, color: "#6d2740" },
-                    { center: { lat: 14.190, lng: 121.243 }, radiusKm: 1.3, label: `Z3 · ${z.fare_text}`, color: "#d17b27" },
-                  ] as ZoneCircle[]
-                )[i])}
-              />
-              <div className="elbiyahe-route-list">
-                {data.zones.map(z => (
-                  <div key={z.id} className="elbiyahe-route-row">
-                    <div className="elbiyahe-route-row-head"><b>{z.label}</b></div>
-                    <p className="muted">{z.fare_text}</p>
-                    <p>{z.note}</p>
+              <section className="elbiyahe-routes" id="tricycle-fare-guide">
+                <div className="elbiyahe-row-head"><h2>Tricycle fare guide (base fare)</h2></div>
+                <div className="elbiyahe-fare-guide-row">
+                  <div className="elbiyahe-fare-guide-icon"><Car size={32} /></div>
+                  <div className="elbiyahe-fare-tiers">
+                    {TRICYCLE_FARE_TIERS.map(([label, fare]) => (
+                      <span key={label}><b>{fare}</b>{label}</span>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </section>
+                </div>
+                <p className="muted" style={{ fontSize: 12 }}><Sparkles size={12} /> Fares may vary depending on time, traffic, and exact location.</p>
 
-            <section className="elbiyahe-tips">
-              <h2>Local travel tips</h2>
-              <ul>{data.tips.map(t => <li key={t.id}>{t.body}</li>)}</ul>
-            </section>
-          </>
+                {calloutTip && (
+                  <div className="elbiyahe-newsletter-card elbiyahe-tip-callout">
+                    <span className="eyebrow" style={{ color: "var(--ochre)" }}>TIP!</span>
+                    <p>{calloutTip.body}</p>
+                  </div>
+                )}
+
+                <div className="elbiyahe-route-list" style={{ marginTop: 14 }}>
+                  {data.zones.map(z => (
+                    <div key={z.id} className="elbiyahe-route-row">
+                      <div className="elbiyahe-route-row-head"><b>{z.label}</b></div>
+                      <p className="muted">{z.fare_text}</p>
+                      <p>{z.note}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {restTips.length > 0 && (
+                <section className="elbiyahe-tips" id="local-tips">
+                  <h2>Local travel tips</h2>
+                  <ul>{restTips.map(t => <li key={t.id}>{t.body}</li>)}</ul>
+                </section>
+              )}
+
+              <div className="elbiyahe-community-cta" style={{ flexDirection: "column", alignItems: "stretch", gap: 18 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+                  <div><h3>Help improve transport in LB!</h3><p>Share your commute experience.</p></div>
+                  <Button onClick={() => setShowFeedback(true)}>Give Feedback</Button>
+                </div>
+                <div className="elbiyahe-value-props">
+                  <div><span className="step-icon"><Users size={20} /></span><div><b>Community Driven</b><p className="muted">By LB, for LB</p></div></div>
+                  <div><span className="step-icon"><BadgeCheck size={20} /></span><div><b>Reliable Information</b><p className="muted">Updated routes &amp; fares</p></div></div>
+                  <div><span className="step-icon"><Compass size={20} /></span><div><b>Tourist Friendly</b><p className="muted">Easy for visitors to navigate</p></div></div>
+                </div>
+              </div>
+            </div>
+
+            <aside className="elbiyahe-widget-rail">
+              <div className="elbiyahe-featured-card">
+                <div className="elbiyahe-row-head"><span className="eyebrow">QUICK GUIDES</span></div>
+                <a className="action-row" href="#jeepney-routes" onClick={scrollTo("jeepney-routes")}>
+                  <i className="step-icon"><Bus size={18} /></i>
+                  <span><b>Jeepney Route Map</b><small>View all routes on the map</small></span>
+                  <ChevronRight size={16} />
+                </a>
+                <a className="action-row" href="#tricycle-fare-guide" onClick={scrollTo("tricycle-fare-guide")}>
+                  <i className="step-icon"><Car size={18} /></i>
+                  <span><b>Tricycle Fare Guide</b><small>Base fares and estimates</small></span>
+                  <ChevronRight size={16} />
+                </a>
+                <div className="action-row" style={{ opacity: .5 }}>
+                  <i className="step-icon"><MapPin size={18} /></i>
+                  <span><b>Terminal Guide</b><small>Coming soon</small></span>
+                </div>
+                <div className="action-row" style={{ opacity: .5 }}>
+                  <i className="step-icon"><Clock3 size={18} /></i>
+                  <span><b>Operating Hours</b><small>Coming soon</small></span>
+                </div>
+              </div>
+
+              <div className="elbiyahe-featured-card" id="plan-your-ride">
+                <span className="eyebrow">PLAN YOUR RIDE</span>
+                <div className="elbiyahe-route-inputs" style={{ marginTop: 10 }}>
+                  <label>From<input value={from} onChange={e => setFrom(e.target.value)} /></label>
+                  <label>To<input value={to} onChange={e => setTo(e.target.value)} /></label>
+                </div>
+                <Button onClick={findRoute}><Navigation size={15} /> Find Best Route</Button>
+                {result && <div className="elbiyahe-route-result"><Sparkles size={16} /> <p>{result}</p></div>}
+              </div>
+
+              <div className="elbiyahe-featured-card">
+                <span className="eyebrow">ZONES MAP</span>
+                <p className="muted" style={{ fontSize: 12, margin: "4px 0 8px" }}>Tricycle zones around Los Baños</p>
+                <MapView
+                  center={LB_CENTER}
+                  zoom={13}
+                  height={220}
+                  ariaLabel="Los Baños tricycle zones map"
+                  zones={data.zones.slice(0, 3).map((z, i) => (
+                    [
+                      { center: { lat: 14.166, lng: 121.238 }, radiusKm: 1.1, label: `Z1 · ${z.fare_text}`, color: "#0e543c" },
+                      { center: { lat: 14.177, lng: 121.217 }, radiusKm: 1.0, label: `Z2 · ${z.fare_text}`, color: "#6d2740" },
+                      { center: { lat: 14.190, lng: 121.243 }, radiusKm: 1.3, label: `Z3 · ${z.fare_text}`, color: "#d17b27" },
+                    ] as ZoneCircle[]
+                  )[i])}
+                />
+                <Link href="/explore" className="btn outline">View Full Map <ArrowRight size={13} /></Link>
+              </div>
+
+              <div className="elbiyahe-newsletter-card">
+                <QrCode size={22} />
+                <h4>Collect. Eat. Earn!</h4>
+                <p>Explore spots and earn rewards with your LB Passport.</p>
+                <Link href="/passport" className="btn outline">Learn More <ArrowRight size={13} /></Link>
+              </div>
+            </aside>
+          </div>
         )}
       </main>
       <Footer />
       <BottomNav />
+      {showFeedback && <RideFeedbackModal onClose={() => setShowFeedback(false)} />}
     </>
   );
 }
@@ -1571,62 +1728,239 @@ export function StayEat({ Header, BottomNav, Footer }: Shell) {
 /* ============================ PARKING ============================ */
 
 const PARKING_FILTERS = ["All", "free", "paid"] as const;
+const PARKING_SORTS = ["Recommended", "Nearest", "Cheapest"] as const;
+const CATEGORY_ICON: Record<string, React.ComponentType<any>> = {
+  mall: ShoppingBag, supermarket: ShoppingBag, institutional: GraduationCap,
+  resort: BedDouble, hotel: BedDouble, market: Store,
+};
 
-function ParkingCard({ p }: { p: ParkingSpotRow }) {
+const PARK_NEAR_DESTINATIONS = [
+  { label: "Robinsons Town Mall", icon: ShoppingBag, query: "Robinsons" },
+  { label: "UPLB", icon: GraduationCap, query: "UPLB" },
+  { label: "Los Baños Public Market", icon: Store, query: "Public Market" },
+  { label: "Municipal Hall", icon: Landmark, query: "Municipal Hall" },
+  { label: "Hotels & Resorts", icon: BedDouble, category: "hotel-resort" },
+] as const;
+
+function ParkingCard({ p, distanceKm: km }: { p: ParkingSpotRow; distanceKm?: number }) {
+  const [showDetails, setShowDetails] = useState(false);
+  const Icon = (p.category && CATEGORY_ICON[p.category]) || Car;
+  const walkMin = km != null ? Math.max(1, Math.round(km * 12)) : null;
   return (
-    <div className="elbiyahe-route-row">
-      <div className="elbiyahe-route-row-head">
-        <b>{p.name}</b>
+    <article className="elbiyahe-tour-card elbiyahe-parking-card">
+      <div className="elbiyahe-tour-card-media elbiyahe-parking-card-icon">
+        <Icon size={30} />
         <span className={`tag ${p.kind === "free" ? "" : "ochre"}`}>{p.kind === "free" ? "Free" : "Paid"}</span>
       </div>
-      <p className="muted"><MapPin size={13} /> {p.place}{p.barangay ? `, Brgy. ${p.barangay}` : ""}</p>
-      <p className="muted">{[p.fee_label, p.capacity_estimate, p.hours_label].filter(Boolean).join(" · ")}</p>
-      {p.notes && <p>{p.notes}</p>}
-      {p.lat != null && p.lng != null && (
-        <a href={directionsUrl(p.lat, p.lng)} target="_blank" rel="noreferrer" className="link-accent"><Navigation size={13} /> Directions</a>
+      <div className="elbiyahe-tour-card-body">
+        <h3>{p.name}</h3>
+        <p className="muted" style={{ alignItems: "flex-start" }}><MapPin size={13} style={{ flex: "none", marginTop: 2 }} /> <span>{p.place}{p.barangay ? `, ${p.barangay}` : ""}</span></p>
+        <p className="muted" style={{ fontSize: 12 }}>{[p.access_type, p.hours_label].filter(Boolean).join(" · ") || "Access & hours not listed"}</p>
+        {p.fee_label && <p style={{ fontWeight: 700, color: "var(--forest)" }}>{p.fee_label}</p>}
+        {km != null && <p className="muted" style={{ fontSize: 12 }}>{formatDistance(km)} · ~{walkMin} min walk</p>}
+        <p className="muted" style={{ fontSize: 11 }}>{p.verified === "verified" ? "✓ Verified" : "Community-reported"}</p>
+        <div className="elbiyahe-tour-card-foot">
+          <button className="btn secondary" style={{ minHeight: 32, fontSize: 12 }} onClick={() => setShowDetails(true)}>Details</button>
+          {p.lat != null && p.lng != null && (
+            <a href={directionsUrl(p.lat, p.lng)} target="_blank" rel="noreferrer" className="btn primary" style={{ minHeight: 32, fontSize: 12 }}><Navigation size={13} /> Directions</a>
+          )}
+        </div>
+      </div>
+      {showDetails && (
+        <div className="modal-backdrop" onClick={() => setShowDetails(false)} role="dialog" aria-modal="true" aria-label={p.name}>
+          <div className="modal" onClick={ev => ev.stopPropagation()}>
+            <div className="modal-head"><h2>{p.name}</h2><button onClick={() => setShowDetails(false)} aria-label="Close"><X size={18} /></button></div>
+            <p className="muted"><MapPin size={13} /> {p.place}{p.barangay ? `, ${p.barangay}` : ""}</p>
+            <p><b>{p.kind === "free" ? "Free" : "Paid"}</b>{p.fee_label ? ` · ${p.fee_label}` : ""}</p>
+            {p.access_type && <p>Access: {p.access_type}</p>}
+            {p.hours_label && <p>Hours: {p.hours_label}</p>}
+            {p.notes && <p className="muted">{p.notes}</p>}
+            <p className="muted" style={{ fontSize: 11 }}>{p.verified === "verified" ? "✓ Verified by El-Biyahe!" : "Community-reported — confirm details on site."}</p>
+          </div>
+        </div>
       )}
+    </article>
+  );
+}
+
+function ParkingFeedbackModal({ onClose }: { onClose: () => void }) {
+  const [body, setBody] = useState("");
+  const onSubmit = (ev: React.FormEvent) => {
+    ev.preventDefault();
+    notify("Thanks — we'll look into it.");
+    onClose();
+  };
+  return (
+    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-label="Report a parking issue">
+      <div className="modal" onClick={ev => ev.stopPropagation()}>
+        <div className="modal-head"><h2>Report an issue</h2><button onClick={onClose} aria-label="Close"><X size={18} /></button></div>
+        <p>Wrong location, outdated access info, or something else? Tell us.</p>
+        <form onSubmit={onSubmit}>
+          <label className="modal-field">What's wrong?<textarea required rows={4} value={body} onChange={ev => setBody(ev.target.value)} placeholder="e.g. This lot is now for staff only…" /></label>
+          <button className="btn primary" type="submit">Send report</button>
+        </form>
+      </div>
     </div>
   );
 }
 
-export function Parking({ Header, BottomNav, Footer }: Shell) {
+export function Parking({ Header, BottomNav, Footer, Button }: Shell) {
   const { data, isLoading, error } = useParkingSpots();
   const [filter, setFilter] = useState<(typeof PARKING_FILTERS)[number]>("All");
-  const list = (data ?? []).filter(p => filter === "All" || p.kind === filter);
-  const mapPoints: LBPoint[] = (data ?? []).filter(p => p.lat != null && p.lng != null).map(p => ({ id: p.id, lat: p.lat!, lng: p.lng!, name: p.name, kind: "Parking", sub: p.kind === "free" ? "Free" : "Paid" }));
+  const [sort, setSort] = useState<(typeof PARKING_SORTS)[number]>("Recommended");
+  const [query, setQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const [areaFilter, setAreaFilter] = useState<string | null>(null);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const loc = useUserLocation();
+
+  const items = data ?? [];
+  const withDistance = (p: ParkingSpotRow) =>
+    loc.coords && p.lat != null && p.lng != null ? distanceKm(loc.coords, { lat: p.lat, lng: p.lng }) : null;
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    let list = items.filter(p => {
+      if (filter !== "All" && p.kind !== filter) return false;
+      if (areaFilter && p.barangay !== areaFilter) return false;
+      if (categoryFilter === "hotel-resort" && p.category !== "hotel" && p.category !== "resort") return false;
+      if (q && !`${p.name} ${p.place ?? ""} ${p.barangay ?? ""}`.toLowerCase().includes(q)) return false;
+      return true;
+    });
+    if (sort === "Nearest" && loc.coords) {
+      list = [...list].sort((a, b) => (withDistance(a) ?? Infinity) - (withDistance(b) ?? Infinity));
+    } else if (sort === "Cheapest") {
+      list = [...list].sort((a, b) => (a.kind === b.kind ? a.name.localeCompare(b.name) : a.kind === "free" ? -1 : 1));
+    } else {
+      list = [...list].sort((a, b) => a.name.localeCompare(b.name));
+    }
+    return list;
+  }, [items, filter, query, areaFilter, categoryFilter, sort, loc.coords]);
+
+  const areas = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const p of items) if (p.barangay) m.set(p.barangay, (m.get(p.barangay) ?? 0) + 1);
+    return Array.from(m.entries()).sort((a, b) => b[1] - a[1]);
+  }, [items]);
+
+  const nearbyWithinKm = loc.coords ? items.filter(p => (withDistance(p) ?? Infinity) <= 1).length : null;
+
+  const mapPoints: LBPoint[] = items.filter(p => p.lat != null && p.lng != null).map(p => ({
+    id: p.id, lat: p.lat!, lng: p.lng!, name: p.name, kind: "Parking",
+    sub: [p.kind === "free" ? "Free" : "Paid", p.fee_label].filter(Boolean).join(" · "),
+    label: p.kind === "free" ? "FREE" : (p.fee_label ?? "PAID"),
+    labelColor: p.kind === "free" ? "#0e543c" : "#c97927",
+  }));
+
+  const jumpToResults = () => document.getElementById("parking-results")?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
 
   return (
     <>
       <Header />
       <main className="container elbiyahe-page">
-        <div className="elbiyahe-page-head">
+        <section className="elbiyahe-transpo-hero">
           <div>
             <p className="eyebrow">GET AROUND LIKE A LOCAL</p>
-            <h1>Parking</h1>
-            <p className="muted">Free and paid parking spots around Los Baños, near the places you're actually headed.</p>
+            <h1 style={{ color: "#fff" }}>Parking without <span style={{ color: "var(--ochre)" }}>the guesswork.</span></h1>
+            <p style={{ opacity: .85 }}>Find nearby parking, check access, and get directions to where you're headed.</p>
+            <div className="search-row" style={{ marginTop: 14 }}>
+              <div className="searchbox elbiyahe-searchbox">
+                <Search size={15} />
+                <input aria-label="Where are you going?" placeholder="Where are you going?" value={query} onChange={ev => setQuery(ev.target.value)} />
+              </div>
+              <Button onClick={jumpToResults}>Search <ArrowRight size={15} /></Button>
+            </div>
           </div>
-        </div>
+          <div className="elbiyahe-transpo-hero-media">
+            <img src="/scenes/elbiyahe-bus.svg" alt="" />
+          </div>
+        </section>
 
         <div className="filter-pills">
+          <button className={loc.coords ? "active" : ""} onClick={() => loc.request()}><LocateFixed size={13} /> {loc.status === "prompting" ? "Locating…" : "Near Me"}</button>
           {PARKING_FILTERS.map(f => (
             <button key={f} className={filter === f ? "active" : ""} onClick={() => setFilter(f)}>{f === "All" ? "All" : f === "free" ? "Free" : "Paid"}</button>
+          ))}
+        </div>
+        <div className="elbiyahe-tabs" style={{ marginTop: 4 }}>
+          {PARKING_SORTS.map(s => (
+            <button key={s} className={sort === s ? "active" : ""} onClick={() => setSort(s)} disabled={s === "Nearest" && !loc.coords}>{s}</button>
           ))}
         </div>
 
         {isLoading && <Loading />}
         {error && <LoadError message={(error as Error).message} />}
 
-        {mapPoints.length > 0 && <MapView points={mapPoints} fitBounds interactive height={300} ariaLabel="Map of Los Baños parking areas" />}
-
-        <div className="elbiyahe-route-list">
-          {list.map(p => <ParkingCard p={p} key={p.id} />)}
-        </div>
-        {!isLoading && !error && list.length === 0 && (
-          <div className="empty-state"><Car size={26} /><h3>No parking spots listed yet.</h3></div>
+        {mapPoints.length > 0 && (
+          <div style={{ position: "relative", marginTop: 12 }}>
+            <MapView points={mapPoints} fitBounds interactive showUser={!!loc.coords} userCoords={loc.coords} height={300} ariaLabel="Map of Los Baños parking areas" />
+            {nearbyWithinKm != null && (
+              <div className="elbiyahe-transpo-tip-chip" style={{ position: "absolute", right: 14, top: 14, left: "auto", bottom: "auto", maxWidth: 220 }}>
+                <Car size={16} />
+                <div><b>{nearbyWithinKm} parking spot{nearbyWithinKm === 1 ? "" : "s"}</b><span>within 1 km</span></div>
+              </div>
+            )}
+          </div>
         )}
+
+        <section className="elbiyahe-routes" id="parking-results" style={{ marginTop: 18 }}>
+          <div className="elbiyahe-row-head"><h2>Nearby Parking ({filtered.length})</h2></div>
+          {filtered.length > 0 ? (
+            <HScrollRow>
+              {filtered.map(p => <ParkingCard p={p} distanceKm={withDistance(p) ?? undefined} key={p.id} />)}
+            </HScrollRow>
+          ) : (
+            !isLoading && !error && <div className="empty-state"><Car size={26} /><h3>No parking spots match those filters.</h3></div>
+          )}
+        </section>
+
+        <div className="detail-layout" style={{ marginTop: 8 }}>
+          <div className="detail-copy" style={{ padding: 0 }}>
+            <section className="elbiyahe-routes">
+              <div className="elbiyahe-row-head"><h2>Park near your destination</h2></div>
+              <div className="elbiyahe-quick-grid">
+                {PARK_NEAR_DESTINATIONS.map(d => (
+                  <button key={d.label} className="elbiyahe-quick-item" onClick={() => { setQuery("query" in d ? d.query ?? "" : ""); setCategoryFilter("category" in d ? d.category ?? null : null); jumpToResults(); }}>
+                    <span className="elbiyahe-quick-icon"><d.icon size={22} /></span>
+                    <span>{d.label}</span>
+                  </button>
+                ))}
+              </div>
+            </section>
+          </div>
+          <aside className="elbiyahe-widget-rail">
+            <div className="elbiyahe-featured-card">
+              <span className="eyebrow">EXPLORE PARKING BY AREA</span>
+              <div className="elbiyahe-radio-group" style={{ marginTop: 8 }}>
+                <label className="elbiyahe-radio"><input type="radio" name="area" checked={areaFilter === null} onChange={() => { setAreaFilter(null); jumpToResults(); }} />All areas <span className="elbiyahe-radio-count">{items.length}</span></label>
+                {areas.map(([area, count]) => (
+                  <label key={area} className="elbiyahe-radio"><input type="radio" name="area" checked={areaFilter === area} onChange={() => { setAreaFilter(area); jumpToResults(); }} />{area} <span className="elbiyahe-radio-count">{count}</span></label>
+                ))}
+              </div>
+            </div>
+
+            <div className="elbiyahe-featured-card">
+              <span className="eyebrow">PARKING GUIDE</span>
+              <div className="action-row">
+                <i className="step-icon"><Sparkles size={18} /></i>
+                <span><b>Tips for a hassle-free trip</b><small>Confirm rates & access on site — UPLB lots may restrict non-affiliates</small></span>
+              </div>
+              <div className="action-row" style={{ opacity: .5 }}>
+                <i className="step-icon"><MapPin size={18} /></i>
+                <span><b>Parking rules in Los Baños</b><small>Coming soon</small></span>
+              </div>
+              <a className="action-row" href="#" onClick={ev => { ev.preventDefault(); setShowFeedback(true); }}>
+                <i className="step-icon"><SlidersHorizontal size={18} /></i>
+                <span><b>Report an issue</b><small>Help us keep information accurate</small></span>
+                <ChevronRight size={16} />
+              </a>
+            </div>
+          </aside>
+        </div>
       </main>
       <Footer />
       <BottomNav />
+      {showFeedback && <ParkingFeedbackModal onClose={() => setShowFeedback(false)} />}
     </>
   );
 }

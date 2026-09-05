@@ -253,21 +253,24 @@ console.log(`✓ passport locations (${passportLocations.length}) + rewards (${r
 /* ---------------- ride guide ---------------- */
 await db.from("ride_routes").delete().neq("id", "00000000-0000-0000-0000-000000000000");
 await db.from("ride_tips").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+/* Sourced from a Los Baños commuter research pass (UPLB commuting discussions + the
+   LB tricycle fare ordinance). Fares/frequencies are community-reported, not an
+   official current fare matrix — labeled as such rather than stated as fact. */
 const rideRoutes = [
-  { kind: "jeep", label: "UPLB ↔ Los Baños Town Proper", mode: "Jeepney", fare_text: "₱13 est.", frequency_text: "every 5–10 min", note: "Main line along the National Highway. Say 'para' one landmark before your stop.", sort: 1 },
-  { kind: "jeep", label: "UPLB ↔ Bay", mode: "Jeepney", fare_text: "₱15 est.", frequency_text: "every 10–15 min", note: "Board at the Grove terminal. Pass fare forward — 'bayad po'.", sort: 2 },
-  { kind: "jeep", label: "UPLB ↔ Calauan", mode: "Jeepney", fare_text: "₱20 est.", frequency_text: "every 15 min", note: "Long-haul line; sit toward the front for an easier exit.", sort: 3 },
-  { kind: "jeep", label: "Crossing ↔ Grove", mode: "Jeepney", fare_text: "₱12 est.", frequency_text: "every 5 min", note: "Short hop that covers most of the campus-town strip.", sort: 4 },
-  { kind: "tricycle_zone", label: "Zone 1 — Batong Malake / Grove", fare_text: "₱30 special · ₱12 sharing", note: "Covers the Grove dining strip and Umali Subdivision.", sort: 1 },
-  { kind: "tricycle_zone", label: "Zone 2 — Poblacion / Bayog", fare_text: "₱35 special", note: "Town hall, public market, and the parish.", sort: 2 },
-  { kind: "tricycle_zone", label: "Zone 3 — Anos / Mayondon", fare_text: "₱40 special", note: "Toward the lakeshore barangays; agree on fare before boarding.", sort: 3 },
+  { kind: "jeep", label: "UPLB ↔ Bayan / Olivarez", mode: "Jeepney", fare_text: "₱11 (community-reported)", frequency_text: "frequent, main corridor", note: "Check the signboard, then ask \"Olivarez po?\" or \"Bayan po?\" before boarding.", sort: 1, image: "/scenes/elbiyahe-bus.svg", stops: ["UPLB", "Bayan", "Olivarez"], travel_time_text: "15–20 min (est.)" },
+  { kind: "jeep", label: "UPLB ↔ Robinson", mode: "Jeepney", fare_text: "₱11 (community-reported)", frequency_text: "frequent", note: "Same UPLB–town corridor as the Olivarez/Bayan line — confirm the destination on the signboard.", sort: 2, image: "/scenes/elbiyahe-bus.svg", stops: ["UPLB", "Bayan", "Robinson"], travel_time_text: "15–20 min (est.)" },
+  { kind: "jeep", label: "UPLB ↔ Calamba / Crossing", mode: "Jeepney", fare_text: "₱25–30 (community-reported)", frequency_text: "frequent", note: "For Sta. Rosa or Enchanted Kingdom, get off at Crossing Calamba and transfer toward Balibago Complex.", sort: 3, image: "/scenes/elbiyahe-bus.svg", stops: ["UPLB", "Bayan", "Crossing Calamba"], travel_time_text: "25–35 min (est.)" },
+  { kind: "tricycle_zone", label: "Zone 1 — Batong Malake / Grove", fare_text: "₱14 first km ordinance rate + ₱1/km beyond", note: "Covers the Grove dining strip and Umali Subdivision. Special (private) trips are agreed on before boarding.", sort: 1 },
+  { kind: "tricycle_zone", label: "Zone 2 — Poblacion / Bayog", fare_text: "₱14 first km ordinance rate + ₱1/km beyond", note: "Town hall, public market, and the parish.", sort: 2 },
+  { kind: "tricycle_zone", label: "Zone 3 — Anos / Mayondon", fare_text: "₱14 first km ordinance rate + ₱1/km beyond", note: "Toward the lakeshore barangays; agree on the fare before boarding for a special trip.", sort: 3 },
 ];
 die("ride_routes", (await db.from("ride_routes").insert(rideRoutes)).error);
 const rideTips = [
-  "Jeepney stops aren't marked — flag one down anywhere it's safe to pull over, and knock on the roof or say 'para' to get off.",
-  "Have coins ready. Hand your fare forward and say 'bayad po'; the driver passes change back the same way.",
-  "Tricycles are door-to-door within a zone. Confirm 'special' (private) vs 'sharing' and the fare before you sit down.",
-  "After dark on Mt. Makiling routes, arrange a return ride in advance — service thins out past 8 PM.",
+  "Jeepney stops aren't marked — flag one down anywhere it's safe to pull over, and say \"para po\" (or knock on the roof rail) to get off.",
+  "Have coins ready. Pass your fare forward and say \"bayad po\"; the driver passes change back the same way.",
+  "For tricycles, ask \"magkano po?\" first. A regular shared route has a known fare; a special (private) trip is agreed on before you leave.",
+  "Fares and frequencies above are community-reported, not an official current fare matrix — confirm with the driver before boarding.",
+  "After dark, service thins out — confirm the route before boarding and prefer established terminals and visible public areas.",
 ].map((body, i) => ({ body, sort: i + 1 }));
 die("ride_tips", (await db.from("ride_tips").insert(rideTips)).error);
 console.log(`✓ ride routes (${rideRoutes.length}) + tips (${rideTips.length})`);
