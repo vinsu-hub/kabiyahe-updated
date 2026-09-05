@@ -111,7 +111,7 @@
 .elbiyahe-tour-card-foot b{color:var(--forest);font-size:15px}
 .elbiyahe-tour-card-foot small{font-weight:500;color:var(--muted)}
 .elbiyahe-tour-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:14px 0}
-.elbiyahe-parking-card{min-width:260px;flex:0 0 260px}
+.elbiyahe-parking-card{min-width:260px}
 .elbiyahe-parking-card-icon{display:flex;align-items:center;justify-content:space-between;padding:16px;background:#eef3ec;color:var(--forest);height:auto}
 .elbiyahe-parking-card .elbiyahe-tour-card-foot{gap:8px}
 .elbiyahe-tour-meta div{background:#eef3ec;border-radius:12px;padding:12px;text-align:center}
@@ -426,6 +426,7 @@
 .elbiyahe-hrow-wrap{position:relative}
 .elbiyahe-delicacy-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,1fr);gap:14px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:6px}
 .elbiyahe-delicacy-row>*{scroll-snap-align:start}
+#parking-results .elbiyahe-delicacy-row{grid-auto-columns:260px}
 .elbiyahe-hrow-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:1;width:32px;height:32px;border-radius:999px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);display:grid;place-items:center}
 .elbiyahe-hrow-arrow.left{left:-14px}
 .elbiyahe-hrow-arrow.right{right:-14px}
