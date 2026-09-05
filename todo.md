@@ -37,6 +37,9 @@ anything but a demo, confirm:
 
 ## B. Missing features (from `project context/ELBI-FINAL-FEATURE-LIST.md`)
 
+- [ ] **Passport page rebuild** — hero + ID-card widget + stamp grid + missions + leaderboard +
+      redeem panel, matching the Ride Guide/Parking rebuild pattern. Full plan, data-model gaps,
+      and the missing-image checklist (with naming convention) are in `passport-todo.md`. **L**
 - [ ] **Save / bookmark persistence** — `SaveButton` is local `useState`; `/saved` is an empty state.
       Needs a `saved_items` table + hooks + the real Saved grid. **M**
 - [ ] **Community feed** — announcements, recaps, photos/videos, user spot reviews; follow
