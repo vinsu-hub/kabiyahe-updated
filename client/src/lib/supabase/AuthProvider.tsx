@@ -69,9 +69,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signInWithGoogle: AuthValue["signInWithGoogle"] = useCallback(async () => {
+    // Redirect back to the exact page (incl. any ?next=) that started the OAuth round-trip,
+    // not just the bare origin — otherwise a gated deep link (e.g. /login?next=/passport)
+    // silently drops its destination and Google sign-in always lands on "/".
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: window.location.origin },
+      options: { redirectTo: window.location.href },
     });
     return { error: error?.message ?? null };
   }, []);

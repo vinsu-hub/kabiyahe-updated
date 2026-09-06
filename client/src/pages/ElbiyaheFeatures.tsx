@@ -816,10 +816,10 @@ const STAMP_TONE: Record<StampCategory, string> = {
   Nature: "sage", Culture: "maroon", Food: "gold", Science: "teal", Event: "maroon", Community: "gold",
 };
 const DOT_CLASS: Record<string, string> = { Nature: "nature", Culture: "culture", Food: "food", Science: "gem", Event: "culture", Community: "gem" };
-const TONE_HEX: Record<string, string> = { sage: "#2f6b4f", maroon: "#6d2740", gold: "#c9971f", teal: "#2f6b4f" };
+export const TONE_HEX: Record<string, string> = { sage: "#2f6b4f", maroon: "#6d2740", gold: "#c9971f", teal: "#2f6b4f" };
 
 const TIER_THRESHOLDS = [0, 100, 300] as const;
-const TIER_NAMES = ["", "Explorer", "Local Insider", "Completionist"] as const;
+export const TIER_NAMES = ["", "Explorer", "Local Insider", "Completionist"] as const;
 const tierFor = (level: number) => TIER_NAMES[Math.min(Math.max(level, 1), 3)];
 const nextTier = (xp: number) => {
   const idx = TIER_THRESHOLDS.findIndex(t => xp < t);
@@ -831,7 +831,7 @@ function hashSeed(s: string): number {
   return Math.abs(s.split("").reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7));
 }
 
-function StampBadge({ seed, category, state, size = 88 }: { seed: string; category: StampCategory; state: "collected" | "locked" | "mystery"; size?: number }) {
+export function StampBadge({ seed, category, state, size = 88 }: { seed: string; category: StampCategory; state: "collected" | "locked" | "mystery"; size?: number }) {
   if (state === "mystery") {
     return (
       <div className="elbiyahe-stamp-badge" style={{ width: size, height: size }}>
@@ -902,7 +902,7 @@ function StampBadge({ seed, category, state, size = 88 }: { seed: string; catego
   );
 }
 
-function WaxSealMark({ size = 84 }: { size?: number }) {
+export function WaxSealMark({ size = 84 }: { size?: number }) {
   return (
     <svg viewBox="0 0 100 100" width={size} height={size} fill="none" className="elbiyahe-wax-seal">
       <circle cx={50} cy={50} r={44} fill="var(--ochre)" opacity={0.95} />
