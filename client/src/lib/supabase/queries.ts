@@ -3,8 +3,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "./client";
 import { useAuth } from "./AuthProvider";
 import type {
-  AccommodationRow, DelicacyRow, DestinationRow, EventDetailRow, EventRow, HeritageWalkStop, ParkingSpotRow,
-  PassportLocationPublic, PassportReward, RideRoute, RideTip, ScanResult, Season, TourPackageDetail, TourPackageRow,
+  AccommodationRow, DelicacyRow, DestinationRow, EventDetailRow, EventRow, HeritageWalkStop, LeaderboardRow,
+  ParkingSpotRow, PassportLocationPublic, PassportMission, PassportReward, RideRoute, RideTip, ScanResult, Season,
+  TourPackageDetail, TourPackageRow,
 } from "./types";
 
 const throwIf = <T>({ data, error }: { data: T; error: { message: string } | null }): T => {
@@ -154,6 +155,18 @@ export interface PassportState {
   rewards: PassportReward[];
   xp: number;
   explorerLevel: number;
+  eventsJoinedCount: number;
+  joinedAt: string | null;
+}
+
+/** Shared by usePassport (Events Joined stat) and usePassportMissions (event_rsvps metric). */
+async function fetchEventRsvpCount(userId: string): Promise<number> {
+  const { count, error } = await supabase
+    .from("event_rsvps")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", userId);
+  if (error) throw new Error(error.message);
+  return count ?? 0;
 }
 
 export function usePassport() {
@@ -171,14 +184,19 @@ export function usePassport() {
       let scannedLocationIds: string[] = [];
       let xp = 0;
       let explorerLevel = 1;
+      let eventsJoinedCount = 0;
+      let joinedAt: string | null = null;
       if (user) {
-        const [scans, profile] = await Promise.all([
+        const [scans, profile, eventsJoined] = await Promise.all([
           supabase.from("passport_scans").select("location_id").eq("user_id", user.id),
-          supabase.from("profiles").select("xp, explorer_level").eq("id", user.id).maybeSingle(),
+          supabase.from("profiles").select("xp, explorer_level, created_at").eq("id", user.id).maybeSingle(),
+          fetchEventRsvpCount(user.id),
         ]);
         scannedLocationIds = (scans.data ?? []).map(s => s.location_id as string);
         xp = profile.data?.xp ?? 0;
         explorerLevel = profile.data?.explorer_level ?? 1;
+        joinedAt = profile.data?.created_at ?? null;
+        eventsJoinedCount = eventsJoined;
       }
       return {
         locations: locations.data as PassportLocationPublic[],
@@ -186,6 +204,8 @@ export function usePassport() {
         rewards: rewards.data as PassportReward[],
         xp,
         explorerLevel,
+        eventsJoinedCount,
+        joinedAt,
       };
     },
   });
@@ -207,6 +227,109 @@ export function useScanPassport() {
     },
     onSuccess: result => {
       if (result.ok) qc.invalidateQueries({ queryKey: ["passport"] });
+    },
+  });
+}
+
+export interface PassportMissionsState {
+  missions: PassportMission[];
+  progressByMissionId: Record<string, number>;
+  completedMissionIds: string[];
+}
+
+export function usePassportMissions() {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["passport-missions", user?.id ?? "guest"],
+    queryFn: async (): Promise<PassportMissionsState> => {
+      const missionsRes = await supabase.from("passport_missions").select("*").eq("active", true).order("sort");
+      if (missionsRes.error) throw new Error(missionsRes.error.message);
+      const missions = missionsRes.data as PassportMission[];
+
+      const progressByMissionId: Record<string, number> = {};
+      let completedMissionIds: string[] = [];
+
+      if (user && missions.length) {
+        const [scansRes, completionsRes, eventsJoinedCount] = await Promise.all([
+          supabase.from("passport_scans").select("passport_locations!inner(category)").eq("user_id", user.id),
+          supabase.from("mission_completions").select("mission_id").eq("user_id", user.id),
+          fetchEventRsvpCount(user.id),
+        ]);
+        if (scansRes.error) throw new Error(scansRes.error.message);
+        if (completionsRes.error) throw new Error(completionsRes.error.message);
+
+        const scanRows = (scansRes.data ?? []) as unknown as { passport_locations: { category: string } }[];
+        const totalScans = scanRows.length;
+        const scansByCategory = new Map<string, number>();
+        for (const row of scanRows) {
+          const cat = row.passport_locations.category;
+          scansByCategory.set(cat, (scansByCategory.get(cat) ?? 0) + 1);
+        }
+
+        for (const m of missions) {
+          if (m.metric === "category_scans") progressByMissionId[m.id] = scansByCategory.get(m.category ?? "") ?? 0;
+          else if (m.metric === "total_scans") progressByMissionId[m.id] = totalScans;
+          else progressByMissionId[m.id] = eventsJoinedCount;
+        }
+        completedMissionIds = (completionsRes.data ?? []).map(c => c.mission_id as string);
+      } else {
+        for (const m of missions) progressByMissionId[m.id] = 0;
+      }
+
+      return { missions, progressByMissionId, completedMissionIds };
+    },
+  });
+}
+
+export function useClaimMission() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (missionId: string): Promise<{ ok: boolean; reason?: string; message?: string; xp_awarded?: number }> => {
+      const { data, error } = await supabase.rpc("claim_mission", { p_mission_id: missionId });
+      if (error) throw new Error(error.message);
+      return data;
+    },
+    onSuccess: result => {
+      if (result.ok) {
+        qc.invalidateQueries({ queryKey: ["passport-missions"] });
+        qc.invalidateQueries({ queryKey: ["passport"] });
+      }
+    },
+  });
+}
+
+export interface LeaderboardState {
+  top: LeaderboardRow[];
+  me: (LeaderboardRow & { rank: number }) | null;
+  meInTop: boolean;
+}
+
+export function useLeaderboard() {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["leaderboard", user?.id ?? "guest"],
+    queryFn: async (): Promise<LeaderboardState> => {
+      const topRes = await supabase.from("profiles_public").select("*").order("xp", { ascending: false }).limit(20);
+      if (topRes.error) throw new Error(topRes.error.message);
+      const top = topRes.data as LeaderboardRow[];
+      const meInTop = Boolean(user && top.some(r => r.id === user.id));
+
+      let me: (LeaderboardRow & { rank: number }) | null = null;
+      if (user && !meInTop) {
+        const mineRes = await supabase.from("profiles_public").select("*").eq("id", user.id).maybeSingle();
+        if (mineRes.error) throw new Error(mineRes.error.message);
+        if (mineRes.data) {
+          const mine = mineRes.data as LeaderboardRow;
+          const rankRes = await supabase
+            .from("profiles_public")
+            .select("id", { count: "exact", head: true })
+            .gt("xp", mine.xp);
+          if (rankRes.error) throw new Error(rankRes.error.message);
+          me = { ...mine, rank: (rankRes.count ?? 0) + 1 };
+        }
+      }
+
+      return { top, me, meInTop };
     },
   });
 }

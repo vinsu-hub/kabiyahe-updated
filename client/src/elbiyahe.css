@@ -497,4 +497,62 @@
   .elbiyahe-trust-strip{grid-template-columns:1fr}
 }
 
+/* ===================== Passport page: dashboard layout ===================== */
+.elbiyahe-passport-hero{position:relative}
+.elbiyahe-wax-seal{position:absolute;right:14px;top:14px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
+
+.elbiyahe-passport-dashboard{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;margin-top:20px}
+.elbiyahe-passport-dashboard>.main{display:flex;flex-direction:column;gap:22px;min-width:0}
+.elbiyahe-passport-dashboard>.side{display:flex;flex-direction:column;gap:16px}
+@media(max-width:1150px){
+  .elbiyahe-passport-dashboard{display:block}
+  .elbiyahe-passport-dashboard>.side{margin-top:20px}
+}
+
+.elbiyahe-passport-card{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px}
+.elbiyahe-passport-card-id{display:flex;align-items:center;gap:14px}
+.elbiyahe-passport-card-id div{display:flex;flex-direction:column;gap:4px}
+.elbiyahe-passport-card-id b{font:700 17px 'Space Grotesk',sans-serif;color:var(--forest)}
+.elbiyahe-passport-card-progress{display:flex;align-items:center;gap:16px;flex:1;min-width:220px;max-width:320px}
+.elbiyahe-passport-card-xp{flex:1}
+.elbiyahe-passport-card-xp .progress{margin-bottom:6px}
+@media(max-width:700px){.elbiyahe-passport-card{flex-direction:column;align-items:stretch}.elbiyahe-passport-card-progress{max-width:none}}
+
+.elbiyahe-identity-qr{display:flex;flex-direction:column;align-items:center;gap:4px;flex:none}
+.elbiyahe-identity-qr img,.elbiyahe-identity-qr-placeholder{width:72px;height:72px;border-radius:8px;background:#fff;border:1px solid var(--line)}
+.elbiyahe-identity-qr small{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.03em;text-align:center}
+
+.elbiyahe-passport-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.elbiyahe-passport-stats-grid>div{background:#eef3ec;border-radius:12px;padding:14px;text-align:center}
+.elbiyahe-passport-stats-grid b{display:block;font:800 22px 'Space Grotesk',sans-serif;color:var(--forest)}
+.elbiyahe-passport-stats-grid span{font-size:11px;color:var(--muted);font-weight:600}
+@media(max-width:700px){.elbiyahe-passport-stats-grid{grid-template-columns:repeat(2,1fr)}}
+
+.elbiyahe-share-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+
+.elbiyahe-stamp-badge{display:grid;place-items:center;border-radius:50%}
+.elbiyahe-stamp-badge.locked{filter:grayscale(1) opacity(.45)}
+.elbiyahe-stamps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:14px;margin-top:14px}
+.elbiyahe-stamp-slot{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.elbiyahe-stamp-slot small{font-size:11px;color:var(--muted);font-weight:600}
+
+.elbiyahe-missions-list{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.elbiyahe-mission-card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.elbiyahe-mission-card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:8px}
+.elbiyahe-mission-card-head p{margin:2px 0 0;font-size:12px}
+.elbiyahe-mission-card .progress{margin-bottom:8px}
+.elbiyahe-mission-card-foot{display:flex;justify-content:space-between;align-items:center}
+
+.elbiyahe-passport-banner{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;background:var(--forest);color:var(--cream);border-radius:16px;padding:18px 20px}
+.elbiyahe-passport-banner b{display:block;color:#fff}
+.elbiyahe-passport-banner p{margin:2px 0 0;opacity:.85;font-size:13px}
+.elbiyahe-skyline-motif{position:absolute;left:0;right:0;bottom:0;height:60px;opacity:.15;pointer-events:none}
+
+.elbiyahe-leaderboard-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.elbiyahe-leaderboard-row:first-of-type{border-top:0}
+.elbiyahe-leaderboard-row b:first-child{width:26px;color:var(--forest);font-size:13px}
+.elbiyahe-leaderboard-row div{flex:1}
+.elbiyahe-leaderboard-row small{color:var(--muted);font-size:11px}
+.elbiyahe-leaderboard-row.me{background:#eef3ec;border-radius:10px;margin-top:4px;padding:8px 8px}
+
 @media (prefers-reduced-motion:reduce){.maplibregl-map *{transition:none!important}}

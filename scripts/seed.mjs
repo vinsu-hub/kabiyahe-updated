@@ -234,10 +234,15 @@ console.log(`✓ tour operators (${operators.length}) + packages (${tours.length
 
 /* ---------------- passport ---------------- */
 const passportLocations = [
-  { slug: "makiling-botanic-gardens", name: "Makiling Botanic Gardens", category: "Nature", qr_code: "ELBIYAHE-MAKILING", lat: 14.1479, lng: 121.2265 },
-  { slug: "los-banos-museum", name: "Old Los Baños Train Station", category: "Culture", qr_code: "ELBIYAHE-MUSEUM", lat: 14.1772, lng: 121.2190 },
-  { slug: "buko-pie-house", name: "Buko Pie House", category: "Food", qr_code: "ELBIYAHE-BUKOPIE", lat: 14.1701, lng: 121.2405 },
-  { slug: "irri-riceworld", name: "IRRI Riceworld Museum", category: "Science", qr_code: "ELBIYAHE-IRRI", lat: 14.1667, lng: 121.2570 },
+  { slug: "makiling-botanic-gardens", name: "Makiling Botanic Gardens", category: "Nature", qr_code: "ELBIYAHE-MAKILING", lat: 14.1479, lng: 121.2265, is_mystery: false },
+  { slug: "los-banos-museum", name: "Old Los Baños Train Station", category: "Culture", qr_code: "ELBIYAHE-MUSEUM", lat: 14.1772, lng: 121.2190, is_mystery: false },
+  { slug: "buko-pie-house", name: "Buko Pie House", category: "Food", qr_code: "ELBIYAHE-BUKOPIE", lat: 14.1701, lng: 121.2405, is_mystery: false },
+  { slug: "irri-riceworld", name: "IRRI Riceworld Museum", category: "Science", qr_code: "ELBIYAHE-IRRI", lat: 14.1667, lng: 121.2570, is_mystery: false },
+  { slug: "mount-makiling", name: "Mount Makiling", category: "Nature", qr_code: "ELBIYAHE-MOUNTMAKILING", lat: 14.1290, lng: 121.1940, is_mystery: false },
+  { slug: "pagsanjan-falls", name: "Pagsanjan Falls", category: "Nature", qr_code: "ELBIYAHE-PAGSANJANFALLS", lat: 14.2306, lng: 121.5525, is_mystery: false },
+  { slug: "uplb-museum-of-natural-history", name: "UPLB Museum of Natural History", category: "Science", qr_code: "ELBIYAHE-UPLBMUSEUMOFNATURALHISTORY", lat: 14.1630, lng: 121.2380, is_mystery: false },
+  { slug: "baker-hall", name: "Baker Hall", category: "Culture", qr_code: "ELBIYAHE-BAKERHALL", lat: 14.1642, lng: 121.2401, is_mystery: false },
+  { slug: "makiling-mud-spring", name: "Makiling Mud Spring", category: "Nature", qr_code: "ELBIYAHE-MAKILINGMUDSPRING", lat: 14.1350, lng: 121.2020, is_mystery: true },
 ];
 die("passport_locations", (await db.from("passport_locations").upsert(passportLocations, { onConflict: "slug" })).error);
 
@@ -249,6 +254,19 @@ const rewards = [
 ];
 die("passport_rewards", (await db.from("passport_rewards").insert(rewards)).error);
 console.log(`✓ passport locations (${passportLocations.length}) + rewards (${rewards.length})`);
+
+await db.from("mission_completions").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+await db.from("passport_missions").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+const missions = [
+  { slug: "nature-seeker", title: "Nature Seeker", description: "Collect stamps from 3 Nature spots.",
+    metric: "category_scans", category: "Nature", target_count: 3, xp_reward: 30, sort: 1, active: true },
+  { slug: "foodie-adventure", title: "Foodie Adventure", description: "Collect a stamp from a Food spot.",
+    metric: "category_scans", category: "Food", target_count: 1, xp_reward: 15, sort: 2, active: true },
+  { slug: "community-explorer", title: "Community Explorer", description: "RSVP to 2 Los Baños events.",
+    metric: "event_rsvps", category: null, target_count: 2, xp_reward: 25, sort: 3, active: true },
+];
+die("passport_missions", (await db.from("passport_missions").upsert(missions, { onConflict: "slug" })).error);
+console.log(`✓ passport missions (${missions.length})`);
 
 /* ---------------- ride guide ---------------- */
 await db.from("ride_routes").delete().neq("id", "00000000-0000-0000-0000-000000000000");

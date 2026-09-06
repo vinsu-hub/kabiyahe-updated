@@ -124,6 +124,26 @@ export interface PassportLocationPublic {
   active: boolean;
   event_id: string | null;
   tour_package_id: string | null;
+  is_mystery: boolean;
+}
+
+export interface PassportMission {
+  id: string;
+  slug: string;
+  title: string;
+  description: string | null;
+  metric: "category_scans" | "total_scans" | "event_rsvps";
+  category: StampCategory | null;
+  target_count: number;
+  xp_reward: number;
+  sort: number;
+}
+
+export interface LeaderboardRow {
+  id: string;
+  display_name: string | null;
+  explorer_level: number;
+  xp: number;
 }
 
 export interface PassportReward {
@@ -161,6 +181,7 @@ export interface Profile {
   role: "user" | "partner" | "admin";
   explorer_level: number;
   xp: number;
+  created_at: string;
 }
 
 export type DelicacyCategory =

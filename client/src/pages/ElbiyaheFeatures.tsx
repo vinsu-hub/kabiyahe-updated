@@ -6,19 +6,24 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
   ArrowLeft, ArrowRight, BadgeCheck, BedDouble, Bookmark, Bus, CalendarDays, Car, Check, ChevronLeft, ChevronRight,
-  Clock3, Compass, ExternalLink, Footprints, GraduationCap, Heart, Landmark, List, Loader2, LocateFixed, MapPin,
-  Navigation, QrCode, Search, Share2, ShoppingBag, SlidersHorizontal, Sparkles, Star, Store, Ticket, Users,
-  Utensils, X,
+  Clock3, Compass, ExternalLink, Footprints, Gift, GraduationCap, Heart, Landmark, List, Loader2, LocateFixed,
+  MapPin, Navigation, QrCode, Search, Share2, ShoppingBag, SlidersHorizontal, Sparkles, Star, Store, Ticket, Trophy,
+  Users, Utensils, X,
 } from "lucide-react";
 import { useAuth } from "@/lib/supabase/AuthProvider";
 import {
-  useAccommodations, useCurrentSeason, useDelicacies, useEvent, useEvents, useMyRsvp, useParkingSpots, usePassport,
-  useReserveAccommodation, useReserveTour, useRideGuide, useScanPassport, useSeasons, useSubmitDelicacySuggestion,
-  useToggleRsvp, useTour, useTours, useHeritageWalk,
+  useAccommodations, useClaimMission, useCurrentSeason, useDelicacies, useEvent, useEvents, useLeaderboard,
+  useMyRsvp, useParkingSpots, usePassport, usePassportMissions, useReserveAccommodation, useReserveTour,
+  useRideGuide, useScanPassport, useSeasons, useSubmitDelicacySuggestion, useToggleRsvp, useTour, useTours,
+  useHeritageWalk,
 } from "@/lib/supabase/queries";
-import type { AccommodationRow, DelicacyRow, EventRow, HeritageWalkStop, ParkingSpotRow, RideRoute, StampCategory } from "@/lib/supabase/types";
+import type {
+  AccommodationRow, DelicacyRow, EventRow, HeritageWalkStop, LeaderboardRow, ParkingSpotRow, PassportLocationPublic,
+  PassportMission, PassportReward, RideRoute, StampCategory,
+} from "@/lib/supabase/types";
 import { MapView, type LBPoint, type ZoneCircle } from "@/components/MapView";
 import { LB_CENTER, directionsUrl, distanceKm, formatDistance, getPosition, prefersReducedMotion, useUserLocation } from "@/lib/geo";
+import QRCode from "qrcode";
 
 interface Shell {
   Header: React.ComponentType;
@@ -808,12 +813,313 @@ const STAMP_TONE: Record<StampCategory, string> = {
   Nature: "sage", Culture: "maroon", Food: "gold", Science: "teal", Event: "maroon", Community: "gold",
 };
 const DOT_CLASS: Record<string, string> = { Nature: "nature", Culture: "culture", Food: "food", Science: "gem", Event: "culture", Community: "gem" };
+const TONE_HEX: Record<string, string> = { sage: "#2f6b4f", maroon: "#6d2740", gold: "#c9971f", teal: "#2f6b4f" };
+
+const TIER_THRESHOLDS = [0, 100, 300] as const;
+const TIER_NAMES = ["", "Explorer", "Local Insider", "Completionist"] as const;
+const tierFor = (level: number) => TIER_NAMES[Math.min(Math.max(level, 1), 3)];
+const nextTier = (xp: number) => {
+  const idx = TIER_THRESHOLDS.findIndex(t => xp < t);
+  return idx === -1 ? null : { name: TIER_NAMES[idx + 1] ?? TIER_NAMES[3], at: TIER_THRESHOLDS[idx] };
+};
+
+/** Deterministic string hash — same seed always renders the same badge, no Math.random(). */
+function hashSeed(s: string): number {
+  return Math.abs(s.split("").reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7));
+}
+
+function StampBadge({ seed, category, state, size = 88 }: { seed: string; category: StampCategory; state: "collected" | "locked" | "mystery"; size?: number }) {
+  if (state === "mystery") {
+    return (
+      <div className="elbiyahe-stamp-badge" style={{ width: size, height: size }}>
+        <svg viewBox="0 0 100 100" width={size} height={size} fill="none">
+          <circle cx={50} cy={50} r={46} stroke="var(--muted)" strokeWidth={2} strokeDasharray="6 5" />
+          <text x={50} y={62} textAnchor="middle" fontSize={40} fontWeight={800} fill="var(--muted)">?</text>
+        </svg>
+      </div>
+    );
+  }
+
+  const hash = hashSeed(seed);
+  const tone = TONE_HEX[STAMP_TONE[category]] ?? "#0e543c";
+  const ringCount = (hash % 3) + 1;
+  const rotation = hash % 360;
+  const shapeIndex = hash % 4;
+  const cx = 50, cy = 50, r = 20;
+
+  const innerShape = () => {
+    if (shapeIndex === 0) {
+      const pts = Array.from({ length: 10 }, (_, i) => {
+        const rad = i % 2 === 0 ? r : r * 0.45;
+        const a = (Math.PI / 5) * i - Math.PI / 2;
+        return `${cx + rad * Math.cos(a)},${cy + rad * Math.sin(a)}`;
+      }).join(" ");
+      return <polygon points={pts} />;
+    }
+    if (shapeIndex === 1) {
+      const pts = Array.from({ length: 6 }, (_, i) => {
+        const a = (Math.PI / 3) * i - Math.PI / 2;
+        return `${cx + r * Math.cos(a)},${cy + r * Math.sin(a)}`;
+      }).join(" ");
+      return <polygon points={pts} />;
+    }
+    if (shapeIndex === 2) {
+      return (
+        <>
+          <line x1={cx - r} y1={cy} x2={cx + r} y2={cy} />
+          <line x1={cx} y1={cy - r} x2={cx} y2={cy + r} />
+          <circle cx={cx} cy={cy} r={r * 0.9} />
+        </>
+      );
+    }
+    const pts = Array.from({ length: 3 }, (_, i) => {
+      const a = (2 * Math.PI / 3) * i - Math.PI / 2;
+      return `${cx + r * Math.cos(a)},${cy + r * Math.sin(a)}`;
+    }).join(" ");
+    return (
+      <>
+        <circle cx={cx} cy={cy} r={r + 4} />
+        <polygon points={pts} />
+      </>
+    );
+  };
+
+  return (
+    <div className={`elbiyahe-stamp-badge ${state === "locked" ? "locked" : ""}`} style={{ width: size, height: size }}>
+      <svg viewBox="0 0 100 100" width={size} height={size} fill="none" stroke={tone} strokeWidth={2}>
+        <circle cx={50} cy={50} r={46} />
+        {ringCount >= 2 && <circle cx={50} cy={50} r={40} />}
+        {ringCount >= 3 && <circle cx={50} cy={50} r={34} />}
+        <g transform={`rotate(${rotation} 50 50)`}>{innerShape()}</g>
+        <text x={50} y={90} textAnchor="middle" fontSize={9} fontWeight={800} fill={tone} stroke="none" letterSpacing={1}>
+          {category.slice(0, 3).toUpperCase()}
+        </text>
+      </svg>
+    </div>
+  );
+}
+
+function WaxSealMark({ size = 84 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 100 100" width={size} height={size} fill="none" className="elbiyahe-wax-seal">
+      <circle cx={50} cy={50} r={44} fill="var(--ochre)" opacity={0.95} />
+      <circle cx={50} cy={50} r={36} fill="none" stroke="#fff" strokeWidth={1.5} strokeDasharray="3 3" />
+      <polygon points="50,26 56,42 73,42 59,52 64,68 50,58 36,68 41,52 27,42 44,42" fill="#fff" opacity={0.9} />
+    </svg>
+  );
+}
+
+function SkylineMotif({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 300 60" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+      <rect x="0" y="30" width="18" height="30" /><rect x="22" y="18" width="14" height="42" />
+      <rect x="40" y="34" width="20" height="26" /><circle cx="80" cy="14" r="10" />
+      <rect x="100" y="10" width="8" height="50" /><rect x="112" y="24" width="16" height="36" />
+      <rect x="132" y="16" width="10" height="44" /><rect x="150" y="36" width="22" height="24" />
+      <path d="M180 60 Q186 28 195 20 Q198 34 192 60Z" /><path d="M200 60 Q206 30 216 22 Q218 36 210 60Z" />
+      <rect x="230" y="20" width="12" height="40" /><rect x="246" y="32" width="18" height="28" />
+      <rect x="268" y="14" width="10" height="46" /><rect x="282" y="28" width="16" height="32" />
+    </svg>
+  );
+}
+
+function IdentityQr({ payload }: { payload: string }) {
+  const [url, setUrl] = useState("");
+  useEffect(() => { QRCode.toDataURL(payload, { width: 160, margin: 1 }).then(setUrl).catch(() => setUrl("")); }, [payload]);
+  return (
+    <div className="elbiyahe-identity-qr">
+      {url ? <img src={url} alt="Your Passport ID QR" /> : <div className="elbiyahe-identity-qr-placeholder" />}
+      <small>PASSPORT ID · {payload.slice(0, 8).toUpperCase()}</small>
+    </div>
+  );
+}
+
+function PassportCard({ displayName, xp, explorerLevel, joinedAt }: { displayName: string | null; xp: number; explorerLevel: number; joinedAt: string | null }) {
+  const initial = (displayName ?? "?").charAt(0).toUpperCase();
+  const next = nextTier(xp);
+  const pct = next ? Math.round((xp / next.at) * 100) : 100;
+  const joined = joinedAt ? new Date(joinedAt).toLocaleDateString("en-PH", { month: "long", year: "numeric" }) : null;
+  return (
+    <section className="elbiyahe-passport-card">
+      <div className="elbiyahe-passport-card-id">
+        <span className="avatar" style={{ width: 56, height: 56, fontSize: 22 }}>{initial}</span>
+        <div>
+          <b>{displayName || "Explorer"}</b>
+          <span className="elbiyahe-badge ochre">{tierFor(explorerLevel).toUpperCase()}</span>
+          {joined && <small className="muted">Member since {joined}</small>}
+        </div>
+      </div>
+      <div className="elbiyahe-passport-card-progress">
+        <IdentityQr payload={`${displayName ?? "explorer"}-${xp}`} />
+        <div className="elbiyahe-passport-card-xp">
+          <div className="progress"><span style={{ width: `${pct}%` }} /></div>
+          <small className="muted">
+            {next ? `${xp} XP · ${next.at - xp} XP to ${next.name}` : `${xp} XP · Max tier reached`}
+          </small>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PassportStats({ stampsCollected, xp, eventsJoinedCount }: { stampsCollected: number; xp: number; eventsJoinedCount: number }) {
+  return (
+    <div className="elbiyahe-passport-stats-grid">
+      <div><b>{stampsCollected}</b><span>Stamps Collected</span></div>
+      <div><b>{xp}</b><span>Total XP</span></div>
+      <div><b>{stampsCollected}</b><span>Places Visited</span></div>
+      <div><b>{eventsJoinedCount}</b><span>Events Joined</span></div>
+    </div>
+  );
+}
+
+function ShareJourneyCallout() {
+  const onShare = async () => {
+    const shareData = { title: "My LB Passport", text: "Come explore Los Baños with me on El-Biyahe!", url: window.location.href };
+    try {
+      if (navigator.share) await navigator.share(shareData);
+      else { await navigator.clipboard.writeText(shareData.url); notify("Link copied — share your passport!"); }
+    } catch { /* user cancelled the native share sheet — not an error */ }
+  };
+  return (
+    <div className="elbiyahe-share-row">
+      <span className="muted">Proud of your progress? Show it off.</span>
+      <button className="btn secondary sm" onClick={onShare}><Share2 size={14} /> Share Passport</button>
+    </div>
+  );
+}
+
+function MyStampsGrid({ locations, scannedLocationIds }: { locations: PassportLocationPublic[]; scannedLocationIds: string[] }) {
+  const scanned = new Set(scannedLocationIds);
+  const known = locations.filter(l => !l.is_mystery);
+  const mystery = locations.find(l => l.is_mystery);
+  return (
+    <section className="elbiyahe-event-group">
+      <div className="elbiyahe-row-head"><h2>MY STAMPS</h2><span className="muted">{scannedLocationIds.length}/{locations.length} collected</span></div>
+      <div className="elbiyahe-stamps-grid">
+        {known.map(l => (
+          <div key={l.id} className="elbiyahe-stamp-slot">
+            <StampBadge seed={l.slug} category={l.category} state={scanned.has(l.id) ? "collected" : "locked"} />
+            <small>{l.name}</small>
+          </div>
+        ))}
+        {mystery && (
+          <div key={mystery.id} className="elbiyahe-stamp-slot">
+            <StampBadge seed={mystery.slug} category={mystery.category} state={scanned.has(mystery.id) ? "collected" : "mystery"} />
+            <small>{scanned.has(mystery.id) ? mystery.name : "??? · scan to reveal"}</small>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function PassportMissionsList({ missions, progressByMissionId, completedMissionIds, onClaim, claiming }: {
+  missions: PassportMission[]; progressByMissionId: Record<string, number>; completedMissionIds: string[];
+  onClaim: (id: string) => void; claiming: boolean;
+}) {
+  if (!missions.length) return null;
+  return (
+    <section className="elbiyahe-event-group">
+      <h2>PASSPORT MISSIONS</h2>
+      <div className="elbiyahe-missions-list">
+        {missions.map(m => {
+          const progress = Math.min(progressByMissionId[m.id] ?? 0, m.target_count);
+          const done = completedMissionIds.includes(m.id);
+          const ready = progress >= m.target_count && !done;
+          return (
+            <div key={m.id} className="elbiyahe-mission-card">
+              <div className="elbiyahe-mission-card-head">
+                <div><b>{m.title}</b><p className="muted">{m.description}</p></div>
+                <span className="elbiyahe-badge sm">+{m.xp_reward} XP</span>
+              </div>
+              <div className="progress"><span style={{ width: `${(progress / m.target_count) * 100}%` }} /></div>
+              <div className="elbiyahe-mission-card-foot">
+                <small className="muted">{progress}/{m.target_count}</small>
+                {done ? (
+                  <span className="elbiyahe-reward-state">Completed</span>
+                ) : ready ? (
+                  <button className="btn sm" disabled={claiming} onClick={() => onClaim(m.id)}>Claim +{m.xp_reward} XP</button>
+                ) : (
+                  <span className="elbiyahe-reward-state">In Progress</span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function EncouragementBanner({ displayName, xp }: { displayName: string | null; xp: number }) {
+  const next = nextTier(xp);
+  return (
+    <div className="elbiyahe-passport-banner">
+      <SkylineMotif className="elbiyahe-skyline-motif" />
+      <Sparkles size={22} />
+      <div>
+        <b>Keep going, {displayName || "Explorer"}!</b>
+        <p>{next ? `${next.at - xp} more XP to reach ${next.name}.` : "You've reached the top tier — Completionist!"}</p>
+      </div>
+    </div>
+  );
+}
+
+function RedeemRewardsPanel({ rewards, stampsCollected }: { rewards: PassportReward[]; stampsCollected: number }) {
+  return (
+    <div className="elbiyahe-featured-card">
+      <span className="eyebrow"><Gift size={14} /> REDEEM REWARDS</span>
+      {rewards.length === 0 && <p className="muted" style={{ fontSize: 12 }}>No rewards available yet.</p>}
+      {rewards.map(r => {
+        const unlocked = stampsCollected >= r.required_stamps;
+        return (
+          <div key={r.id} className={`elbiyahe-reward ${unlocked ? "" : "locked"}`}>
+            <Ticket size={16} />
+            <div>
+              <b>{r.title}</b>
+              <small>{unlocked ? r.description : `Unlock at ${r.required_stamps} stamps`}</small>
+            </div>
+            <span className="elbiyahe-reward-state">{unlocked ? "Ready" : "Locked"}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function LeaderboardPanel({ top, me, meInTop }: { top: LeaderboardRow[]; me: (LeaderboardRow & { rank: number }) | null; meInTop: boolean }) {
+  return (
+    <div className="elbiyahe-featured-card">
+      <span className="eyebrow"><Trophy size={14} /> LEADERBOARD</span>
+      {top.length === 0 && <p className="muted" style={{ fontSize: 12 }}>Be the first explorer to earn XP!</p>}
+      {top.map((row, i) => (
+        <div key={row.id} className="elbiyahe-leaderboard-row">
+          <b>#{i + 1}</b>
+          <span className="avatar" style={{ width: 28, height: 28, fontSize: 12 }}>{(row.display_name ?? "?").charAt(0).toUpperCase()}</span>
+          <div><b>{row.display_name || "Explorer"}</b><small className="muted">{tierFor(row.explorer_level)}</small></div>
+          <small>{row.xp} XP</small>
+        </div>
+      ))}
+      {!meInTop && me && (
+        <div className="elbiyahe-leaderboard-row me">
+          <b>#{me.rank}</b>
+          <span className="avatar" style={{ width: 28, height: 28, fontSize: 12 }}>{(me.display_name ?? "?").charAt(0).toUpperCase()}</span>
+          <div><b>You</b><small className="muted">{tierFor(me.explorer_level)}</small></div>
+          <small>{me.xp} XP</small>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [, navigate] = useLocation();
   const { data, isLoading, error } = usePassport();
-  const { data: seasons } = useSeasons();
+  const missionsQuery = usePassportMissions();
+  const leaderboard = useLeaderboard();
+  const claimMission = useClaimMission();
   const scan = useScanPassport();
   const [code, setCode] = useState("");
   const [scanOpen, setScanOpen] = useState(false);
@@ -827,19 +1133,8 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
     return () => document.removeEventListener("keydown", onKey);
   }, [scanOpen]);
 
-  const currentSeason = seasons?.find(s => s.is_current);
   const total = data && data.locations.length ? data.locations.length : 0;
   const collected = data ? data.scannedLocationIds.length : 0;
-  const pct = total ? Math.round((collected / total) * 100) : 0;
-
-  const byCategory = useMemo(() => {
-    const counts: Record<string, number> = { Nature: 0, Culture: 0, Food: 0, Science: 0, Event: 0, Community: 0 };
-    if (data) {
-      const scanned = new Set(data.scannedLocationIds);
-      for (const loc of data.locations) if (scanned.has(loc.id)) counts[loc.category] = (counts[loc.category] ?? 0) + 1;
-    }
-    return counts;
-  }, [data]);
 
   const submitCode = async () => {
     if (!user) { navigate("/login?next=/passport"); return; }
@@ -861,23 +1156,43 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
     );
   };
 
+  const onClaimMission = (missionId: string) => {
+    claimMission.mutate(missionId, {
+      onSuccess: r => notify(r.ok ? `Mission complete — +${r.xp_awarded} XP!` : (r.message ?? "Not ready to claim yet.")),
+      onError: err => notify(err.message),
+    });
+  };
+
+  const nearbyUnscanned = useMemo(() => {
+    let list = (data?.locations ?? []).filter(l => !l.is_mystery && !data?.scannedLocationIds.includes(l.id));
+    if (loc.coords) {
+      list = [...list].sort((a, b) => {
+        const da = a.lat != null ? distanceKm(loc.coords!, { lat: a.lat, lng: a.lng! }) : Infinity;
+        const db = b.lat != null ? distanceKm(loc.coords!, { lat: b.lat, lng: b.lng! }) : Infinity;
+        return da - db;
+      });
+    }
+    return list.slice(0, 4);
+  }, [data, loc.coords]);
+
   return (
     <>
       <Header />
-      <main className="container elbiyahe-page elbiyahe-passport">
-        <div className="elbiyahe-passport-header">
-          <img src="/scenes/elbiyahe-passport.svg" alt="" />
+      <main className="container elbiyahe-page">
+        <section className="elbiyahe-transpo-hero elbiyahe-passport-hero">
           <div>
-            <span className="elbiyahe-badge ochre">EXPLORER · LEVEL {data?.explorerLevel ?? 1}</span>
-            <h1>Digital LB Passport</h1>
-            <p className="muted">{user ? `${collected} / ${total} stamps collected` : "Sign in to start collecting stamps"}</p>
-            <div className="progress"><span style={{ width: `${pct}%` }} /></div>
+            <p className="eyebrow">EXPLORE. COLLECT. EARN.</p>
+            <h1>Your Los Baños Passport</h1>
+            <p className="muted">Explore Los Baños, collect stamps, and earn real rewards from local partners.</p>
+            <button className="elbiyahe-scan-btn" onClick={() => (user ? setScanOpen(true) : navigate("/login?next=/passport"))}>
+              <QrCode size={20} /> Scan Passport
+            </button>
           </div>
-        </div>
-
-        <button className="elbiyahe-scan-btn" onClick={() => (user ? setScanOpen(true) : navigate("/login?next=/passport"))}>
-          <QrCode size={20} /> Scan Passport
-        </button>
+          <div className="elbiyahe-transpo-hero-media">
+            <img src="/scenes/elbiyahe-hero.svg" alt="" />
+            <WaxSealMark />
+          </div>
+        </section>
 
         {isLoading && <Loading />}
         {error && <LoadError message={(error as Error).message} />}
@@ -893,80 +1208,85 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
           </div>
         )}
 
-        <section className="elbiyahe-stamp-cats">
-          <h2>Stamps by category</h2>
-          <div className="elbiyahe-stamp-cat-grid">
-            {(Object.keys(byCategory) as StampCategory[]).map(c => (
-              <div key={c} className={`elbiyahe-stamp-cat ${STAMP_TONE[c]}`}>
-                <b>{byCategory[c]}</b>
-                <span>{c}</span>
-              </div>
-            ))}
-          </div>
-        </section>
+        {!user && (
+          <div className="empty-state"><QrCode size={26} /><h3>Sign in to start collecting stamps.</h3><Button onClick={() => navigate("/login?next=/passport")}>Sign In</Button></div>
+        )}
 
-        <section className="elbiyahe-nearby-stamps">
-          <div className="elbiyahe-nearby-head">
-            <h2>Nearby stamps</h2>
-            {loc.status !== "granted" && (
-              <button className="link-accent" onClick={() => loc.request()}>
-                <Navigation size={14} /> {loc.status === "prompting" ? "Locating…" : "Sort by distance"}
-              </button>
-            )}
-          </div>
-          <ul>
-            {(() => {
-              let list = (data?.locations ?? []).filter(l => !data?.scannedLocationIds.includes(l.id));
-              if (loc.coords) {
-                list = [...list].sort((a, b) => {
-                  const da = a.lat != null ? distanceKm(loc.coords!, { lat: a.lat, lng: a.lng! }) : Infinity;
-                  const db = b.lat != null ? distanceKm(loc.coords!, { lat: b.lat, lng: b.lng! }) : Infinity;
-                  return da - db;
-                });
-              }
-              return list.slice(0, 6).map(l => {
-                const km = loc.coords && l.lat != null ? distanceKm(loc.coords, { lat: l.lat, lng: l.lng! }) : null;
-                const inner = (
-                  <>
-                    <span className={`dot ${DOT_CLASS[l.category] ?? "gem"}`} />
-                    <div><b>{l.name}</b><small className="muted">{l.category}{km != null ? ` · ${formatDistance(km)}` : ""}</small></div>
-                    <ChevronRight size={16} />
-                  </>
-                );
-                return l.lat != null && l.lng != null
-                  ? <li key={l.id}><a href={directionsUrl(l.lat, l.lng)} target="_blank" rel="noreferrer" className="elbiyahe-nearby-row">{inner}</a></li>
-                  : <li key={l.id}>{inner}</li>;
-              });
-            })()}
-            {data && data.locations.length > 0 && data.locations.every(l => data.scannedLocationIds.includes(l.id)) && (
-              <li><div><b>All nearby stamps collected — nice.</b></div></li>
-            )}
-          </ul>
-        </section>
+        {user && data && (
+          <div className="elbiyahe-passport-dashboard">
+            <div className="main">
+              <PassportCard displayName={profile?.display_name ?? null} xp={data.xp} explorerLevel={data.explorerLevel} joinedAt={data.joinedAt} />
+              <PassportStats stampsCollected={collected} xp={data.xp} eventsJoinedCount={data.eventsJoinedCount} />
+              <ShareJourneyCallout />
 
-        {currentSeason && (
-          <section className="elbiyahe-season-track">
-            <div className="elbiyahe-season-track-head">
-              <div>
-                <span className="eyebrow">{currentSeason.quarter} · {currentSeason.name.toUpperCase()}</span>
-                <h2>Season Track</h2>
-              </div>
-              <b>{Math.min(collected, 6)}/6</b>
-            </div>
-            <p className="muted">{currentSeason.pillars}</p>
-            <div className="elbiyahe-rewards">
-              {(data?.rewards ?? []).map(r => {
-                const unlocked = collected >= r.required_stamps;
-                return (
-                  <div key={r.id} className={`elbiyahe-reward ${unlocked ? "" : "locked"}`}>
-                    <Ticket size={16} />
-                    <div><b>{r.title}</b><small>{unlocked ? r.description : `Collect ${r.required_stamps - collected} more stamp(s) to unlock`}</small></div>
-                    <span className="elbiyahe-reward-state">{unlocked ? "Ready" : "Locked"}</span>
+              {nearbyUnscanned.length > 0 && (
+                <section className="elbiyahe-nearby-stamps">
+                  <div className="elbiyahe-nearby-head">
+                    <h2>Nearby unscanned spots</h2>
+                    {loc.status !== "granted" && (
+                      <button className="link-accent" onClick={() => loc.request()}>
+                        <Navigation size={14} /> {loc.status === "prompting" ? "Locating…" : "Sort by distance"}
+                      </button>
+                    )}
                   </div>
-                );
-              })}
+                  <ul>
+                    {nearbyUnscanned.map(l => {
+                      const km = loc.coords && l.lat != null ? distanceKm(loc.coords, { lat: l.lat, lng: l.lng! }) : null;
+                      const inner = (
+                        <>
+                          <span className={`dot ${DOT_CLASS[l.category] ?? "gem"}`} />
+                          <div><b>{l.name}</b><small className="muted">{l.category}{km != null ? ` · ${formatDistance(km)}` : ""}</small></div>
+                          <ChevronRight size={16} />
+                        </>
+                      );
+                      return l.lat != null && l.lng != null
+                        ? <li key={l.id}><a href={directionsUrl(l.lat, l.lng)} target="_blank" rel="noreferrer" className="elbiyahe-nearby-row">{inner}</a></li>
+                        : <li key={l.id}>{inner}</li>;
+                    })}
+                  </ul>
+                </section>
+              )}
+
+              <MyStampsGrid locations={data.locations} scannedLocationIds={data.scannedLocationIds} />
+
+              {!missionsQuery.isLoading && (
+                <PassportMissionsList
+                  missions={missionsQuery.data?.missions ?? []}
+                  progressByMissionId={missionsQuery.data?.progressByMissionId ?? {}}
+                  completedMissionIds={missionsQuery.data?.completedMissionIds ?? []}
+                  onClaim={onClaimMission}
+                  claiming={claimMission.isPending}
+                />
+              )}
+
+              <EncouragementBanner displayName={profile?.display_name ?? null} xp={data.xp} />
             </div>
-          </section>
+
+            <aside className="side">
+              <RedeemRewardsPanel rewards={data.rewards} stampsCollected={collected} />
+              {!leaderboard.isLoading && leaderboard.data && (
+                <LeaderboardPanel top={leaderboard.data.top} me={leaderboard.data.me} meInTop={leaderboard.data.meInTop} />
+              )}
+              <div className="elbiyahe-newsletter-card">
+                <Sparkles size={22} />
+                <h4>Keep exploring LB!</h4>
+                <p>More destinations, delicacies, and events are waiting to be discovered.</p>
+                <Link href="/explore" className="btn outline">Explore Los Baños</Link>
+              </div>
+            </aside>
+          </div>
+        )}
+
+        {user && data && (
+          <div className="elbiyahe-community-cta" style={{ flexDirection: "column", alignItems: "stretch", gap: 18 }}>
+            <div><h3>Why El-Biyahe! Passport?</h3></div>
+            <div className="elbiyahe-value-props">
+              <div><span className="step-icon"><MapPin size={20} /></span><div><b>Real Stamps, Real Rewards</b><p className="muted">Every spot is a real Los Baños location</p></div></div>
+              <div><span className="step-icon"><Trophy size={20} /></span><div><b>Track Your Level</b><p className="muted">Explorer → Local Insider → Completionist</p></div></div>
+              <div><span className="step-icon"><Users size={20} /></span><div><b>Support Local</b><p className="muted">Rewards from real local partners</p></div></div>
+              <div><span className="step-icon"><Star size={20} /></span><div><b>Compete &amp; Compare</b><p className="muted">See how you rank on the leaderboard</p></div></div>
+            </div>
+          </div>
         )}
       </main>
 
