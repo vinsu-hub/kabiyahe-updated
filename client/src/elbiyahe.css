@@ -337,6 +337,7 @@
 
 /* -- 3-column layout: filter rail | event list | widget rail -- */
 .elbiyahe-events-layout{display:grid;grid-template-columns:240px 1fr 300px;gap:24px;align-items:start}
+.elbiyahe-events-main{min-width:0}
 .elbiyahe-events-filter-rail{border-radius:14px;border:1px solid var(--line)}
 .elbiyahe-events-filter-rail .rail-title h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase}
 .elbiyahe-radio-group{display:grid;gap:8px;margin:0 8px 6px}
@@ -456,6 +457,44 @@
 @media(max-width:700px){
   .elbiyahe-hrow-arrow{display:none}
   .elbiyahe-event-grid{grid-template-columns:1fr}
+}
+
+/* ===================== Stay & Eat page: hero + 3-column mockup layout ===================== */
+.elbiyahe-stay-hero{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:center;background:var(--forest);color:var(--cream);border-radius:18px;padding:28px;margin-bottom:26px}
+.elbiyahe-stay-hero .eyebrow{color:var(--ochre)}
+.elbiyahe-stay-hero h1{color:#fff;font:700 34px/1.1 'Space Grotesk',sans-serif;margin:6px 0}
+.elbiyahe-stay-hero h1 .script{color:var(--ochre);font-size:1.05em}
+.elbiyahe-stay-hero .muted{color:#dce7de}
+.elbiyahe-stay-hero-stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.elbiyahe-stay-hero-media{border-radius:14px;overflow:hidden;height:220px}
+.elbiyahe-stay-hero-media img{width:100%;height:100%;object-fit:cover}
+
+/* top section pills — All / Eat / Stay, synced with the left-rail category radios */
+.elbiyahe-section-pills{display:flex;gap:8px;overflow-x:auto;margin:0 0 18px}
+.elbiyahe-section-pills button{flex:none;min-height:38px;padding:0 18px;border-radius:999px;background:#eef3ec;font-weight:700;font-size:13px}
+.elbiyahe-section-pills button.active{background:var(--forest);color:#fff}
+
+/* eat/stay badge variants on the shared VenueCard */
+.elbiyahe-badge.green{background:var(--forest);color:#fff}
+.elbiyahe-badge.blue{background:#377b8c;color:#fff}
+
+/* right-rail mini map */
+.elbiyahe-stay-minimap{border-radius:14px;overflow:hidden}
+
+/* trust strip, directly above the footer */
+.elbiyahe-trust-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:32px 0}
+.elbiyahe-trust-item{display:flex;gap:10px;align-items:flex-start}
+.elbiyahe-trust-icon{width:36px;height:36px;flex:none;border-radius:999px;background:#eef3ec;color:var(--forest);display:grid;place-items:center}
+.elbiyahe-trust-item b{display:block;font:700 13px 'Space Grotesk',sans-serif;color:var(--forest)}
+.elbiyahe-trust-item p{margin:2px 0 0;font-size:12px;color:var(--muted)}
+
+@media(max-width:1150px){
+  .elbiyahe-stay-hero{grid-template-columns:1fr}
+  .elbiyahe-stay-hero-media{height:160px;order:-1}
+  .elbiyahe-trust-strip{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:700px){
+  .elbiyahe-trust-strip{grid-template-columns:1fr}
 }
 
 @media (prefers-reduced-motion:reduce){.maplibregl-map *{transition:none!important}}
