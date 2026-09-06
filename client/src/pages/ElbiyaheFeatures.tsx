@@ -2,7 +2,7 @@
    shared Coming Soon placeholder. Data comes from Supabase via
    @/lib/supabase/queries. Shared shell (Header/BottomNav/Footer/Button/Tag) is
    passed in from App.tsx. */
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
   ArrowLeft, ArrowRight, BadgeCheck, BedDouble, Bookmark, Bus, CalendarDays, Car, Check, ChevronLeft, ChevronRight,
@@ -22,7 +22,10 @@ import type {
   PassportMission, PassportReward, RideRoute, StampCategory,
 } from "@/lib/supabase/types";
 import { MapView, type LBPoint, type ZoneCircle } from "@/components/MapView";
-import { LB_CENTER, directionsUrl, distanceKm, formatDistance, getPosition, prefersReducedMotion, useUserLocation } from "@/lib/geo";
+import {
+  LB_CENTER, directionsUrl, distanceKm, fetchRoute, formatDistance, getPosition, prefersReducedMotion,
+  type RouteResult, useUserLocation,
+} from "@/lib/geo";
 import QRCode from "qrcode";
 
 interface Shell {
@@ -1327,6 +1330,17 @@ const TRICYCLE_FARE_TIERS: [string, string][] = [
   ["4 km & beyond", "+₱1.00/km"],
 ];
 
+/* One real, sourced jeepney terminal — beside the Caltex station, in front of Olivarez Plaza.
+   Coordinates reused verbatim from the existing real `olivarez-plaza` destination row
+   (scripts/seed-geo.mjs). No other terminal could be confidently verified, so this is
+   deliberately a single real starting point, not a fabricated terminal network — the rest of
+   "Terminal Guide" stays "Coming soon" until more real locations are sourced. */
+const TERMINAL_POINT: LBPoint = {
+  id: "olivarez-plaza-terminal", lat: 14.1700, lng: 121.2430,
+  name: "Olivarez Plaza Jeepney Terminal", kind: "Community",
+  sub: "Beside the Caltex station, in front of Olivarez Plaza",
+};
+
 function RouteCard({ r }: { r: RideRoute }) {
   return (
     <article className="elbiyahe-tour-card elbiyahe-route-card">
@@ -1377,6 +1391,37 @@ export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
   const [to, setTo] = useState("Los Baños Town Proper");
   const [result, setResult] = useState<string | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
+  const loc = useUserLocation();
+  const [routeStatus, setRouteStatus] = useState<RouteStatus>("idle");
+  const [routeResult, setRouteResult] = useState<RouteResult | null>(null);
+  const routeCacheRef = useRef<Map<string, RouteResult | null>>(new Map());
+
+  const onShowTerminalRoute = async () => {
+    setRouteResult(null);
+    let coords = loc.coords;
+    if (!coords) {
+      setRouteStatus("locating");
+      coords = await loc.request();
+      if (!coords) { setRouteStatus("denied"); return; }
+    }
+    const key = `${coords.lat},${coords.lng}|${TERMINAL_POINT.lat},${TERMINAL_POINT.lng}|walking`;
+    const cache = routeCacheRef.current;
+    if (cache.has(key)) {
+      const cached = cache.get(key)!;
+      setRouteResult(cached);
+      setRouteStatus(cached ? "ready" : "error");
+      return;
+    }
+    setRouteStatus("loading");
+    const res = await fetchRoute(coords, { lat: TERMINAL_POINT.lat, lng: TERMINAL_POINT.lng }, "walking");
+    cache.set(key, res);
+    setRouteResult(res);
+    setRouteStatus(res ? "ready" : "error");
+  };
+  const terminalRouteActive = routeStatus === "ready" && !!routeResult;
+  const terminalPoints: LBPoint[] = terminalRouteActive && loc.coords
+    ? [{ id: "me", lat: loc.coords.lat, lng: loc.coords.lng, name: "You" }, TERMINAL_POINT]
+    : [TERMINAL_POINT];
 
   const findRoute = () => {
     setResult(
@@ -1520,10 +1565,11 @@ export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
                   <span><b>Tricycle Fare Guide</b><small>Base fares and estimates</small></span>
                   <ChevronRight size={16} />
                 </a>
-                <div className="action-row" style={{ opacity: .5 }}>
+                <a className="action-row" href="#terminal-guide" onClick={scrollTo("terminal-guide")}>
                   <i className="step-icon"><MapPin size={18} /></i>
-                  <span><b>Terminal Guide</b><small>Coming soon</small></span>
-                </div>
+                  <span><b>Terminal Guide</b><small>One real terminal so far</small></span>
+                  <ChevronRight size={16} />
+                </a>
                 <div className="action-row" style={{ opacity: .5 }}>
                   <i className="step-icon"><Clock3 size={18} /></i>
                   <span><b>Operating Hours</b><small>Coming soon</small></span>
@@ -1538,6 +1584,42 @@ export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
                 </div>
                 <Button onClick={findRoute}><Navigation size={15} /> Find Best Route</Button>
                 {result && <div className="elbiyahe-route-result"><Sparkles size={16} /> <p>{result}</p></div>}
+              </div>
+
+              <div className="elbiyahe-featured-card" id="terminal-guide">
+                <span className="eyebrow">TERMINAL GUIDE</span>
+                <p className="muted" style={{ fontSize: 12, margin: "4px 0 8px" }}>{TERMINAL_POINT.name} — {TERMINAL_POINT.sub}</p>
+                <div style={{ position: "relative" }}>
+                  <MapView
+                    points={terminalPoints}
+                    center={TERMINAL_POINT}
+                    zoom={terminalRouteActive ? undefined : 15}
+                    fitBounds={terminalRouteActive}
+                    interactive
+                    showUser={!!loc.coords}
+                    userCoords={loc.coords}
+                    height={200}
+                    routeGeometry={terminalRouteActive ? routeResult : null}
+                    ariaLabel="Map of the Olivarez Plaza jeepney terminal"
+                  />
+                  {terminalRouteActive && routeResult && (
+                    <div className="elbiyahe-route-info">
+                      <Navigation size={14} />
+                      <span>{formatDistance(routeResult.distanceM / 1000)} · ~{Math.round(routeResult.durationS / 60)} min walk</span>
+                    </div>
+                  )}
+                </div>
+                <button
+                  className="btn primary"
+                  style={{ width: "100%", marginTop: 10 }}
+                  disabled={routeStatus === "locating" || routeStatus === "loading"}
+                  onClick={onShowTerminalRoute}
+                >
+                  <Navigation size={15} />
+                  {routeStatus === "locating" ? "Locating…" : routeStatus === "loading" ? "Routing…" : "Show Route"}
+                </button>
+                {routeStatus === "error" && <p className="elbiyahe-route-error">Live route unavailable — showing pin only.</p>}
+                {routeStatus === "denied" && <p className="elbiyahe-route-error">Location unavailable — try Directions from the map instead.</p>}
               </div>
 
               <div className="elbiyahe-featured-card">
@@ -2316,10 +2398,16 @@ const PARK_NEAR_DESTINATIONS = [
   { label: "Hotels & Resorts", icon: BedDouble, category: "hotel-resort" },
 ] as const;
 
-function ParkingCard({ p, distanceKm: km }: { p: ParkingSpotRow; distanceKm?: number }) {
+type RouteStatus = "idle" | "locating" | "loading" | "ready" | "error" | "denied";
+
+function ParkingCard({ p, distanceKm: km, routeStatus, isRouteActive, onShowRoute }: {
+  p: ParkingSpotRow; distanceKm?: number;
+  routeStatus: RouteStatus; isRouteActive: boolean; onShowRoute: (p: ParkingSpotRow) => void;
+}) {
   const [showDetails, setShowDetails] = useState(false);
   const Icon = (p.category && CATEGORY_ICON[p.category]) || Car;
   const walkMin = km != null ? Math.max(1, Math.round(km * 12)) : null;
+  const activeStatus = isRouteActive ? routeStatus : "idle";
   return (
     <article className="elbiyahe-tour-card elbiyahe-parking-card">
       <div className="elbiyahe-tour-card-media elbiyahe-parking-card-icon">
@@ -2336,9 +2424,22 @@ function ParkingCard({ p, distanceKm: km }: { p: ParkingSpotRow; distanceKm?: nu
         <div className="elbiyahe-tour-card-foot">
           <button className="btn secondary" style={{ minHeight: 32, fontSize: 12 }} onClick={() => setShowDetails(true)}>Details</button>
           {p.lat != null && p.lng != null && (
-            <a href={directionsUrl(p.lat, p.lng)} target="_blank" rel="noreferrer" className="btn primary" style={{ minHeight: 32, fontSize: 12 }}><Navigation size={13} /> Directions</a>
+            <a href={directionsUrl(p.lat, p.lng)} target="_blank" rel="noreferrer" className="btn secondary" style={{ minHeight: 32, fontSize: 12 }}><Navigation size={13} /> Directions</a>
           )}
         </div>
+        {p.lat != null && p.lng != null && (
+          <button
+            className="btn primary"
+            style={{ minHeight: 32, fontSize: 12, width: "100%", marginTop: 8 }}
+            disabled={activeStatus === "locating" || activeStatus === "loading"}
+            onClick={() => onShowRoute(p)}
+          >
+            <Navigation size={13} />
+            {activeStatus === "locating" ? "Locating…" : activeStatus === "loading" ? "Routing…" : "Show Route"}
+          </button>
+        )}
+        {activeStatus === "error" && <p className="elbiyahe-route-error">Live route unavailable — showing pins only.</p>}
+        {activeStatus === "denied" && <p className="elbiyahe-route-error">Location unavailable — use Directions instead.</p>}
       </div>
       {showDetails && (
         <div className="modal-backdrop" onClick={() => setShowDetails(false)} role="dialog" aria-modal="true" aria-label={p.name}>
@@ -2388,6 +2489,36 @@ export function Parking({ Header, BottomNav, Footer, Button }: Shell) {
   const [showFeedback, setShowFeedback] = useState(false);
   const loc = useUserLocation();
 
+  const [activeRouteSpotId, setActiveRouteSpotId] = useState<string | null>(null);
+  const [routeStatus, setRouteStatus] = useState<RouteStatus>("idle");
+  const [routeResult, setRouteResult] = useState<RouteResult | null>(null);
+  const routeCacheRef = useRef<Map<string, RouteResult | null>>(new Map());
+
+  const onShowRoute = async (p: ParkingSpotRow) => {
+    if (p.lat == null || p.lng == null) return;
+    setActiveRouteSpotId(p.id);
+    setRouteResult(null);
+    let coords = loc.coords;
+    if (!coords) {
+      setRouteStatus("locating");
+      coords = await loc.request();
+      if (!coords) { setRouteStatus("denied"); return; }
+    }
+    const key = `${coords.lat},${coords.lng}|${p.lat},${p.lng}|walking`;
+    const cache = routeCacheRef.current;
+    if (cache.has(key)) {
+      const cached = cache.get(key)!;
+      setRouteResult(cached);
+      setRouteStatus(cached ? "ready" : "error");
+      return;
+    }
+    setRouteStatus("loading");
+    const result = await fetchRoute(coords, { lat: p.lat, lng: p.lng }, "walking");
+    cache.set(key, result);
+    setRouteResult(result);
+    setRouteStatus(result ? "ready" : "error");
+  };
+
   const items = data ?? [];
   const withDistance = (p: ParkingSpotRow) =>
     loc.coords && p.lat != null && p.lng != null ? distanceKm(loc.coords, { lat: p.lat, lng: p.lng }) : null;
@@ -2425,6 +2556,18 @@ export function Parking({ Header, BottomNav, Footer, Button }: Shell) {
     label: p.kind === "free" ? "FREE" : (p.fee_label ?? "PAID"),
     labelColor: p.kind === "free" ? "#0e543c" : "#c97927",
   }));
+
+  const activeSpot = activeRouteSpotId ? items.find(p => p.id === activeRouteSpotId) : null;
+  const routeActive = routeStatus === "ready" && !!routeResult && !!activeSpot;
+  const displayPoints: LBPoint[] =
+    routeActive && loc.coords && activeSpot?.lat != null && activeSpot?.lng != null
+      ? [
+          { id: "me", lat: loc.coords.lat, lng: loc.coords.lng, name: "You" },
+          { id: activeSpot.id, lat: activeSpot.lat, lng: activeSpot.lng, name: activeSpot.name, kind: "Parking",
+            label: activeSpot.kind === "free" ? "FREE" : (activeSpot.fee_label ?? "PAID"),
+            labelColor: activeSpot.kind === "free" ? "#0e543c" : "#c97927" },
+        ]
+      : mapPoints;
 
   const jumpToResults = () => document.getElementById("parking-results")?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
 
@@ -2467,8 +2610,23 @@ export function Parking({ Header, BottomNav, Footer, Button }: Shell) {
 
         {mapPoints.length > 0 && (
           <div style={{ position: "relative", marginTop: 12 }}>
-            <MapView points={mapPoints} fitBounds interactive showUser={!!loc.coords} userCoords={loc.coords} height={300} ariaLabel="Map of Los Baños parking areas" />
-            {nearbyWithinKm != null && (
+            <MapView
+              points={displayPoints}
+              fitBounds
+              interactive
+              showUser={!!loc.coords}
+              userCoords={loc.coords}
+              height={300}
+              routeGeometry={routeActive ? routeResult : null}
+              ariaLabel="Map of Los Baños parking areas"
+            />
+            {routeActive && routeResult && (
+              <div className="elbiyahe-route-info">
+                <Navigation size={14} />
+                <span>{formatDistance(routeResult.distanceM / 1000)} · ~{Math.round(routeResult.durationS / 60)} min walk to {activeSpot?.name}</span>
+              </div>
+            )}
+            {!routeActive && nearbyWithinKm != null && (
               <div className="elbiyahe-transpo-tip-chip" style={{ position: "absolute", right: 14, top: 14, left: "auto", bottom: "auto", maxWidth: 220 }}>
                 <Car size={16} />
                 <div><b>{nearbyWithinKm} parking spot{nearbyWithinKm === 1 ? "" : "s"}</b><span>within 1 km</span></div>
@@ -2481,7 +2639,16 @@ export function Parking({ Header, BottomNav, Footer, Button }: Shell) {
           <div className="elbiyahe-row-head"><h2>Nearby Parking ({filtered.length})</h2></div>
           {filtered.length > 0 ? (
             <HScrollRow>
-              {filtered.map(p => <ParkingCard p={p} distanceKm={withDistance(p) ?? undefined} key={p.id} />)}
+              {filtered.map(p => (
+                <ParkingCard
+                  p={p}
+                  distanceKm={withDistance(p) ?? undefined}
+                  key={p.id}
+                  routeStatus={routeStatus}
+                  isRouteActive={activeRouteSpotId === p.id}
+                  onShowRoute={onShowRoute}
+                />
+              ))}
             </HScrollRow>
           ) : (
             !isLoading && !error && <div className="empty-state"><Car size={26} /><h3>No parking spots match those filters.</h3></div>

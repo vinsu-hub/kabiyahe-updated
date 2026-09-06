@@ -196,6 +196,8 @@
 .elbiyahe-transpo-tip-chip{position:absolute;right:14px;bottom:14px;left:14px;background:rgba(255,255,255,.95);color:var(--forest);border-radius:12px;padding:10px 14px;display:flex;gap:8px;align-items:flex-start;box-shadow:var(--shadow)}
 .elbiyahe-transpo-tip-chip b{display:block;font-size:12px}
 .elbiyahe-transpo-tip-chip span{display:block;font-size:12px;color:var(--muted)}
+.elbiyahe-route-info{position:absolute;left:14px;bottom:14px;right:14px;z-index:2;background:var(--forest);color:#fff;border-radius:12px;padding:10px 14px;display:flex;gap:8px;align-items:center;font-size:12px;font-weight:600;box-shadow:var(--shadow)}
+.elbiyahe-route-error{color:var(--muted);font-size:11px;margin:6px 0 0}
 
 /* Route cards */
 .elbiyahe-route-card{min-width:260px;flex:0 0 260px}
@@ -284,6 +286,7 @@
 .lbmap-pin:hover,.lbmap-pin:focus-visible{transform:scale(1.14);outline:none}
 .lbmap-pin:focus-visible svg{outline:2px solid var(--forest);outline-offset:2px;border-radius:50%}
 .lbmap-user{display:block;width:16px;height:16px;border-radius:50%;background:#2f6bd8;border:3px solid #fff;box-shadow:0 0 0 4px rgba(47,107,216,.28)}
+.lbmap-route-dot{display:block;width:14px;height:14px;border-radius:50%;background:#0e543c;border:3px solid #fff;box-shadow:0 0 0 4px rgba(14,84,60,.28)}
 .lbmap-zone-label{background:rgba(255,253,248,.92);border:1px solid var(--line);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:800;color:var(--forest);white-space:nowrap}
 .lbmap-label-pin{border:2px solid #fff;border-radius:20px;padding:4px 10px;font-size:11px;font-weight:800;color:#fff;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.28);white-space:nowrap;transition:transform .12s}
 .lbmap-label-pin:hover,.lbmap-label-pin:focus-visible{transform:scale(1.08);outline:none}

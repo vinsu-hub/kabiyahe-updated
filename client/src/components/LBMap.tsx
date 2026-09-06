@@ -4,7 +4,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { ArrowRight, Navigation } from "lucide-react";
 import { Link } from "wouter";
 import {
-  LB_CENTER, LB_DEFAULT_ZOOM, directionsUrl, mapLinkUrl, prefersReducedMotion, type LatLng,
+  LB_CENTER, LB_DEFAULT_ZOOM, directionsUrl, distanceKm, mapLinkUrl, prefersReducedMotion, type LatLng,
 } from "@/lib/geo";
 
 // Raster basemap — OpenStreetMap standard tiles. Free, no API key, works on every
@@ -38,6 +38,8 @@ export type LBPoint = {
 };
 
 export type ZoneCircle = { center: LatLng; radiusKm: number; label: string; color?: string };
+
+export type RouteGeometry = { coordinates: [number, number][]; distanceM?: number; durationS?: number };
 
 const KIND_COLOR: Record<string, string> = {
   Nature: "#0e543c", "Nature & Parks": "#0e543c",
@@ -79,6 +81,7 @@ export default function LBMap({
   showUser = false,
   userCoords = null,
   routeLine = false,
+  routeGeometry = null,
   numbered = false,
   height = 420,
   ariaLabel = "Map of Los Baños",
@@ -92,6 +95,7 @@ export default function LBMap({
   showUser?: boolean;
   userCoords?: LatLng | null;
   routeLine?: boolean;
+  routeGeometry?: RouteGeometry | null;
   numbered?: boolean;
   height?: number;
   ariaLabel?: string;
@@ -129,12 +133,58 @@ export default function LBMap({
   const routeGeo = useMemo(
     () => ({
       type: "FeatureCollection" as const,
-      features: routeLine && points.length > 1
+      features: !routeGeometry && routeLine && points.length > 1
         ? [{ type: "Feature" as const, properties: {}, geometry: { type: "LineString" as const, coordinates: points.map(p => [p.lng, p.lat]) } }]
         : [],
     }),
-    [routeLine, points],
+    [routeLine, points, routeGeometry],
   );
+
+  // Real (Mapbox-derived) route: a solid line, distinct from the dashed straight-line above,
+  // plus a traveling dot that continuously re-traces the path — skipped under reduced motion.
+  const realRouteGeo = useMemo(
+    () => ({
+      type: "FeatureCollection" as const,
+      features: routeGeometry && routeGeometry.coordinates.length > 1
+        ? [{ type: "Feature" as const, properties: {}, geometry: { type: "LineString" as const, coordinates: routeGeometry.coordinates } }]
+        : [],
+    }),
+    [routeGeometry],
+  );
+
+  const cumDist = useMemo(() => {
+    if (!routeGeometry || routeGeometry.coordinates.length < 2) return null;
+    const coords = routeGeometry.coordinates;
+    const dist = [0];
+    for (let i = 1; i < coords.length; i++) {
+      const [lng1, lat1] = coords[i - 1];
+      const [lng2, lat2] = coords[i];
+      dist.push(dist[i - 1] + distanceKm({ lat: lat1, lng: lng1 }, { lat: lat2, lng: lng2 }));
+    }
+    return { coords, dist, total: dist[dist.length - 1] };
+  }, [routeGeometry]);
+
+  const [dotPos, setDotPos] = useState<LatLng | null>(null);
+  useEffect(() => {
+    if (!cumDist || reduce || cumDist.total === 0) { setDotPos(null); return; }
+    let raf = 0;
+    const durationMs = 1800;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = ((now - start) % durationMs) / durationMs;
+      const targetDist = t * cumDist.total;
+      let idx = 0;
+      while (idx < cumDist.dist.length - 1 && cumDist.dist[idx + 1] < targetDist) idx++;
+      const segStart = cumDist.dist[idx], segEnd = cumDist.dist[idx + 1] ?? segStart;
+      const segT = segEnd > segStart ? (targetDist - segStart) / (segEnd - segStart) : 0;
+      const [lng1, lat1] = cumDist.coords[idx];
+      const [lng2, lat2] = cumDist.coords[idx + 1] ?? cumDist.coords[idx];
+      setDotPos({ lat: lat1 + (lat2 - lat1) * segT, lng: lng1 + (lng2 - lng1) * segT });
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [cumDist, reduce]);
 
   const zoneGeo = useMemo(
     () => ({
@@ -164,11 +214,23 @@ export default function LBMap({
       >
         {interactive && <NavigationControl position="top-right" showCompass={false} />}
 
-        {routeLine && points.length > 1 && (
+        {!routeGeometry && routeLine && points.length > 1 && (
           <Source id="lbmap-route" type="geojson" data={routeGeo}>
             <Layer id="lbmap-route-line" type="line" layout={{ "line-cap": "round", "line-join": "round" }}
               paint={{ "line-color": "#6d2740", "line-width": 3, "line-opacity": 0.55, "line-dasharray": [1.5, 1.5] }} />
           </Source>
+        )}
+
+        {routeGeometry && routeGeometry.coordinates.length > 1 && (
+          <Source id="lbmap-route-real" type="geojson" data={realRouteGeo}>
+            <Layer id="lbmap-route-real-line" type="line" layout={{ "line-cap": "round", "line-join": "round" }}
+              paint={{ "line-color": "#0e543c", "line-width": 4, "line-opacity": 0.85 }} />
+          </Source>
+        )}
+        {dotPos && (
+          <Marker longitude={dotPos.lng} latitude={dotPos.lat} anchor="center">
+            <span className="lbmap-route-dot" aria-hidden="true" />
+          </Marker>
         )}
 
         {zones.length > 0 && (

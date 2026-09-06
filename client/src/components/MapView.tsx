@@ -1,12 +1,12 @@
 import { lazy, Suspense } from "react";
 import { MapPin } from "lucide-react";
 import { hasWebGL, mapLinkUrl } from "@/lib/geo";
-import type { LBPoint, ZoneCircle } from "./LBMap";
+import type { LBPoint, RouteGeometry, ZoneCircle } from "./LBMap";
 import type { LatLng } from "@/lib/geo";
 
 const LBMap = lazy(() => import("./LBMap"));
 
-export type { LBPoint, ZoneCircle };
+export type { LBPoint, RouteGeometry, ZoneCircle };
 
 type Props = {
   points?: LBPoint[];
@@ -18,6 +18,7 @@ type Props = {
   showUser?: boolean;
   userCoords?: LatLng | null;
   routeLine?: boolean;
+  routeGeometry?: RouteGeometry | null;
   numbered?: boolean;
   height?: number;
   ariaLabel?: string;

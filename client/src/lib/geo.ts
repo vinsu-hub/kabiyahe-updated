@@ -78,3 +78,34 @@ export function hasWebGL(): boolean {
 
 export const prefersReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+export type RouteResult = { coordinates: [number, number][]; distanceM: number; durationS: number };
+
+/**
+ * Real road-following route geometry via Mapbox Directions — map tiles stay the free/keyless
+ * OpenStreetMap raster used everywhere else; this is the only thing that touches Mapbox.
+ * Returns null (never throws) when the token is missing or the request fails, so every call
+ * site can treat null as "show an honest fallback" rather than crash.
+ */
+export async function fetchRoute(
+  origin: LatLng,
+  destination: LatLng,
+  profile: "walking" | "driving" = "walking",
+): Promise<RouteResult | null> {
+  const token = import.meta.env.VITE_MAPBOX_TOKEN as string | undefined;
+  if (!token) return null;
+  try {
+    const url =
+      `https://api.mapbox.com/directions/v5/mapbox/${profile}/` +
+      `${origin.lng},${origin.lat};${destination.lng},${destination.lat}` +
+      `?geometries=geojson&overview=full&access_token=${token}`;
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const route = data?.routes?.[0];
+    if (!route?.geometry?.coordinates?.length) return null;
+    return { coordinates: route.geometry.coordinates, distanceM: route.distance, durationS: route.duration };
+  } catch {
+    return null;
+  }
+}
