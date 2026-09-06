@@ -16,8 +16,9 @@ const db = createClient(process.env.VITE_SUPABASE_URL, process.env.SUPABASE_SECR
 const { data: ul } = await db.auth.admin.listUsers();
 const tester = ul.users.find(u => u.email === "elbi-tester@example.com");
 const reset = async () => {
-  for (const t of ["event_rsvps", "passport_scans", "referral_events", "tour_reservations"])
+  for (const t of ["event_rsvps", "passport_scans", "referral_events", "tour_reservations", "mission_completions"])
     await db.from(t).delete().eq("user_id", tester.id);
+  await db.from("profiles").update({ xp: 0, explorer_level: 1 }).eq("id", tester.id);
 };
 await reset();
 const results = [];
@@ -87,6 +88,38 @@ await page.click(".modal .btn, [role=dialog] .btn"); await page.waitForTimeout(2
 ps = await db.from("passport_scans").select("*").eq("user_id", tester.id);
 const toast = await page.$(".notice");
 rec("passport scan (invalid rejected)", (ps.data?.length ?? 0) === 1 && !!toast, `${ps.data?.length} scan(s), toast:${!!toast}`);
+
+// passport leveling + missions: scan_passport / claim_mission both write XP through the
+// same award_passport_xp() DB function — this exercises the real tier-crossing math and
+// the claim_mission double-award guard, not just the older passport-scan flow above.
+await db.from("mission_completions").delete().eq("user_id", tester.id);
+await db.from("passport_scans").delete().eq("user_id", tester.id);
+await db.from("profiles").update({ xp: 0, explorer_level: 1 }).eq("id", tester.id);
+
+const natureCodes = ["ELBIYAHE-MAKILING", "ELBIYAHE-MOUNTMAKILING", "ELBIYAHE-MAKILINGMUDSPRING"];
+for (const c of natureCodes) {
+  await page.goto(base + "/passport", { waitUntil: "load" });
+  await page.click('button:has-text("Scan Passport")'); await page.waitForTimeout(400);
+  await page.fill(".modal input, [role=dialog] input", c);
+  await page.click(".modal .btn, [role=dialog] .btn"); await page.waitForTimeout(1800);
+}
+let prof = await db.from("profiles").select("xp, explorer_level").eq("id", tester.id).maybeSingle();
+rec("passport leveling: 3 scans = 75 XP, still Explorer", prof.data?.xp === 75 && prof.data?.explorer_level === 1, `xp:${prof.data?.xp} level:${prof.data?.explorer_level}`);
+
+await page.goto(base + "/passport", { waitUntil: "load" });
+await page.waitForTimeout(800);
+const claimBtn = await page.$('.elbiyahe-mission-card:has-text("Nature Seeker") button:has-text("Claim")');
+if (claimBtn) { await claimBtn.click(); await page.waitForTimeout(1500); }
+prof = await db.from("profiles").select("xp, explorer_level").eq("id", tester.id).maybeSingle();
+rec("mission claim: +30 XP crosses the 100-XP tier threshold", prof.data?.xp === 105 && prof.data?.explorer_level === 2, `xp:${prof.data?.xp} level:${prof.data?.explorer_level}`);
+
+const authed = createClient(process.env.VITE_SUPABASE_URL, process.env.VITE_SUPABASE_PUBLISHABLE_KEY);
+await authed.auth.signInWithPassword({ email: "elbi-tester@example.com", password: "test-elbi-123" });
+const mission = await db.from("passport_missions").select("id").eq("slug", "nature-seeker").maybeSingle();
+const reclaim = await authed.rpc("claim_mission", { p_mission_id: mission.data.id });
+rec("mission re-claim is rejected (no double XP)", reclaim.data?.ok === false && reclaim.data?.reason === "already", JSON.stringify(reclaim.data));
+const profAfter = await db.from("profiles").select("xp").eq("id", tester.id).maybeSingle();
+rec("XP unchanged after re-claim attempt", profAfter.data?.xp === 105, `xp:${profAfter.data?.xp}`);
 
 // RLS: anonymous cannot write
 const anon = createClient(process.env.VITE_SUPABASE_URL, process.env.VITE_SUPABASE_PUBLISHABLE_KEY);

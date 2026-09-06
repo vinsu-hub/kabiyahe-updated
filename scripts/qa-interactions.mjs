@@ -45,12 +45,12 @@ page.on("pageerror", e => errs.push(`${page.url().replace(base, "")} pageerror: 
 page.on("console", m => m.type() === "error" && errs.push(`${page.url().replace(base, "")} console: ${m.text().slice(0, 200)}`));
 
 for (const [name, path] of ROUTES) {
-  await page.goto(base + path, { waitUntil: "networkidle" });
+  await page.goto(base + path, { waitUntil: "load" });
   await page.waitForTimeout(500);
   const n = (await page.$$(SEL)).length;
   let dead = 0, tested = 0;
   for (let i = 0; i < n; i++) {
-    await page.goto(base + path, { waitUntil: "networkidle" });
+    await page.goto(base + path, { waitUntil: "load" });
     await page.waitForTimeout(250);
     const els = await page.$$(SEL);
     const el = els[i];
@@ -84,7 +84,7 @@ for (const [name, path] of ROUTES) {
 for (const w of [390, 1280]) {
   await page.setViewportSize({ width: w, height: 850 });
   // mobile menu
-  await page.goto(base + "/", { waitUntil: "networkidle" });
+  await page.goto(base + "/", { waitUntil: "load" });
   const mm = await page.$(".mobile-menu");
   if (w <= 700) {
     if (!mm) findings.push({ route: "home", control: "mobile menu", issue: `hamburger not visible at ${w}px` });
@@ -97,12 +97,12 @@ for (const w of [390, 1280]) {
     }
   }
   // explore filters toggle
-  await page.goto(base + "/explore", { waitUntil: "networkidle" });
+  await page.goto(base + "/explore", { waitUntil: "load" });
   await page.waitForTimeout(400);
   const fbtn = await page.$('button:has-text("Filters")');
   if (fbtn) { await fbtn.click(); await page.waitForTimeout(300); await page.screenshot({ path: `${out}/overlay__explore-filters__${w}.png` }); }
   // passport scan modal (logged in)
-  await page.goto(base + "/passport", { waitUntil: "networkidle" });
+  await page.goto(base + "/passport", { waitUntil: "load" });
   await page.waitForTimeout(400);
   const scanBtn = await page.$('button:has-text("Scan Passport")');
   if (scanBtn) {
