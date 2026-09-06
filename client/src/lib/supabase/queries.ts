@@ -250,20 +250,26 @@ export function usePassportMissions() {
       let completedMissionIds: string[] = [];
 
       if (user && missions.length) {
-        const [scansRes, completionsRes, eventsJoinedCount] = await Promise.all([
-          supabase.from("passport_scans").select("passport_locations!inner(category)").eq("user_id", user.id),
+        // passport_locations' base table is admin-only under RLS — join client-side against the
+        // public view instead of embedding it in the scans query (an embedded !inner join is
+        // evaluated under the same RLS and silently returns zero rows for non-admin users).
+        const [scansRes, locationsRes, completionsRes, eventsJoinedCount] = await Promise.all([
+          supabase.from("passport_scans").select("location_id").eq("user_id", user.id),
+          supabase.from("passport_locations_public").select("id, category"),
           supabase.from("mission_completions").select("mission_id").eq("user_id", user.id),
           fetchEventRsvpCount(user.id),
         ]);
         if (scansRes.error) throw new Error(scansRes.error.message);
+        if (locationsRes.error) throw new Error(locationsRes.error.message);
         if (completionsRes.error) throw new Error(completionsRes.error.message);
 
-        const scanRows = (scansRes.data ?? []) as unknown as { passport_locations: { category: string } }[];
+        const categoryByLocationId = new Map((locationsRes.data ?? []).map(l => [l.id, l.category as string]));
+        const scanRows = scansRes.data ?? [];
         const totalScans = scanRows.length;
         const scansByCategory = new Map<string, number>();
         for (const row of scanRows) {
-          const cat = row.passport_locations.category;
-          scansByCategory.set(cat, (scansByCategory.get(cat) ?? 0) + 1);
+          const cat = categoryByLocationId.get(row.location_id as string);
+          if (cat) scansByCategory.set(cat, (scansByCategory.get(cat) ?? 0) + 1);
         }
 
         for (const m of missions) {
