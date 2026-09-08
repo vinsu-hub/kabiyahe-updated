@@ -93,6 +93,7 @@ export function useToggleRsvp(eventId: string | undefined) {
 /* ---------------------------------------------------------------- tours */
 export interface TourListItem extends TourPackageRow {
   operator_name: string | null;
+  stops: { name: string; sort: number; time_label: string }[];
 }
 
 export function useTours() {
@@ -102,11 +103,18 @@ export function useTours() {
       const rows = throwIf(
         await supabase
           .from("tour_packages")
-          .select("*, tour_operators(name)")
+          .select("*, tour_operators(name), tour_itinerary_stops(name,sort,time_label)")
           .eq("status", "active")
           .order("featured", { ascending: false }),
-      ) as (TourPackageRow & { tour_operators: { name: string } | null })[];
-      return rows.map(({ tour_operators, ...r }) => ({ ...r, operator_name: tour_operators?.name ?? null })) as TourListItem[];
+      ) as (TourPackageRow & {
+        tour_operators: { name: string } | null;
+        tour_itinerary_stops: { name: string; sort: number; time_label: string }[] | null;
+      })[];
+      return rows.map(({ tour_operators, tour_itinerary_stops, ...r }) => ({
+        ...r,
+        operator_name: tour_operators?.name ?? null,
+        stops: [...(tour_itinerary_stops ?? [])].sort((a, b) => a.sort - b.sort),
+      })) as TourListItem[];
     },
   });
 }

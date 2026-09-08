@@ -1,5 +1,45 @@
 # Progress Log
 
+## 2026-09-09 (Bus Tours page rebuild + dedicated mobile auth composition)
+- **`/tours` rebuilt** to the supplied spec (§1–§9), same pattern as the Events/Delicacies
+  rebuilds. New sections in `BusTours` (`client/src/pages/ElbiyaheFeatures.tsx`): hero card +
+  Quick Tour Guides card; a horizontal filter bar (3 pill groups — "traveling with" is a
+  selectable placeholder that doesn't filter, per spec item 6; "kind of day" → `tags`;
+  "how much time?" → `duration`); Popular Tours grid (`TourCard` = rebuilt
+  `.elbiyahe-tour-card.is-rich`: photo, FEATURED ribbon, heart toggle, theme chips, meta row,
+  stop snippet, price + `<Rating>`, "View Tour →") + a "Plan Your Los Baños Day" sticky
+  planner derived from the featured tour's real itinerary; 4 mood tiles (photo, set the
+  theme filter); a 3-up banner row (Weekend Pick from the featured tour, "Every tour is
+  designed…" 4-icon card, LB Passport promo). Header/Footer/BottomNav unchanged (global);
+  `TourDetail` untouched.
+- **Data**: seeded **4 new tour_packages** (`makiling-nature-trek`, `seven-lakes-circuit`,
+  `los-banos-food-crawl`, `rizal-heritage-route` — 7 total) with real LB/Laguna stops +
+  coords + reviews, and set `hero_image` on the 3 existing tours to the new photos. Ran
+  `scripts/seed.mjs` against prod Supabase. `reserve_url`s stay `example.com` (consistent
+  with the existing 3; tracked in `todo.md`).
+- **`useTours()`** extended to embed `tour_itinerary_stops(name,sort,time_label)` so cards can
+  show stop count/snippet and the planner can build its timeline without a second query.
+- **Assets**: 11 photos from `assets/bus tour page/` → committed `client/public/tours/`
+  (sharp, JPG q82; passport illustration kept PNG).
+- **CSS**: new `.elbiyahe-tours-*` block appended to `elbiyahe.css`; breakpoints 1024 / 768 /
+  480; `.elbiyahe-tour-card`/`-media`/`-foot` NOT renamed (shared with Delicacy/Parking
+  cards) — only `.is-rich` descendant rules added.
+- QA: `/tours` 0 horizontal overflow at 375/390/768/980/1024/1440, 0 console errors, images
+  200. Theme pills + mood tiles filter (7 → Food 2 → Nature 3) and scroll to results; heart
+  toggles; audience pills don't narrow (expected); "View Tour"/"Build This Trip" navigate.
+  `/tours/:id`, Home tour rail, and the Delicacies page (shared card class) all intact.
+  `pnpm check` + `pnpm build` clean.
+
+- **Mobile auth composition** (earlier same session, also uncommitted): `/login` + `/signup`
+  ≤767px rebuilt as a dedicated flow — compact `mobile-hero.jpg` (Makiling + bus) with a
+  rounded bottom, centred brand mark overlapping it, then the form; paper-plane hidden,
+  guest note hidden; 50–52px controls; a real "Forgot password?" wired to
+  `supabase.auth.resetPasswordForEmail` (new `AuthProvider` method, no new route); compact
+  `.auth-passport-promo` card ≤767 (the 4-step image stays ≥768). Tablet 768–1023: 38% art /
+  62% form using the clean photo. Desktop ≥1024 unchanged except the Google button gains a
+  "G" and a "Forgot password?" link. New `client/public/auth/mobile-hero.jpg` +
+  `passport-mark.png`. 0 overflow 320→1440; functional pass at 390px.
+
 ## 2026-09-08 (Sign Up / Login rebrand to reference art + responsive-scaling pass)
 - **Sign Up + Login now use the reference design** (`assets/sign up page/`): `Auth.tsx` left
   panel is the tropical `signup-hero.png` for both modes (procedural `AuthHeroScene`, `PILLARS`,

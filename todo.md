@@ -17,8 +17,10 @@ anything but a demo, confirm:
       the 4 "seasons" map to real LB event clusters or stay as a product device. **M**
 - [ ] **Passport rewards** — "10% Off Local Partner Voucher", "Free buko pie slice — Buko Pie House":
       real partner agreements, or placeholder copy? **S**
-- [ ] **Tour operators & packages** — Laguna Heritage Coaches, Laguna Discovery Tours, the 3 packages,
-      prices, schedules, `reserve_url`s (currently `example.com/...`). Real or illustrative? **M**
+- [ ] **Tour operators & packages** — Laguna Heritage Coaches, Laguna Discovery Tours, now **7**
+      packages (3 original + 4 added 2026-09-09 for the /tours rebuild: Makiling Nature Trek,
+      Seven Lakes Circuit, LB Food Crawl, Rizal Heritage Route), prices, schedules,
+      `reserve_url`s (all still `example.com/...`). Real or illustrative? **M**
 - [ ] **Accommodations** — Trace Suites / City of Springs / Anest Tower: price ranges, amenities,
       real booking channels (referral URLs are Google-search links). Photos also needed —
       see `photo-checklist.md` (their `hero_image` state needs live-DB verification first, no
