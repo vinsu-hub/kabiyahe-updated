@@ -22,6 +22,7 @@ import type {
   PassportMission, PassportReward, RideRoute, StampCategory,
 } from "@/lib/supabase/types";
 import { MapView, type LBPoint, type ZoneCircle } from "@/components/MapView";
+import { Rating } from "@/components/Rating";
 import {
   LB_CENTER, directionsUrl, distanceKm, fetchRoute, formatDistance, getPosition, prefersReducedMotion,
   type RouteResult, useUserLocation,
@@ -68,14 +69,24 @@ function fallbackScene(e: Pick<EventRow, "slug" | "category">): string {
   return `/scenes/${name}.svg`;
 }
 
-function Loading() {
+export function Loading() {
   return (
     <div className="elbiyahe-loading" role="status">
       <Loader2 size={22} className="elbiyahe-spin" /> Loading…
     </div>
   );
 }
-function LoadError({ message }: { message?: string }) {
+/** Close-on-Escape for the hand-rolled modal-backdrop overlays (parity with App's <Modal>).
+    Pass undefined when the overlay is closed so it can be called unconditionally. */
+function useDismissable(onClose?: () => void) {
+  useEffect(() => {
+    if (!onClose) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+}
+export function LoadError({ message }: { message?: string }) {
   return (
     <div className="empty-state">
       <QrCode size={24} />
@@ -684,7 +695,7 @@ export function BusTours({ Header, BottomNav, Footer }: Shell) {
                 <p className="muted"><Clock3 size={13} /> {t.duration}&nbsp;&nbsp;·&nbsp;&nbsp;<Bus size={13} />&nbsp;{t.operator_name}</p>
                 <div className="elbiyahe-tour-card-foot">
                   <b>{peso(t.price_per_seat)}<small> /seat</small></b>
-                  <span className="rating"><Star size={13} fill="currentColor" /> {Number(t.rating).toFixed(1)} <small>({t.review_count})</small></span>
+                  <Rating value={t.rating} count={t.review_count} />
                 </div>
               </div>
             </Link>
@@ -747,7 +758,7 @@ export function TourDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shell
         <div className="elbiyahe-tour-meta">
           <div><b>{peso(t.price_per_seat)}</b><small>per seat</small></div>
           <div><b>{t.duration}</b><small>duration</small></div>
-          <div><b>{Number(t.rating).toFixed(1)} ★</b><small>{t.review_count} reviews</small></div>
+          <div><b>{t.rating != null ? `${Number(t.rating).toFixed(1)} ★` : "—"}</b><small>{t.review_count ?? 0} reviews</small></div>
           <div><b className={soldOutSoon ? "warn" : ""}>{t.seats_available}</b><small>of {t.seat_capacity} seats left</small></div>
         </div>
 
@@ -1365,6 +1376,7 @@ function RouteCard({ r }: { r: RideRoute }) {
 }
 
 function RideFeedbackModal({ onClose }: { onClose: () => void }) {
+  useDismissable(onClose);
   const [body, setBody] = useState("");
   const onSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
@@ -1790,7 +1802,7 @@ function DelicacyCard({ d, distanceLabel }: { d: DelicacyRow; distanceLabel?: st
         <p className="muted" style={{ alignItems: "flex-start" }}><MapPin size={13} style={{ flex: "none", marginTop: 2 }} /> <span>{d.place}{d.barangay ? `, Brgy. ${d.barangay}` : ""}</span></p>
         <div className="elbiyahe-chip-row">{d.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}</div>
         <div className="elbiyahe-tour-card-foot">
-          {d.rating ? <span className="rating"><Star size={13} fill="currentColor" /> {Number(d.rating).toFixed(1)} <small>({d.review_count})</small></span> : <span className="unrated">Reviews coming soon</span>}
+          <Rating value={d.rating} count={d.review_count} />
           {distanceLabel && <span className="muted"><MapPin size={12} /> {distanceLabel}</span>}
         </div>
       </div>
@@ -1799,6 +1811,7 @@ function DelicacyCard({ d, distanceLabel }: { d: DelicacyRow; distanceLabel?: st
 }
 
 function SuggestionModal({ onClose }: { onClose: () => void }) {
+  useDismissable(onClose);
   const { user } = useAuth();
   const [, navigate] = useLocation();
   const submit = useSubmitDelicacySuggestion();
@@ -2005,7 +2018,7 @@ export function Delicacies({ Header, BottomNav, Footer, Button }: Shell) {
                     <div>
                       <b>{d.name}</b>
                       <small>{d.category}{km != null ? ` · ${formatDistance(km)}` : ""}</small>
-                      {d.rating ? <span className="rating sm"><Star size={11} fill="currentColor" /> {Number(d.rating).toFixed(1)}</span> : <span className="unrated">New</span>}
+                      <Rating value={d.rating} count={d.review_count} />
                     </div>
                   </div>
                 );
@@ -2112,7 +2125,7 @@ function VenueCard({ v, distanceLabel, onReserve }: { v: Venue; distanceLabel?: 
         {v.description && <p className="muted" style={{ fontSize: 12 }}>{v.description}</p>}
         <div className="elbiyahe-tour-card-foot">
           <b>{v.priceLabel}</b>
-          {v.rating ? <span className="rating"><Star size={13} fill="currentColor" /> {Number(v.rating).toFixed(1)} <small>({v.reviewCount})</small></span> : <span className="unrated">Reviews coming soon</span>}
+          <Rating value={v.rating} count={v.reviewCount} />
           {distanceLabel && <span className="muted"><MapPin size={12} /> {distanceLabel}</span>}
         </div>
         {v.kind === "stay" && onReserve && (
@@ -2340,7 +2353,7 @@ export function StayEat({ Header, BottomNav, Footer, Button }: Shell) {
                     <div>
                       <b>{v.name}</b>
                       <small>{v.kind === "eat" ? "Eat" : "Stay"} · {v.categoryLabel}{km != null ? ` · ${formatDistance(km)}` : ""}</small>
-                      <span className="rating sm"><Star size={11} fill="currentColor" /> {Number(v.rating).toFixed(1)}</span>
+                      <Rating value={v.rating} count={v.reviewCount} />
                     </div>
                   </div>
                 );
@@ -2405,6 +2418,7 @@ function ParkingCard({ p, distanceKm: km, routeStatus, isRouteActive, onShowRout
   routeStatus: RouteStatus; isRouteActive: boolean; onShowRoute: (p: ParkingSpotRow) => void;
 }) {
   const [showDetails, setShowDetails] = useState(false);
+  useDismissable(showDetails ? () => setShowDetails(false) : undefined);
   const Icon = (p.category && CATEGORY_ICON[p.category]) || Car;
   const walkMin = km != null ? Math.max(1, Math.round(km * 12)) : null;
   const activeStatus = isRouteActive ? routeStatus : "idle";
@@ -2459,6 +2473,7 @@ function ParkingCard({ p, distanceKm: km, routeStatus, isRouteActive, onShowRout
 }
 
 function ParkingFeedbackModal({ onClose }: { onClose: () => void }) {
+  useDismissable(onClose);
   const [body, setBody] = useState("");
   const onSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();

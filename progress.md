@@ -1,5 +1,86 @@
 # Progress Log
 
+## 2026-09-08 (Sign Up / Login rebrand to reference art + responsive-scaling pass)
+- **Sign Up + Login now use the reference design** (`assets/sign up page/`): `Auth.tsx` left
+  panel is the tropical `signup-hero.png` for both modes (procedural `AuthHeroScene`, `PILLARS`,
+  `WaxSealMark` deleted), paper-plane glyph + plain guest link + the `passport-steps.png`
+  "4 steps" card on both. New committed assets in `client/public/auth/`. `.auth-*` overlay
+  classes and their mobile overrides removed from `index.css`.
+- **Responsive / visual-bug pass** (3-agent audit → 9 fixes, live routes only, dead template
+  CSS left alone):
+  - **Nav dead-zone 701–900px** — `elbiyahe.css` hides `.elbiyahe-topbar nav` at ≤900 but the
+    hamburger/bottom-nav only appeared at ≤700, leaving no nav in that band. Added
+    `@media(max-width:900px){.mobile-menu{display:block}}`.
+  - Viewport meta `maximum-scale=1` removed (blocked pinch-zoom).
+  - Google Fonts query now loads Space Grotesk **400** — the shell headings (`font:400 …`) were
+    being faux-synthesized.
+  - `html,body{overflow-x:clip}` safety net; `.admin-table` → `display:block;overflow-x:auto`
+    with `thead/tbody{display:table;min-width:max-content}` so wide admin tables scroll instead
+    of pushing the page 820–1100px.
+  - `.empty-state` was used ~10× with no CSS — gave it a real centered treatment.
+  - Explore + DestinationDetail loading now use the shared `<Loading>` spinner (exported from
+    `ElbiyaheFeatures`); errors use `<LoadError>`.
+  - **Rating unified** — new `client/src/components/Rating.tsx` (`★ N (count)`, renders null
+    when the seed value is absent) replaces 8 divergent treatments ("Reviews coming soon" /
+    "New" / "Ratings coming soon." / bare number / `NaN` risk). Orphaned `.reviews-coming-soon`
+    CSS deleted.
+  - The 4 hand-rolled `modal-backdrop` overlays (Ride/Parking feedback, Suggestion, Parking
+    details) now close on Escape via a shared `useDismissable` hook — parity with App's `<Modal>`.
+- QA: `qa-responsive.mjs` full sweep (25 routes × 7 widths + auth) — **0 horizontal overflow**,
+  0 console errors beyond a pre-existing dev-only `maplibre-gl-worker.mjs` 404. `qa-interactions`
+  Escape-close verified on ride-guide + delicacies modals (same one-liner on the other two).
+  `pnpm check` + `pnpm build` clean. Not committed (this checkout isn't a git repo).
+- **Deferred** (noted in `todo.md`): dead-CSS strip (~55%), `font:400` vs `font:700/800` heading
+  systems, card-token harmonization, `.btn.sm` in `admin.css`, inline-style button sizes.
+
+## 2026-09-07 (Stay & Eat + Passport rebuilds, Mapbox routing, Sign Up rebuild, prod bugfix — all merged to `main`)
+- **Stay & Eat rebuild** (`f07754a`): hero+stat-chip, synced All/Eat/Stay pills + left-rail filters,
+  shared `VenueCard` for accommodations+delicacies, real mini-map + Top Rated widget, honest trust
+  strip. Fixed the Eat half never filtering delicacies by place.
+- **Passport rebuild** (`d427834` + 3 migrations, `4920460`): full dashboard — identity card w/ real
+  QR, procedural line-art `StampBadge`s (no commissioned art), real missions, honest leaderboard,
+  restyled stamp-gate rewards. New DB: `award_passport_xp()` real tier leveling wired into
+  `scan_passport` (was stuck at level 1 forever), `passport_missions`/`claim_mission` RPC,
+  `is_mystery` flag. Grew stamps 4→9 using only real, already-sourced locations (no invented names).
+  `qa-writeflows.mjs` extended with leveling/double-claim checks; fixed a `networkidle` hang in
+  `qa-interactions.mjs`.
+- **Ride Guide/Parking overflow fix + real animated Mapbox routing** (`838621b`): `.detail-layout`
+  was missing `min-width:0` (same root-cause class as an earlier fix), causing real 300px+
+  overflow at 768-1024px. Added `LBMap.tsx`'s `routeGeometry` prop (backward-compatible — Heritage
+  Walk's straight-line route untouched) with a real road-following line + animated traveling dot
+  (respects `prefers-reduced-motion`) via Mapbox Directions (map tiles stay free/keyless OSM).
+  Ships on Parking (real spot data) + one real, web-researched jeepney terminal on Ride Guide
+  (Olivarez Plaza) — no fabricated terminal network. Session-cached per origin+destination.
+  `VITE_MAPBOX_TOKEN` added to `.env.local`/`.env.example`/Vercel prod (swapped once mid-session
+  to the user's dedicated token — both `.env.local` and Vercel updated, redeployed, reverified).
+- **Sign Up / Login rebuild** (`38d0a1f`): split-screen — procedural SVG hero scene (mountain,
+  church, lake, jeepney, foliage; code-drawn, no commissioned art) with 3 pillars + `WaxSealMark` +
+  "Come Curious!" tag; OAuth-first form with a busy state + surfaced errors (previously silent),
+  icon-prefixed fields, password show/hide, consent checkbox **unchecked by default** (PH Data
+  Privacy Act — mockup reference had it checked, decided against), prominent guest CTA, static
+  Passport-journey teaser reusing real `StampBadge`/`WaxSealMark`/`TIER_NAMES` exports. Fixed a
+  real bug: Google OAuth's `redirectTo` was hardcoded to origin, dropping `?next=` — now uses
+  `window.location.href`.
+- **Production bug found + fixed** (`3a2ed64`): `usePassportMissions()` embedded
+  `passport_locations!inner(category)` directly on `passport_scans` — that embed is evaluated
+  under `passport_locations`'s own RLS (admin-only read on the base table), so for every real
+  (non-admin) user, category-based mission progress silently read 0 and Claim never appeared. Only
+  looked fine earlier this session because the QA account (`elbi-tester@example.com`) happens to
+  have `role: admin`. Fixed by joining client-side against `passport_locations_public` instead.
+  Verified against a genuinely plain (`role: user`) throwaway account (deleted after verifying).
+- **Demo account seeded** (data only, not in git): `demo-passport@example.com` /
+  `RasofdL-Hrfe` — all 9 stamps incl. mystery, all 3 missions completed, Completionist/300XP,
+  both rewards unlocked, #1 leaderboard. Separate from `elbi-tester` so QA resets don't touch it.
+- All work pushed to `main` and verified live on `https://el-biyahe.vercel.app` (Playwright checks
+  against prod after each deploy, not just local). `pnpm check`/`pnpm build` clean throughout.
+- **Next**: `photo-checklist.md` (new this session) tracks every real photo still needed —
+  10 destinations, 3 accommodations (needs live-DB verification first), all 14 delicacies, 2 page
+  hero banners. Ride Guide's "Terminal Guide" has only 1 real terminal wired — real terminal
+  coordinates for more jeepney/tricycle stops would need sourcing (couldn't verify more via web
+  search this session). `todo.md`'s broader backlog (community feed, reviews, partner portals,
+  super-admin, etc.) is untouched and still large.
+
+
 ## 2026-09-05 (Delicacies page rebuild toward the ELBi G! mockup — branch `feat/delicacies-page-mockup`, merged to `main`)
 - Same treatment as the Events page rebuild, applied to `/delicacies` (`D:\El-Biyahe!\website\delecacies.png`
   + pasted spec). Real content was thin going in: only 4 delicacies existed, none rated, 0 items across
