@@ -1,5 +1,27 @@
 # Progress Log
 
+## 2026-09-09 (Bus Tours page — 1:1 pass against the mockup)
+Adopted `D:\El-Biyahe!\website\bus tour.png` exactly (`BusTours`/`TourCard` in
+`ElbiyaheFeatures.tsx` + `.elbiyahe-tours-*` in `elbiyahe.css`; no seed/DB/route changes):
+- Hero: ref sub-copy, an orange brush underline on "by bus.", wider bus photo crop, ~230px.
+- Quick Tour Guides: relabelled "Nature Day / Heritage Day / Food Trip / Science & Discovery"
+  with the ref sublines + rust/gold/teal badge tones.
+- Filter bar: single desktop row (`Leaf` icon, "FIND YOUR TOUR", **white bordered pills**,
+  `flex-wrap:nowrap` groups + a groups wrapper so the "Find My Tour" button stays centred
+  right; wraps ≤1200).
+- Popular Tours: grid capped to **first 4 of 7** + a working "See all tours / Show less"
+  toggle; card grid forced **4-up** (→2 ≤1100, →1 ≤620). TourCard: plain outline heart (no
+  white circle), pipe-separated meta row, `•` stop snippet incl. lunch, subtler tag chips.
+- Planner: wider sidebar (380px), 2-col inner (timeline | YOUR DAY), **icon-badge timeline**
+  (`stopIcon()` keyword map), header band.
+- Mood tiles: **wide short banners** (~104px, icon left, left-heavy gradient), ref titles
+  ("Breathe in Los Baños" etc.).
+- Banner row: centre column widened; "Every tour is designed…" ease card is **4-across in one
+  row** (→2×2 ≤900) with the ref's shorter copy; Weekend Pick fixed tagline; passport promo
+  keeps the open-book PNG (no phone-mockup asset).
+- QA: `/tours` 0 overflow at 375/768/1024/1280/1440, 0 console errors; "See all tours" 4↔7;
+  mood banners + theme pills filter and scroll; heart toggles. `pnpm check` + `build` clean.
+
 ## 2026-09-09 (Bus Tours page rebuild + dedicated mobile auth composition)
 - **`/tours` rebuilt** to the supplied spec (§1–§9), same pattern as the Events/Delicacies
   rebuilds. New sections in `BusTours` (`client/src/pages/ElbiyaheFeatures.tsx`): hero card +

@@ -7,7 +7,7 @@ import { Link, useLocation } from "wouter";
 import {
   ArrowLeft, ArrowRight, Atom, BadgeCheck, BedDouble, Bookmark, Bus, CalendarDays, Car, Check, ChevronLeft, ChevronRight,
   Clock3, Compass, ExternalLink, Footprints, Gift, GraduationCap, Heart, Landmark, Leaf, List, Loader2, LocateFixed,
-  MapPin, Navigation, QrCode, Route, Search, Share2, ShoppingBag, SlidersHorizontal, Sparkles, Star, Store, Sun, Ticket,
+  MapPin, Navigation, QrCode, Search, Share2, ShoppingBag, SlidersHorizontal, Sparkles, Star, Store, Sun, Ticket,
   Trophy, User, Users, UsersRound, Utensils, X,
 } from "lucide-react";
 import { useAuth } from "@/lib/supabase/AuthProvider";
@@ -671,24 +671,37 @@ const TOUR_DURATIONS: { key: string; icon: typeof Sun }[] = [
 ];
 const isHalfDay = (d: string | null) => !!d && /half/i.test(d);
 
+const TOUR_THEME_BADGE: Record<TourTheme, string> = {
+  Nature: "var(--forest)", Culture: "#b25b32", Food: "#d99a1e", Science: "#2f7d84",
+};
 const TOUR_GUIDES: { title: string; body: string; theme: TourTheme; href?: string }[] = [
-  { title: "Nature & Trails", body: "Makiling slopes, falls, and crater lakes", theme: "Nature" },
-  { title: "Heritage Walk", body: "The poblacion's churches and old stations", theme: "Culture", href: "/heritage-walk" },
-  { title: "Food Trips", body: "Buko pie, kesong puti, and market finds", theme: "Food" },
-  { title: "Science & Campus", body: "UPLB, IRRI, and the Museum of Natural History", theme: "Science" },
+  { title: "Nature Day", body: "Hot springs, forests & mountain views", theme: "Nature" },
+  { title: "Heritage Day", body: "History, culture & local landmarks", theme: "Culture", href: "/heritage-walk" },
+  { title: "Food Trip", body: "Local flavors & must-try spots", theme: "Food" },
+  { title: "Science & Discovery", body: "UPLB and Laguna's scientific heritage", theme: "Science" },
 ];
 const MOOD_TILES: { theme: TourTheme; photo: string; title: string; body: string }[] = [
-  { theme: "Nature", photo: "/tours/misty-mountains.jpg", title: "Chase the outdoors", body: "Trails, waterfalls, and lakeside views." },
-  { theme: "Culture", photo: "/tours/church-golden.jpg", title: "Walk through history", body: "Colonial churches and heritage streets." },
-  { theme: "Food", photo: "/tours/food-spread-alt.jpg", title: "Eat your way around", body: "Local classics, stop by stop." },
-  { theme: "Science", photo: "/tours/uplb-campus.jpg", title: "Discover how it works", body: "Campus science and living museums." },
+  { theme: "Nature", photo: "/tours/misty-mountains.jpg", title: "Breathe in Los Baños", body: "Makiling, springs, trails and green spaces." },
+  { theme: "Culture", photo: "/tours/heritage-church.jpg", title: "Stories of Los Baños", body: "Heritage sites, landmarks and local history." },
+  { theme: "Food", photo: "/tours/food-spread.jpg", title: "Taste Laguna", body: "Local restaurants, specialities and food stops." },
+  { theme: "Science", photo: "/tours/uplb-campus.jpg", title: "Discover UPLB", body: "Science, agriculture and the university community." },
 ];
 const DAY_EASE: { icon: typeof Bus; label: string; body: string }[] = [
-  { icon: Bus, label: "Transport", body: "Air-conditioned coach from your pickup point and back." },
-  { icon: Compass, label: "Local Guide", body: "A licensed guide who knows the stories behind each stop." },
-  { icon: Route, label: "Curated Stops", body: "A day planned so you see more and rush less." },
-  { icon: Sparkles, label: "Local Experiences", body: "Tastings, walks, and moments you'd miss on your own." },
+  { icon: Bus, label: "Transport", body: "Comfortable group transportation" },
+  { icon: Compass, label: "Local Guide", body: "Know the story behind every stop" },
+  { icon: MapPin, label: "Curated Stops", body: "The places worth your time" },
+  { icon: Utensils, label: "Local Experiences", body: "Taste and experience Los Baños" },
 ];
+
+/** Timeline badge icon for a planner stop, by keyword. */
+function stopIcon(name: string) {
+  const n = name.toLowerCase();
+  if (/depart|meet|pickup|return/.test(n)) return n.includes("return") ? <Check size={12} /> : <Bus size={12} />;
+  if (/lunch|merienda|meal|eat|food|tasting|dairy|pie|cake/.test(n)) return <Utensils size={12} />;
+  if (/museum|church|parish|hall|heritage|cathedral|shrine|station|carillon/.test(n)) return <Landmark size={12} />;
+  if (/souvenir|coffee|pasalubong|market/.test(n)) return <ShoppingBag size={12} />;
+  return <MapPin size={12} />;
+}
 
 const scrollToResults = () =>
   document.getElementById("tours-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -698,7 +711,7 @@ function TourCard({ t, saved, onToggleSave }: {
   saved: boolean;
   onToggleSave: () => void;
 }) {
-  const stopNames = t.stops.map(s => s.name).filter(n => !/^lunch/i.test(n));
+  const stopNames = t.stops.map(s => s.name.replace(/\s*[—-]\s*.*/, "").trim());
   return (
     <article className="elbiyahe-tour-card is-rich">
       <div className="elbiyahe-tour-card-media">
@@ -725,7 +738,7 @@ function TourCard({ t, saved, onToggleSave }: {
           <span><MapPin size={13} /> {t.stops.length} Stops</span>
         </p>
         {stopNames.length > 0 && (
-          <p className="muted elbiyahe-tour-card-stops">{stopNames.slice(0, 3).join(" · ")}{stopNames.length > 3 ? " …" : ""}</p>
+          <p className="muted elbiyahe-tour-card-stops">{stopNames.slice(0, 4).join(" • ")}{stopNames.length > 4 ? " • …" : ""}</p>
         )}
         <div className="elbiyahe-tour-card-foot">
           <b>{peso(t.price_per_seat)}<small> /seat</small></b>
@@ -743,6 +756,7 @@ export function BusTours({ Header, BottomNav, Footer, Button }: Shell) {
   const [audience, setAudience] = useState<string | null>(null);
   const [duration, setDuration] = useState<string | null>(null);
   const [saved, setSaved] = useState<Set<string>>(new Set());
+  const [showAll, setShowAll] = useState(false);
 
   const all = tours ?? [];
   const featured = all.find(t => t.featured) ?? all[0] ?? null;
@@ -750,6 +764,8 @@ export function BusTours({ Header, BottomNav, Footer, Button }: Shell) {
     (!theme || t.tags.includes(theme)) &&
     (!duration || (duration === "Half Day" ? isHalfDay(t.duration) : !isHalfDay(t.duration))),
   );
+  const filtered = Boolean(theme || duration);
+  const visible = showAll || filtered ? list : list.slice(0, 4);
   const pickTheme = (k: TourTheme) => { setTheme(cur => (cur === k ? null : k)); scrollToResults(); };
   const toggleSave = (id: string) =>
     setSaved(cur => { const n = new Set(cur); n.has(id) ? n.delete(id) : n.add(id); return n; });
@@ -765,8 +781,8 @@ export function BusTours({ Header, BottomNav, Footer, Button }: Shell) {
         <section className="elbiyahe-tours-hero">
           <div className="elbiyahe-tours-hero-card" style={{ ["--hero-photo" as any]: "url(/tours/hero-bus-lake.jpg)" }}>
             <p className="eyebrow">SEE MORE, STRESS LESS</p>
-            <h1>Explore Los Baños by bus.</h1>
-            <p>Curated day tours with a coach, a guide, and every stop planned — built for visitors coming in from other cities.</p>
+            <h1>Explore Los Baños <span className="elbiyahe-tours-hero-accent">by bus.</span></h1>
+            <p>Curated day trips connecting the places, flavors, science, and stories that make Los Baños special.</p>
             <div className="elbiyahe-tours-hero-cta">
               <Button variant="soft" onClick={scrollToResults}>Explore Tours <ArrowRight size={15} /></Button>
               <button type="button" className="btn outline elbiyahe-tours-hero-plan" onClick={() => document.getElementById("tours-planner")?.scrollIntoView({ behavior: "smooth", block: "start" })}>
@@ -785,7 +801,7 @@ export function BusTours({ Header, BottomNav, Footer, Button }: Shell) {
               const Icon = th.icon;
               const inner = (
                 <>
-                  <span className="elbiyahe-tours-guide-icon" style={{ background: th.tone }}><Icon size={16} /></span>
+                  <span className="elbiyahe-tours-guide-icon" style={{ background: TOUR_THEME_BADGE[g.theme] }}><Icon size={16} /></span>
                   <span className="elbiyahe-tours-guide-text"><b>{g.title}</b><small>{g.body}</small></span>
                   <ChevronRight size={16} />
                 </>
@@ -800,34 +816,36 @@ export function BusTours({ Header, BottomNav, Footer, Button }: Shell) {
         {/* 2 — FILTER BAR */}
         <section className="elbiyahe-tours-filterbar" aria-label="Find your tour">
           <div className="elbiyahe-tours-filter-intro">
-            <span className="elbiyahe-tours-filter-intro-icon"><Compass size={20} /></span>
-            <div><b>Find your tour</b><small>Tell us your day and we'll narrow it down.</small></div>
+            <span className="elbiyahe-tours-filter-intro-icon"><Leaf size={18} /></span>
+            <div><b>Find your tour</b><small>Tell us what you're looking for and we'll help plan your day.</small></div>
           </div>
-          <div className="elbiyahe-tours-filter-group">
-            <label>Who are you traveling with?</label>
-            <div className="filter-pills">
-              {TOUR_AUDIENCE.map(a => {
-                const Icon = a.icon;
-                return <button key={a.key} type="button" className={audience === a.key ? "active" : ""} onClick={() => setAudience(cur => (cur === a.key ? null : a.key))}><Icon size={14} /> {a.key}</button>;
-              })}
+          <div className="elbiyahe-tours-filter-groups">
+            <div className="elbiyahe-tours-filter-group">
+              <label>Who are you traveling with?</label>
+              <div className="filter-pills">
+                {TOUR_AUDIENCE.map(a => {
+                  const Icon = a.icon;
+                  return <button key={a.key} type="button" className={audience === a.key ? "active" : ""} onClick={() => setAudience(cur => (cur === a.key ? null : a.key))}><Icon size={13} /> {a.key}</button>;
+                })}
+              </div>
             </div>
-          </div>
-          <div className="elbiyahe-tours-filter-group">
-            <label>What kind of day?</label>
-            <div className="filter-pills">
-              {TOUR_THEMES.map(th => {
-                const Icon = th.icon;
-                return <button key={th.key} type="button" className={theme === th.key ? "active" : ""} onClick={() => setTheme(cur => (cur === th.key ? null : th.key))}><Icon size={14} /> {th.key}</button>;
-              })}
+            <div className="elbiyahe-tours-filter-group">
+              <label>What kind of day?</label>
+              <div className="filter-pills">
+                {TOUR_THEMES.map(th => {
+                  const Icon = th.icon;
+                  return <button key={th.key} type="button" className={theme === th.key ? "active" : ""} onClick={() => setTheme(cur => (cur === th.key ? null : th.key))}><Icon size={13} /> {th.key}</button>;
+                })}
+              </div>
             </div>
-          </div>
-          <div className="elbiyahe-tours-filter-group">
-            <label>How much time?</label>
-            <div className="filter-pills">
-              {TOUR_DURATIONS.map(d => {
-                const Icon = d.icon;
-                return <button key={d.key} type="button" className={duration === d.key ? "active" : ""} onClick={() => setDuration(cur => (cur === d.key ? null : d.key))}><Icon size={14} /> {d.key}</button>;
-              })}
+            <div className="elbiyahe-tours-filter-group">
+              <label>How much time?</label>
+              <div className="filter-pills">
+                {TOUR_DURATIONS.map(d => {
+                  const Icon = d.icon;
+                  return <button key={d.key} type="button" className={duration === d.key ? "active" : ""} onClick={() => setDuration(cur => (cur === d.key ? null : d.key))}><Icon size={13} /> {d.key}</button>;
+                })}
+              </div>
             </div>
           </div>
           <Button onClick={scrollToResults}>Find My Tour <ArrowRight size={15} /></Button>
@@ -838,14 +856,16 @@ export function BusTours({ Header, BottomNav, Footer, Button }: Shell) {
           <section className="elbiyahe-tours-main">
             <div className="elbiyahe-row-head">
               <h2>Popular Tours</h2>
-              {(theme || duration) && <button type="button" className="link-accent" onClick={resetFilters}>See all tours <ArrowRight size={13} /></button>}
+              {filtered
+                ? <button type="button" className="link-accent" onClick={resetFilters}>See all tours <ArrowRight size={13} /></button>
+                : list.length > 4 && <button type="button" className="link-accent" onClick={() => setShowAll(v => !v)}>{showAll ? "Show less" : "See all tours"} <ArrowRight size={13} /></button>}
             </div>
             {isLoading && <Loading />}
             {error && <LoadError message={(error as Error).message} />}
             {!isLoading && !error && (
               list.length > 0 ? (
                 <div className="elbiyahe-tour-grid">
-                  {list.map(t => <TourCard key={t.id} t={t} saved={saved.has(t.id)} onToggleSave={() => toggleSave(t.id)} />)}
+                  {visible.map(t => <TourCard key={t.id} t={t} saved={saved.has(t.id)} onToggleSave={() => toggleSave(t.id)} />)}
                 </div>
               ) : (
                 <div className="empty-state">
@@ -858,18 +878,23 @@ export function BusTours({ Header, BottomNav, Footer, Button }: Shell) {
 
           {featured && (
             <aside className="elbiyahe-tours-planner" id="tours-planner">
-              <span className="eyebrow">PLAN YOUR LOS BAÑOS DAY</span>
-              <ol className="elbiyahe-tours-timeline">
-                {featured.stops.map(s => (
-                  <li key={s.sort}><span className="elbiyahe-tours-timeline-dot" /><b>{s.time_label}</b><span>{s.name}</span></li>
-                ))}
-              </ol>
-              <div className="elbiyahe-tours-yourday">
-                <b>YOUR DAY</b>
-                <p><MapPin size={14} /> {featured.stops.length} destinations</p>
-                <p><Bus size={14} /> Transport included</p>
-                <p><Utensils size={14} /> {lunchLine}</p>
-                <p><Clock3 size={14} /> {featured.duration}</p>
+              <span className="eyebrow elbiyahe-tours-planner-head">PLAN YOUR LOS BAÑOS DAY</span>
+              <div className="elbiyahe-tours-planner-inner">
+                <ol className="elbiyahe-tours-timeline">
+                  {featured.stops.map(s => (
+                    <li key={s.sort}>
+                      <span className="elbiyahe-tours-timeline-icon">{stopIcon(s.name)}</span>
+                      <b>{s.time_label}</b><span>{s.name}</span>
+                    </li>
+                  ))}
+                </ol>
+                <div className="elbiyahe-tours-yourday">
+                  <b>YOUR DAY</b>
+                  <p><MapPin size={14} /> {featured.stops.length} destinations</p>
+                  <p><Bus size={14} /> Transportation included</p>
+                  <p><Utensils size={14} /> {lunchLine}</p>
+                  <p><Clock3 size={14} /> {featured.duration}</p>
+                </div>
               </div>
               <p className="elbiyahe-tours-planner-price">From {peso(featured.price_per_seat)}/person</p>
               <Button href={`/tours/${featured.slug}`}>Build This Trip <ArrowRight size={15} /></Button>
@@ -887,7 +912,7 @@ export function BusTours({ Header, BottomNav, Footer, Button }: Shell) {
               return (
                 <button key={m.theme} type="button" className="elbiyahe-tours-mood-tile" onClick={() => pickTheme(m.theme)}
                   style={{ ["--tile-photo" as any]: `url(${m.photo})` }}>
-                  <span className="elbiyahe-tours-mood-icon" style={{ background: th.tone }}><Icon size={15} /></span>
+                  <span className="elbiyahe-tours-mood-icon" style={{ background: TOUR_THEME_BADGE[m.theme] }}><Icon size={16} /></span>
                   <span className="elbiyahe-tours-mood-copy">
                     <small>{m.theme}</small>
                     <b>{m.title}</b>
@@ -905,7 +930,7 @@ export function BusTours({ Header, BottomNav, Footer, Button }: Shell) {
             <div className="elbiyahe-tours-weekend" style={{ ["--hero-photo" as any]: "url(/tours/bus-on-road.jpg)" }}>
               <p className="eyebrow">WEEKEND PICK</p>
               <h3>{featured.title}</h3>
-              <p>{featured.summary}</p>
+              <p>A full day of nature, heritage &amp; local flavors.</p>
               <p className="elbiyahe-tours-weekend-price">{peso(featured.price_per_seat)}/person</p>
               <Link href={`/tours/${featured.slug}`} className="btn soft">Explore Tour <ArrowRight size={14} /></Link>
             </div>
