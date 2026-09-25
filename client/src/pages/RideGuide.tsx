@@ -1,3 +1,5 @@
+import { conceptImages } from "@/lib/conceptImages";
+import { PassportPromoCard } from "@/components/shell";
 /* El-Biyahe! priority feature tabs — Events, Bus Tours, Passport, Ride Guide, and a
    shared Coming Soon placeholder. Data comes from Supabase via
    @/lib/supabase/queries. Shared shell (Header/BottomNav/Footer/Button/Tag) is
@@ -108,7 +110,7 @@ function RouteCard({ r }: { r: RideRoute }) {
   return (
     <article className="elbiyahe-tour-card elbiyahe-route-card">
       <div className="elbiyahe-tour-card-media">
-        <img src={r.image || "/scenes/elbiyahe-bus.svg"} alt="" />
+        <img src={r.image || conceptImages.transpoJeepneyStreet.src} alt="" />
         <span className="elbiyahe-badge">ROUTE {r.sort}</span>
       </div>
       <div className="elbiyahe-tour-card-body">
@@ -229,7 +231,7 @@ export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
             </div>
           </div>
           <div className="elbiyahe-transpo-hero-media">
-            <img src="/scenes/elbiyahe-bus.svg" alt="" />
+            <img src={conceptImages.transpoJeepneyHero.src} alt={conceptImages.transpoJeepneyHero.alt} />
             {heroTip && (
               <div className="elbiyahe-transpo-tip-chip">
                 <Sparkles size={16} />
@@ -409,12 +411,7 @@ export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
                 <Link href="/explore" className="btn outline">View Full Map <ArrowRight size={13} /></Link>
               </div>
 
-              <div className="elbiyahe-newsletter-card">
-                <QrCode size={22} />
-                <h4>Collect. Eat. Earn!</h4>
-                <p>Explore spots and earn rewards with your LB Passport.</p>
-                <Link href="/passport" className="btn outline">Learn More <ArrowRight size={13} /></Link>
-              </div>
+              <PassportPromoCard body="Scan spots, collect stamps, and earn rewards with your LB Passport." />
             </aside>
           </div>
         )}

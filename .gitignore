@@ -127,3 +127,4 @@ scratchpad-build/
 
 # Orca worker screenshots
 .orca-shots/
+.playwright-mcp/

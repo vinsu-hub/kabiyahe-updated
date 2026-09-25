@@ -1,3 +1,4 @@
+import { conceptImages } from "@/lib/conceptImages";
 /* El-Biyahe! priority feature tabs — Events, Bus Tours, Passport, Ride Guide, and a
    shared Coming Soon placeholder. Data comes from Supabase via
    @/lib/supabase/queries. Shared shell (Header/BottomNav/Footer/Button/Tag) is
@@ -319,7 +320,7 @@ export function Parking({ Header, BottomNav, Footer, Button }: Shell) {
             </div>
           </div>
           <div className="elbiyahe-transpo-hero-media">
-            <img src="/scenes/elbiyahe-bus.svg" alt="" />
+            <img src={conceptImages.transpoJeepneyStreet.src} alt={conceptImages.transpoJeepneyStreet.alt} />
           </div>
         </section>
 

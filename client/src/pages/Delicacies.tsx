@@ -1,4 +1,6 @@
 import "@/styles/pages/delicacies.css";
+import { conceptImages } from "@/lib/conceptImages";
+import { PassportPromoCard } from "@/components/shell";
 /* El-Biyahe! priority feature tabs — Events, Bus Tours, Passport, Ride Guide, and a
    shared Coming Soon placeholder. Data comes from Supabase via
    @/lib/supabase/queries. Shared shell (Header/BottomNav/Footer/Button/Tag) is
@@ -113,7 +115,7 @@ function DelicacyCard({ d, distanceLabel }: { d: DelicacyRow; distanceLabel?: st
   return (
     <article className="elbiyahe-tour-card elbiyahe-delicacy-card">
       <div className="elbiyahe-tour-card-media">
-        <img src={d.hero_image || "/scenes/elbiyahe-food.svg"} alt={d.name} />
+        <img src={d.hero_image || conceptImages.foodBukoPie.src} alt={d.name} />
         {d.featured && <span className="elbiyahe-badge ochre">FEATURED</span>}
         <button
           className={`elbiyahe-card-bookmark ${saved ? "on" : ""}`}
@@ -233,7 +235,7 @@ export function Delicacies({ Header, BottomNav, Footer, Button }: Shell) {
             <p className="muted">Discover the flavors that make Los Baños special.</p>
             <div className="elbiyahe-hero-stat-chip"><Utensils size={20} /> <div><b>{items.length}</b><span>Delicacies to try</span></div></div>
           </div>
-          <div className="elbiyahe-delicacies-hero-media"><img src="/scenes/elbiyahe-food.svg" alt="" /></div>
+          <div className="elbiyahe-delicacies-hero-media"><img src={conceptImages.foodSilogHero.src} alt={conceptImages.foodSilogHero.alt} /></div>
         </section>
 
         <div className="elbiyahe-events-layout">
@@ -344,7 +346,7 @@ export function Delicacies({ Header, BottomNav, Footer, Button }: Shell) {
                 const km = withDistance(d);
                 return (
                   <div className="elbiyahe-discover-row" key={d.id}>
-                    <img src={d.hero_image || "/scenes/elbiyahe-food.svg"} alt="" />
+                    <img src={d.hero_image || conceptImages.foodBukoPie.src} alt="" />
                     <div>
                       <b>{d.name}</b>
                       <small>{d.category}{km != null ? ` · ${formatDistance(km)}` : ""}</small>
@@ -354,12 +356,7 @@ export function Delicacies({ Header, BottomNav, Footer, Button }: Shell) {
                 );
               })}
             </div>
-            <div className="elbiyahe-newsletter-card">
-              <QrCode size={22} />
-              <h4>Collect. Eat. Earn!</h4>
-              <p>Scan spots, collect stamps, and earn rewards with your LB Passport.</p>
-              <Link href="/passport" className="btn outline">Open Passport</Link>
-            </div>
+            <PassportPromoCard body="Scan spots, collect stamps, and earn rewards with your LB Passport." />
           </aside>
         </div>
       </main>

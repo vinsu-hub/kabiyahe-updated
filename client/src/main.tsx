@@ -5,6 +5,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import "./styles/theme.css";
 import "./index.css";
 import "./elbiyahe.css";
+import "./styles/shared-rails.css";
 import "./admin.css";
 import App from "./App";
 

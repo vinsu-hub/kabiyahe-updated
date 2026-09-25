@@ -1,4 +1,4 @@
-import { Link, useLocation } from "wouter";
+import { Link, Redirect, useLocation } from "wouter";
 import { CalendarDays, Bus, QrCode, LayoutDashboard, ArrowLeft, Loader2, Utensils, BedDouble, Car, Compass, LogOut, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/lib/supabase/AuthProvider";
 
@@ -15,9 +15,8 @@ const NAV = [
 
 export function RequireAdmin({ children }: { children: React.ReactNode }) {
   const { loading, isAuthenticated, isAdmin } = useAuth();
-  const [, navigate] = useLocation();
   if (loading) return <div className="admin-gate"><Loader2 className="elbiyahe-spin" /> Checking access…</div>;
-  if (!isAuthenticated) { navigate("/login?next=/admin"); return null; }
+  if (!isAuthenticated) return <Redirect to="/login?next=/admin" />;
   if (!isAdmin) {
     return (
       <div className="admin-gate">
