@@ -1,0 +1,95 @@
+/* ===================== Passport page: dashboard layout ===================== */
+.elbiyahe-passport-hero{position:relative}
+.elbiyahe-wax-seal{position:absolute;right:14px;top:14px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
+
+.elbiyahe-passport-dashboard{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;margin-top:20px}
+.elbiyahe-passport-dashboard>.main{display:flex;flex-direction:column;gap:22px;min-width:0}
+.elbiyahe-passport-dashboard>.side{display:flex;flex-direction:column;gap:16px}
+@media(max-width:1150px){
+  .elbiyahe-passport-dashboard{display:block}
+  .elbiyahe-passport-dashboard>.side{margin-top:20px}
+}
+
+.elbiyahe-passport-card{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px}
+.elbiyahe-passport-card-id{display:flex;align-items:center;gap:14px}
+.elbiyahe-passport-card-id div{display:flex;flex-direction:column;gap:4px}
+.elbiyahe-passport-card-id b{font:700 17px 'Poppins',sans-serif;color:var(--forest)}
+.elbiyahe-passport-card-progress{display:flex;align-items:center;gap:16px;flex:1;min-width:220px;max-width:320px}
+.elbiyahe-passport-card-xp{flex:1}
+.elbiyahe-passport-card-xp .progress{margin-bottom:6px}
+@media(max-width:700px){.elbiyahe-passport-card{flex-direction:column;align-items:stretch}.elbiyahe-passport-card-progress{max-width:none}}
+
+.elbiyahe-identity-qr{display:flex;flex-direction:column;align-items:center;gap:4px;flex:none}
+.elbiyahe-identity-qr img,.elbiyahe-identity-qr-placeholder{width:72px;height:72px;border-radius:8px;background:#fff;border:1px solid var(--line)}
+.elbiyahe-identity-qr small{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.03em;text-align:center}
+
+.elbiyahe-passport-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.elbiyahe-passport-stats-grid>div{background:#eef3ec;border-radius:12px;padding:14px;text-align:center}
+.elbiyahe-passport-stats-grid b{display:block;font:800 22px 'Poppins',sans-serif;color:var(--forest)}
+.elbiyahe-passport-stats-grid span{font-size:11px;color:var(--muted);font-weight:600}
+@media(max-width:700px){.elbiyahe-passport-stats-grid{grid-template-columns:repeat(2,1fr)}}
+
+.elbiyahe-share-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+
+.elbiyahe-stamp-badge{display:grid;place-items:center;border-radius:50%}
+.elbiyahe-stamp-badge.locked{filter:grayscale(1) opacity(.45)}
+.elbiyahe-stamps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:14px;margin-top:14px}
+.elbiyahe-stamp-slot{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.elbiyahe-stamp-slot small{font-size:11px;color:var(--muted);font-weight:600}
+
+.elbiyahe-missions-list{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.elbiyahe-mission-card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.elbiyahe-mission-card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:8px}
+.elbiyahe-mission-card-head p{margin:2px 0 0;font-size:12px}
+.elbiyahe-mission-card .progress{margin-bottom:8px}
+.elbiyahe-mission-card-foot{display:flex;justify-content:space-between;align-items:center}
+
+.elbiyahe-passport-banner{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;background:var(--forest);color:var(--cream);border-radius:16px;padding:18px 20px}
+.elbiyahe-passport-banner b{display:block;color:#fff}
+.elbiyahe-passport-banner p{margin:2px 0 0;opacity:.85;font-size:13px}
+.elbiyahe-skyline-motif{position:absolute;left:0;right:0;bottom:0;height:60px;opacity:.15;pointer-events:none}
+
+.elbiyahe-leaderboard-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.elbiyahe-leaderboard-row:first-of-type{border-top:0}
+.elbiyahe-leaderboard-row b:first-child{width:26px;color:var(--forest);font-size:13px}
+.elbiyahe-leaderboard-row div{flex:1}
+.elbiyahe-leaderboard-row small{color:var(--muted);font-size:11px}
+.elbiyahe-leaderboard-row.me{background:#eef3ec;border-radius:10px;margin-top:4px;padding:8px 8px}
+
+
+
+
+/* Concept board: passport workspace */
+.elbiyahe-page:has(.elbiyahe-passport-hero){width:min(1380px,calc(100% - 64px));padding-top:8px}
+.elbiyahe-passport-hero.shell-page-hero{min-height:205px;grid-template-columns:minmax(0,1fr) 52%;background:#fff;border-radius:0;overflow:hidden;margin-bottom:0}
+.elbiyahe-passport-hero .shell-page-hero-image{left:auto;width:61%;object-position:center 52%;border-radius:0 14px 14px 0}
+.elbiyahe-passport-hero.shell-page-hero:before{background:linear-gradient(90deg,#fff 0%,#fff 39%,rgba(255,255,255,.88) 47%,transparent 63%)}
+.elbiyahe-passport-hero .shell-page-hero-copy{padding:16px;align-self:center}
+.elbiyahe-passport-hero h1{font:700 clamp(31px,3.35vw,48px)/1.1 Poppins,sans-serif;color:var(--forest);white-space:nowrap;margin:0 0 4px}
+.elbiyahe-passport-hero .shell-hero-subtitle{color:#802e2a;font-size:23px;margin:0 0 5px}
+.elbiyahe-passport-hero .shell-hero-body{font-size:14px;max-width:285px;color:#1e2922;margin:0;line-height:1.55}
+.elbiyahe-passport-hero .shell-hero-actions{margin-top:12px}
+.elbiyahe-scan-btn{background:var(--forest);color:#fff;border-radius:8px;padding:9px 14px;display:inline-flex;align-items:center;gap:8px;font-weight:700}
+.elbiyahe-passport-hero .shell-page-hero-card{justify-self:start;align-self:center;padding:0;margin-left:15%}
+.elbiyahe-hero-seal{width:142px;height:142px;border:3px double rgba(5,64,46,.38);border-radius:50%;display:grid;place-items:center;transform:rotate(-15deg);opacity:.58;background:rgba(255,255,255,.28)}
+.elbiyahe-hero-seal .elbiyahe-wax-seal{position:static;filter:none;opacity:.6}
+.elbiyahe-hero-seal span{display:none}
+.elbiyahe-passport-dashboard{grid-template-columns:minmax(0,2.65fr) minmax(300px,1fr);gap:16px;margin-top:0}
+.elbiyahe-passport-dashboard>.main{display:grid;grid-template-columns:minmax(275px,36%) minmax(0,1fr);align-items:start;gap:14px}
+.elbiyahe-passport-card{grid-column:1;grid-row:1 / span 2;background:linear-gradient(140deg,#073925,#00422f);color:#fff;min-height:390px;display:flex;flex-direction:column;align-items:stretch;justify-content:space-between;padding:24px;border:0;box-shadow:0 14px 28px rgba(3,62,39,.16)}
+.elbiyahe-passport-card-heading{display:flex;align-items:center;gap:12px;color:var(--makiling-gold)}
+.elbiyahe-passport-card-heading .elbiyahe-wax-seal{position:static;filter:none}
+.elbiyahe-passport-card-heading .script-accent{display:block;font-size:26px;line-height:1}
+.elbiyahe-passport-card-heading strong{display:block;letter-spacing:.08em;font:700 22px Poppins}
+.elbiyahe-passport-card-id{align-self:stretch}.elbiyahe-passport-card-id .avatar{width:65px;height:65px;font-size:27px;background:#b18853;flex:none}.elbiyahe-passport-card-id>div{gap:5px}.elbiyahe-passport-card-id b{color:#fff;font-size:18px}.elbiyahe-passport-card-id small{color:#d7e6d6;font-size:11px}.elbiyahe-passport-card-id .elbiyahe-badge{width:max-content;background:rgba(255,255,255,.16);color:#fff}
+.elbiyahe-passport-card-progress{border-top:1px solid rgba(245,184,46,.4);padding-top:18px;max-width:none;min-width:0;width:100%;justify-content:space-between;align-items:end;flex-direction:row-reverse}.elbiyahe-passport-card-progress>div:first-child>small{display:none}.elbiyahe-passport-card-xp{min-width:0}.elbiyahe-passport-card-xp>span{display:block;font-weight:700;margin-bottom:10px}.elbiyahe-passport-card-xp small{color:#d9e9db;font-size:11px}.elbiyahe-passport-card-xp .progress{height:5px;background:#2b634d}.elbiyahe-passport-card-xp .progress span{background:var(--makiling-gold)}.elbiyahe-identity-qr small{color:#e2eade;font-size:8px}.elbiyahe-identity-qr img{width:65px;height:65px}
+.elbiyahe-passport-stats{grid-column:1;grid-row:3}.elbiyahe-passport-stats h2{font-size:16px;margin:0 0 10px}.elbiyahe-passport-stats-grid{gap:8px}.elbiyahe-passport-stats-grid .shell-stat-tile{min-width:0;align-items:center;text-align:center;padding:12px 5px;gap:3px;background:#fff}.elbiyahe-passport-stats-grid svg{color:var(--forest)}.elbiyahe-passport-stats-grid strong{font-size:19px;line-height:1.2}.elbiyahe-passport-stats-grid span{font-size:10px;color:#343e36}
+.elbiyahe-share-row{grid-column:1;grid-row:4;border:1px solid #a7c3b1;border-radius:10px;padding:10px 12px;gap:8px}.elbiyahe-share-row .muted{font-size:11px}.elbiyahe-share-row .btn{background:var(--forest);color:#fff;font-size:11px}
+.elbiyahe-passport-dashboard .elbiyahe-nearby-stamps{grid-column:1 / -1;order:8;background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px}.elbiyahe-nearby-head{display:flex;justify-content:space-between;gap:10px}.elbiyahe-nearby-head h2{margin:0 0 9px;font-size:16px}
+.elbiyahe-passport-dashboard .elbiyahe-event-group{grid-column:2;grid-row:auto;margin:0;background:#fff;border:1px solid var(--line);border-radius:12px;padding:15px}.elbiyahe-passport-dashboard .elbiyahe-event-group h2{margin:0;font-size:17px;color:#1d2c21}.elbiyahe-row-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.elbiyahe-row-head .muted{font-size:11px;color:#1e2f22}.elbiyahe-stamps-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:10px 5px;margin-top:14px}.elbiyahe-stamp-badge,.elbiyahe-stamp-badge svg{max-width:100%;height:auto!important;aspect-ratio:1}.elbiyahe-stamp-slot small{font-size:10px;color:#182a1e;line-height:1.25}.elbiyahe-section-intro{font-size:11px;margin:0 0 9px}.elbiyahe-missions-list{gap:0;margin:0}.elbiyahe-mission-card{border-radius:9px;margin-top:5px;padding:9px}.elbiyahe-mission-card-head b{font-size:12px}.elbiyahe-mission-card-head p{font-size:10px}.elbiyahe-mission-card .progress{height:5px;max-width:75%;margin:0}.elbiyahe-mission-card-foot{margin-top:4px}.elbiyahe-mission-card-foot small{font-size:10px}.elbiyahe-passport-banner{grid-column:2;background:#f7f2e9;color:var(--forest);border:1px solid var(--line);padding:18px;min-height:82px}.elbiyahe-passport-banner b{color:var(--forest)}.elbiyahe-passport-banner p{font-size:11px}.elbiyahe-skyline-motif{opacity:.08}
+.elbiyahe-passport-dashboard>.side{gap:12px;padding-top:8px}.elbiyahe-passport-dashboard .shell-right-rail-card{background:#fff;padding:18px}.elbiyahe-passport-dashboard .shell-right-rail-card h2{margin:0 0 12px;font-size:16px;color:#1c2920}.elbiyahe-reward{background:none;border-top:1px solid #eee9df;border-radius:0;padding:10px 0;gap:9px}.elbiyahe-reward img{width:58px;height:58px;object-fit:cover;border-radius:8px}.elbiyahe-reward b{font-size:12px}.elbiyahe-reward small{display:block;font-size:10px;line-height:1.25}.elbiyahe-reward em{display:inline-block;color:var(--forest);background:#eaf2e8;border-radius:4px;padding:2px 4px;font-size:9px;font-style:normal;margin-top:4px}.elbiyahe-reward-state{letter-spacing:0;color:var(--forest);font-size:10px}.elbiyahe-reward-help{border-top:1px solid var(--line);padding-top:10px;margin:0;font-size:10px;color:var(--muted)}.elbiyahe-leaderboard-row{padding:7px 0}.elbiyahe-leaderboard-row div b{font-size:11px}.elbiyahe-passport-dashboard .shell-passport-promo{min-height:160px}.elbiyahe-passport-dashboard .shell-passport-promo .elbiyahe-stamp-badge{filter:brightness(0) invert(1);opacity:.75}
+.elbiyahe-passport-why{display:flex;align-items:center;gap:20px;background:#fffdf8;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-top:16px}.elbiyahe-passport-why>div:first-child{min-width:205px}.elbiyahe-passport-why h2{font-size:20px!important;color:#752c2a!important;margin:0 0 3px}.elbiyahe-passport-why p{font-size:11px;margin:0}.elbiyahe-passport-why .shell-community-strip{flex:1;border:0;padding:0;gap:10px}.elbiyahe-passport-why .shell-community-strip>div{flex:1;display:grid;grid-template-columns:34px 1fr;align-content:center;gap:0 5px;min-width:0;border-left:1px solid var(--line);padding-left:12px}.elbiyahe-passport-why .shell-community-strip>div>span{grid-row:1 / span 2}.elbiyahe-passport-why .shell-community-strip strong{font-size:11px}.elbiyahe-passport-why .shell-community-strip small{font-size:10px;line-height:1.3}
+@media(max-width:1150px){.elbiyahe-passport-dashboard{display:grid;grid-template-columns:1fr}.elbiyahe-passport-dashboard>.side{display:grid;grid-template-columns:repeat(3,1fr);margin:0}.elbiyahe-passport-why{display:block}.elbiyahe-passport-why .shell-community-strip{margin-top:14px}}
+@media(max-width:700px){.elbiyahe-page:has(.elbiyahe-passport-hero){width:calc(100% - 32px);padding-top:0}.elbiyahe-passport-hero.shell-page-hero{display:block;min-height:340px}.elbiyahe-passport-hero .shell-page-hero-image{top:155px;left:0;width:100%;height:185px;border-radius:0 0 12px 12px}.elbiyahe-passport-hero.shell-page-hero:before{background:linear-gradient(#fff 0 44%,rgba(255,255,255,.3) 60%,transparent 90%)}.elbiyahe-passport-hero .shell-page-hero-copy{padding:17px 4px}.elbiyahe-passport-hero h1{font-size:29px;white-space:normal}.elbiyahe-passport-hero .shell-hero-subtitle{font-size:21px}.elbiyahe-passport-hero .shell-hero-body{font-size:12px;max-width:235px}.elbiyahe-passport-hero .shell-hero-actions{position:absolute;top:207px;left:12px;margin:0}.elbiyahe-passport-hero .shell-page-hero-card{position:absolute;right:6px;bottom:13px;padding:0;margin:0}.elbiyahe-hero-seal{width:82px;height:82px}.elbiyahe-hero-seal .elbiyahe-wax-seal{width:65px;height:65px}.elbiyahe-passport-dashboard>.main{display:flex;flex-direction:column;gap:12px}.elbiyahe-passport-card,.elbiyahe-passport-stats,.elbiyahe-share-row,.elbiyahe-passport-dashboard .elbiyahe-event-group,.elbiyahe-passport-banner{width:100%}.elbiyahe-passport-card{min-height:320px}.elbiyahe-passport-stats-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.elbiyahe-passport-stats-grid .shell-stat-tile{padding:10px 2px}.elbiyahe-passport-stats-grid strong{font-size:16px}.elbiyahe-passport-stats-grid span{font-size:9px}.elbiyahe-stamps-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.elbiyahe-passport-dashboard>.side{grid-template-columns:1fr}.elbiyahe-passport-why .shell-community-strip{display:grid;grid-template-columns:1fr 1fr}.elbiyahe-passport-why .shell-community-strip>div{width:auto;border-left:0;padding:8px 2px}.elbiyahe-passport-why .shell-community-strip small{font-size:9px}.elbiyahe-share-row{order:7}}
+
+.elbiyahe-passport-hero .elbiyahe-scan-btn{width:max-content;max-width:100%}

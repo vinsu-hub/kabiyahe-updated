@@ -1,0 +1,61 @@
+/* Shared rail/filter/card styles for Delicacies, Ride Guide and Parking, restored from main.
+   They lived in events.css after the page split and were dropped when Events was rebuilt. */
+.filter-rail{padding:28px 16px;border-right:1px solid var(--line);background:#f8f4ea}
+.rail-title{display:flex;justify-content:space-between;font-weight:800;margin:8px}
+.rail-title.spaced{margin-top:27px}
+.filter-rail>button{width:100%;display:flex;gap:10px;align-items:center;text-align:left;padding:9px 10px;background:transparent;border-radius:8px;margin:2px 0}
+.filter-rail>button.selected{background:#e5eadb;color:var(--forest);font-weight:700}
+.search-row{display:flex;align-items:center;gap:10px}
+.searchbox{height:44px;width:380px;border:1px solid var(--line);border-radius:12px;background:var(--paper);display:flex;align-items:center;gap:9px;padding:0 13px}
+.searchbox input{border:0;outline:0;background:transparent;width:100%}
+.empty-state h3{font:400 22px 'Space Grotesk';color:var(--forest);margin:0 0 6px}
+.modal-head h2{font:400 24px 'Space Grotesk';color:var(--forest);margin:0}
+.detail-copy h2{font:400 24px 'Space Grotesk';color:var(--forest);margin:19px 0 8px}
+.elbiyahe-page h2{font:700 22px 'Space Grotesk',sans-serif;color:var(--forest);margin:22px 0 12px}
+.elbiyahe-transpo-hero h1{color:#fff;font:700 32px/1.15 'Space Grotesk',sans-serif;margin:6px 0}
+.elbiyahe-events-layout{display:grid;grid-template-columns:240px 1fr 300px;gap:24px;align-items:start}
+.elbiyahe-events-main{min-width:0}
+.elbiyahe-events-filter-rail{border-radius:14px;border:1px solid var(--line)}
+.elbiyahe-events-filter-rail .rail-title h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.elbiyahe-radio-group{display:grid;gap:8px;margin:0 8px 6px}
+.elbiyahe-radio{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink)}
+.elbiyahe-radio input{width:15px;height:15px;accent-color:var(--forest)}
+.elbiyahe-rail-select{width:calc(100% - 16px);margin:0 8px 10px;min-height:38px;border-radius:10px;border:1px solid var(--line);background:var(--paper);padding:0 10px;font-weight:600;color:var(--ink)}
+.elbiyahe-rail-select-wrap{display:flex;align-items:center;gap:6px;margin:0 8px;color:var(--muted)}
+.elbiyahe-rail-select-wrap .elbiyahe-rail-select{margin:0;flex:1}
+.elbiyahe-events-filter-rail>.btn{width:calc(100% - 16px);margin:14px 8px 8px}
+.elbiyahe-events-main-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.elbiyahe-results-count{font-size:13px;font-weight:600;color:var(--muted);margin:0}
+.elbiyahe-filters-toggle{display:none}
+.elbiyahe-card-bookmark{position:absolute;top:10px;right:10px;z-index:1;width:30px;height:30px;border-radius:999px;background:rgba(255,255,255,.92);display:grid;place-items:center;color:var(--forest);box-shadow:var(--shadow)}
+.elbiyahe-widget-rail{display:flex;flex-direction:column;gap:16px}
+.elbiyahe-featured-card{display:flex;flex-direction:column;gap:4px}
+.elbiyahe-featured-card h3{margin:2px 0 4px;font-size:17px}
+.elbiyahe-featured-card .btn{width:100%;margin-top:6px}
+.elbiyahe-newsletter-card{background:var(--forest);color:var(--cream);display:flex;flex-direction:column;gap:8px}
+.elbiyahe-newsletter-card h4{color:#fff;margin:0;font:700 16px 'Space Grotesk',sans-serif}
+.elbiyahe-newsletter-card p{margin:0;opacity:.85;font-size:12px}
+.elbiyahe-newsletter-card input{min-height:40px;border-radius:10px;border:0;padding:0 12px;background:#fff;color:#1c1c1c}
+.elbiyahe-newsletter-card .btn{width:100%}
+@media(max-width:1150px){.elbiyahe-events-layout{display:block}}
+@media(max-width:1150px){.elbiyahe-widget-rail{margin-top:20px}}
+@media(max-width:1150px){.elbiyahe-filters-toggle{display:inline-flex}}
+.elbiyahe-delicacies-hero h1{color:#fff;font:700 34px/1.1 'Space Grotesk',sans-serif;margin:6px 0}
+.elbiyahe-hero-stat-chip b{display:block;font:800 18px 'Space Grotesk',sans-serif}
+
+/* QA fixes: transpo/parking hero (the button sat forest-on-forest, input text inherited cream on white, mobile clipped) */
+.elbiyahe-transpo-hero>*{min-width:0}
+.elbiyahe-transpo-hero .search-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.elbiyahe-transpo-hero .searchbox{flex:1 1 240px;width:auto;max-width:100%;min-width:0}
+.elbiyahe-transpo-hero .searchbox input{color:var(--ink)}
+.elbiyahe-transpo-hero .searchbox input::placeholder{color:var(--muted)}
+.elbiyahe-transpo-hero .btn.primary{background:var(--makiling-gold);color:var(--elbi-forest);box-shadow:none}
+.elbiyahe-transpo-hero .btn.primary:hover{background:#ffc94d}
+@media(max-width:720px){
+  .elbiyahe-transpo-hero{grid-template-columns:minmax(0,1fr);padding:20px;gap:16px}
+  .elbiyahe-transpo-hero h1{font-size:26px;overflow-wrap:anywhere}
+  .elbiyahe-transpo-hero .btn.primary{width:100%}
+  .elbiyahe-transpo-hero-media{height:180px}
+}
+/* Parking guide rows: .step-icon is absolutely positioned for the Home steps; keep it inline here */
+.action-row .step-icon{position:static;width:36px;height:36px;flex:none}

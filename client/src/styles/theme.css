@@ -1,0 +1,25 @@
+:root {
+  --elbi-forest: #07543f;
+  --makiling-green: #2e7d4f;
+  --laguna-blue: #168bc4;
+  --makiling-gold: #f5b82e;
+  --biyahe-coral: #f15b3a;
+  --warm-cream: #f7f1e3;
+  --soft-cloud: #ddebf2;
+  --stone: #3b3b3b;
+  --forest: var(--elbi-forest);
+  --forest-2: #043b2c;
+  --sage: var(--makiling-green);
+  --teal: var(--makiling-green);
+  --ochre: var(--makiling-gold);
+  --cream: var(--warm-cream);
+  --ink: var(--stone);
+  --primary: var(--elbi-forest);
+  --secondary-foreground: var(--elbi-forest);
+  --accent: var(--makiling-gold);
+  --ring: var(--makiling-gold);
+  --background: var(--warm-cream);
+  --foreground: var(--stone);
+}
+:where(h1, h2, h3, h4, h5, h6) { font-family: Poppins, sans-serif; font-weight: 700; }
+.script-accent { font-family: 'Kaushan Script', cursive; font-weight: 400; }

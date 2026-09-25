@@ -2,10 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import QRCode from "qrcode";
-import { Plus, Trash2, Download, Loader2, X } from "lucide-react";
+import { Plus, Trash2, Download, Loader2, X, CalendarDays, QrCode, Users, Bus, Store, BedDouble, Utensils, Car, Compass, Gift, ArrowRight, ShieldCheck, ClipboardList } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { adminCounts, deleteRow, listAdmin, replaceChildren, slugify, uploadMedia, upsertRow } from "@/lib/supabase/admin";
 import { AdminShell } from "./AdminShell";
+import { StatTile } from "@/components/shell";
 import type {
   AccommodationRow, DelicacyRow, DestinationRow, EventDetailRow, ParkingSpotRow, PassportLocationPublic, PassportReward,
   Season, TourOperator, TourPackageDetail,
@@ -83,30 +84,31 @@ function useSeasonsList() {
 
 export function AdminDashboard() {
   const { data, isLoading } = useQuery({ queryKey: ["admin", "counts"], queryFn: adminCounts });
-  return (
-    <AdminShell title="Dashboard">
-      {isLoading ? <Loader2 className="elbiyahe-spin" /> : (
-        <div className="admin-stat-grid">
-          {[
-            ["Events", data!.events, "/admin/events"],
-            ["Tour packages", data!.tour_packages, "/admin/tours"],
-            ["Passport spots", data!.passport_locations, "/admin/passport"],
-            ["Rewards", data!.passport_rewards, "/admin/passport"],
-            ["Delicacies", data!.delicacies, "/admin/delicacies"],
-            ["Accommodations", data!.accommodations, "/admin/accommodations"],
-            ["Parking spots", data!.parking_spots, "/admin/parking"],
-            ["Destinations", data!.destinations, "/admin/destinations"],
-            ["Tour reservations", data!.tour_reservations, null],
-            ["Registered users", data!.profiles, null],
-          ].map(([label, n, href]) => {
-            const card = <div className="admin-stat"><b>{n as number}</b><span>{label as string}</span></div>;
-            return href ? <Link key={label as string} href={href as string}>{card}</Link> : <div key={label as string}>{card}</div>;
-          })}
-        </div>
-      )}
+  const modules = [
+    { title: "Events Management", description: "Create, edit, and feature platform events.", href: "/admin/events", icon: CalendarDays },
+    { title: "Tour Operators", description: "Manage packages, availability, and tour content.", href: "/admin/tours", icon: Bus },
+    { title: "Passport Management", description: "Manage stamp locations and rewards.", href: "/admin/passport", icon: QrCode },
+    { title: "Delicacies", description: "Maintain local food and restaurant listings.", href: "/admin/delicacies", icon: Utensils },
+    { title: "Stay & Eat", description: "Manage accommodations and places to stay.", href: "/admin/accommodations", icon: BedDouble },
+    { title: "Parking", description: "Update parking locations and details.", href: "/admin/parking", icon: Car },
+    { title: "Explore", description: "Maintain destinations and local discoveries.", href: "/admin/destinations", icon: Compass },
+  ];
+  return <AdminShell title="Platform Overview">
+    {isLoading ? <div className="admin-loading"><Loader2 className="elbiyahe-spin" /> Loading overview…</div> : data && <>
+      <section className="admin-overview-stats" aria-label="Platform statistics">
+        <StatTile label="Registered Users" value={data.profiles.toLocaleString()} icon={<Users size={22} />} />
+        <StatTile label="Events" value={data.events.toLocaleString()} icon={<CalendarDays size={22} />} />
+        <StatTile label="Passport Spots" value={data.passport_locations.toLocaleString()} icon={<QrCode size={22} />} />
+        <StatTile label="Tour Reservations" value={data.tour_reservations.toLocaleString()} icon={<Bus size={22} />} />
+      </section>
+      <div className="admin-overview-columns">
+        <section className="admin-attention admin-panel"><div className="admin-panel-heading"><h2>Needs Attention</h2><ClipboardList size={19} /></div><p>Review queues are not connected to this overview yet. Open a module to inspect its current records.</p><div className="admin-attention-links"><Link href="/admin/events">Events <ArrowRight size={14} /></Link><Link href="/admin/tours">Tour packages <ArrowRight size={14} /></Link><Link href="/admin/passport">Passport <ArrowRight size={14} /></Link></div></section>
+        <section className="admin-inventory admin-panel"><div className="admin-panel-heading"><h2>Platform Content</h2><ShieldCheck size={19} /></div><dl><div><dt>Rewards</dt><dd>{data.passport_rewards}</dd></div><div><dt>Delicacies</dt><dd>{data.delicacies}</dd></div><div><dt>Accommodations</dt><dd>{data.accommodations}</dd></div><div><dt>Parking spots</dt><dd>{data.parking_spots}</dd></div><div><dt>Destinations</dt><dd>{data.destinations}</dd></div></dl></section>
+      </div>
+      <section className="admin-section admin-modules"><div className="admin-section-head"><h2>Key Admin Modules</h2><span>Manage live content across El-Biyahe!</span></div><div className="admin-module-grid">{modules.map(m => { const Icon = m.icon; return <Link href={m.href} className="admin-module" key={m.href}><Icon size={27} /><strong>{m.title}</strong><span>{m.description}</span><ArrowRight className="admin-module-arrow" size={16} /></Link>; })}</div></section>
       <p className="admin-note">Content edited here is live immediately on the public site.</p>
-    </AdminShell>
-  );
+    </>}
+  </AdminShell>;
 }
 
 /* ------------------------------------------------------------------ events */

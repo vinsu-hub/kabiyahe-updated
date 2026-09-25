@@ -124,3 +124,7 @@ scratchpad-build/
 .vercel
 .env*
 !.env.example
+
+# Orca worker screenshots
+.orca-shots/
+.playwright-mcp/
