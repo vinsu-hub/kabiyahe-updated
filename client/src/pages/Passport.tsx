@@ -1,4 +1,6 @@
 import { SkylineMotif } from "@/components/shell/SkylineMotif";
+import { PageHero, RightRailCard, PassportPromoCard, CommunityStrip, StatTile } from "@/components/shell";
+import { conceptImages } from "@/lib/conceptImages";
 import "@/styles/pages/passport.css";
 /* El-Biyahe! priority feature tabs — Events, Bus Tours, Passport, Ride Guide, and a
    shared Coming Soon placeholder. Data comes from Supabase via
@@ -215,40 +217,24 @@ function PassportCard({ displayName, xp, explorerLevel, joinedAt }: { displayNam
   const joined = joinedAt ? new Date(joinedAt).toLocaleDateString("en-PH", { month: "long", year: "numeric" }) : null;
   return (
     <section className="elbiyahe-passport-card">
+      <div className="elbiyahe-passport-card-heading"><WaxSealMark size={64} /><div><span className="script-accent">El-Biyahe!</span><strong>PASSPORT</strong></div></div>
       <div className="elbiyahe-passport-card-id">
-        <span className="avatar" style={{ width: 56, height: 56, fontSize: 22 }}>{initial}</span>
-        <div>
-          <b>{displayName || "Explorer"}</b>
-          <span className="elbiyahe-badge ochre">{tierFor(explorerLevel).toUpperCase()}</span>
-          {joined && <small className="muted">Member since {joined}</small>}
-        </div>
+        <span className="avatar">{initial}</span>
+        <div><b>{displayName || "Explorer"}</b><span className="elbiyahe-badge ochre">{tierFor(explorerLevel)}</span>{joined && <small>Member since {joined}</small>}</div>
       </div>
-      <div className="elbiyahe-passport-card-progress">
-        <IdentityQr payload={`${displayName ?? "explorer"}-${xp}`} />
-        <div className="elbiyahe-passport-card-xp">
-          <div className="progress"><span style={{ width: `${pct}%` }} /></div>
-          <small className="muted">
-            {next ? `${xp} XP · ${next.at - xp} XP to ${next.name}` : `${xp} XP · Max tier reached`}
-          </small>
-        </div>
-      </div>
+      <div className="elbiyahe-passport-card-progress"><div><small>YOUR PASSPORT</small><IdentityQr payload={`${displayName ?? "explorer"}-${xp}`} /></div><div className="elbiyahe-passport-card-xp"><span>Level {explorerLevel} · {tierFor(explorerLevel)}</span><div className="progress"><span style={{ width: `${pct}%` }} /></div><small>{next ? `${xp} / ${next.at} XP to ${next.name}` : `${xp} XP · Max tier reached`}</small></div></div>
     </section>
   );
 }
 
-
-
 function PassportStats({ stampsCollected, xp, eventsJoinedCount }: { stampsCollected: number; xp: number; eventsJoinedCount: number }) {
-  return (
-    <div className="elbiyahe-passport-stats-grid">
-      <div><b>{stampsCollected}</b><span>Stamps Collected</span></div>
-      <div><b>{xp}</b><span>Total XP</span></div>
-      <div><b>{stampsCollected}</b><span>Places Visited</span></div>
-      <div><b>{eventsJoinedCount}</b><span>Events Joined</span></div>
-    </div>
-  );
+  return <section className="elbiyahe-passport-stats"><h2>Passport Stats</h2><div className="elbiyahe-passport-stats-grid">
+    <StatTile label="Stamps Collected" value={stampsCollected} icon={<Leaf size={22} />} />
+    <StatTile label="Total XP" value={xp.toLocaleString()} icon={<Trophy size={22} />} />
+    <StatTile label="Places Visited" value={stampsCollected} icon={<MapPin size={22} />} />
+    <StatTile label="Events Joined" value={eventsJoinedCount} icon={<CalendarDays size={22} />} />
+  </div></section>;
 }
-
 
 
 function ShareJourneyCallout() {
@@ -275,7 +261,7 @@ function MyStampsGrid({ locations, scannedLocationIds }: { locations: PassportLo
   const mystery = locations.find(l => l.is_mystery);
   return (
     <section className="elbiyahe-event-group">
-      <div className="elbiyahe-row-head"><h2>MY STAMPS</h2><span className="muted">{scannedLocationIds.length}/{locations.length} collected</span></div>
+      <div className="elbiyahe-row-head"><h2>My Stamps</h2><span className="muted">{scannedLocationIds.length} / {locations.length} stamps collected</span></div>
       <div className="elbiyahe-stamps-grid">
         {known.map(l => (
           <div key={l.id} className="elbiyahe-stamp-slot">
@@ -290,6 +276,7 @@ function MyStampsGrid({ locations, scannedLocationIds }: { locations: PassportLo
           </div>
         )}
       </div>
+      {locations.length === 0 && <p className="muted">Stamp locations are coming soon.</p>}
     </section>
   );
 }
@@ -303,7 +290,7 @@ function PassportMissionsList({ missions, progressByMissionId, completedMissionI
   if (!missions.length) return null;
   return (
     <section className="elbiyahe-event-group">
-      <h2>PASSPORT MISSIONS</h2>
+      <h2>Passport Missions</h2><p className="elbiyahe-section-intro">Complete missions to earn XP and stamps!</p>
       <div className="elbiyahe-missions-list">
         {missions.map(m => {
           const progress = Math.min(progressByMissionId[m.id] ?? 0, m.target_count);
@@ -353,33 +340,22 @@ function EncouragementBanner({ displayName, xp }: { displayName: string | null; 
 
 
 function RedeemRewardsPanel({ rewards, stampsCollected }: { rewards: PassportReward[]; stampsCollected: number }) {
-  return (
-    <div className="elbiyahe-featured-card">
-      <span className="eyebrow"><Gift size={14} /> REDEEM REWARDS</span>
-      {rewards.length === 0 && <p className="muted" style={{ fontSize: 12 }}>No rewards available yet.</p>}
-      {rewards.map(r => {
-        const unlocked = stampsCollected >= r.required_stamps;
-        return (
-          <div key={r.id} className={`elbiyahe-reward ${unlocked ? "" : "locked"}`}>
-            <Ticket size={16} />
-            <div>
-              <b>{r.title}</b>
-              <small>{unlocked ? r.description : `Unlock at ${r.required_stamps} stamps`}</small>
-            </div>
-            <span className="elbiyahe-reward-state">{unlocked ? "Ready" : "Locked"}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
+  const rewardImage = (title: string) => /coffee|cafe/i.test(title) ? conceptImages.passportCoffeeReward : /pie|food|voucher/i.test(title) ? conceptImages.passportPieReward : conceptImages.passportToteReward;
+  return <RightRailCard title="Redeem Rewards" className="elbiyahe-rewards-panel">
+    {rewards.length === 0 && <p className="muted">No rewards available yet. Keep collecting stamps!</p>}
+    {rewards.map(r => { const unlocked = stampsCollected >= r.required_stamps; const photo = rewardImage(r.title); return (
+      <div key={r.id} className={`elbiyahe-reward ${unlocked ? "" : "locked"}`}>
+        <img src={photo.src} alt="" /><div><b>{r.title}</b><small>{r.description}</small><em>{r.required_stamps} stamps</em></div><span className="elbiyahe-reward-state">{unlocked ? "Ready" : "Locked"}</span>
+      </div>
+    ); })}
+    <p className="elbiyahe-reward-help">Collect stamps at participating locations to unlock rewards.</p>
+  </RightRailCard>;
 }
-
 
 
 function LeaderboardPanel({ top, me, meInTop }: { top: LeaderboardRow[]; me: (LeaderboardRow & { rank: number }) | null; meInTop: boolean }) {
   return (
-    <div className="elbiyahe-featured-card">
-      <span className="eyebrow"><Trophy size={14} /> LEADERBOARD</span>
+    <RightRailCard title="Passport Leaderboard" className="elbiyahe-leaderboard-panel">
       {top.length === 0 && <p className="muted" style={{ fontSize: 12 }}>Be the first explorer to earn XP!</p>}
       {top.map((row, i) => (
         <div key={row.id} className="elbiyahe-leaderboard-row">
@@ -397,7 +373,7 @@ function LeaderboardPanel({ top, me, meInTop }: { top: LeaderboardRow[]; me: (Le
           <small>{me.xp} XP</small>
         </div>
       )}
-    </div>
+    </RightRailCard>
   );
 }
 
@@ -469,23 +445,10 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
     <>
       <Header />
       <main className="container elbiyahe-page">
-        <section className="elbiyahe-transpo-hero elbiyahe-passport-hero">
-          <div>
-            <p className="eyebrow">EXPLORE. COLLECT. EARN.</p>
-            <h1>Your Los Baños Passport</h1>
-            <p className="muted">Explore Los Baños, collect stamps, and earn real rewards from local partners.</p>
-            <button className="elbiyahe-scan-btn" onClick={() => (user ? setScanOpen(true) : navigate("/login?next=/passport"))}>
-              <QrCode size={20} /> Scan Passport
-            </button>
-          </div>
-          <div className="elbiyahe-transpo-hero-media">
-            <img src="/scenes/elbiyahe-hero.svg" alt="" />
-            <WaxSealMark />
-          </div>
-        </section>
+        <PageHero className="elbiyahe-passport-hero" title="Your Los Baños Passport" subtitle="Explore. Collect. Earn." body="Explore Los Baños, collect stamps, and earn rewards from local partners." image={conceptImages.passportHero.src} imageAlt={conceptImages.passportHero.alt} actions={<button className="elbiyahe-scan-btn" onClick={() => (user ? setScanOpen(true) : navigate("/login?next=/passport"))}><QrCode size={19} /> Scan Passport</button>} rightCard={<div className="elbiyahe-hero-seal"><WaxSealMark size={120} /><span>COME CURIOUS · EL-BIYAHE!</span></div>} />
 
-        {isLoading && <Loading />}
-        {error && <LoadError message={(error as Error).message} />}
+        {isLoading && user && <Loading />}
+        {error && user && <LoadError message={(error as Error).message} />}
 
         {last && (
           <div className="elbiyahe-stamp-success">
@@ -507,7 +470,7 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
             <div className="main">
               <PassportCard displayName={profile?.display_name ?? null} xp={data.xp} explorerLevel={data.explorerLevel} joinedAt={data.joinedAt} />
               <PassportStats stampsCollected={collected} xp={data.xp} eventsJoinedCount={data.eventsJoinedCount} />
-              <ShareJourneyCallout />
+
 
               {nearbyUnscanned.length > 0 && (
                 <section className="elbiyahe-nearby-stamps">
@@ -550,6 +513,7 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
               )}
 
               <EncouragementBanner displayName={profile?.display_name ?? null} xp={data.xp} />
+              <ShareJourneyCallout />
             </div>
 
             <aside className="side">
@@ -557,27 +521,17 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
               {!leaderboard.isLoading && leaderboard.data && (
                 <LeaderboardPanel top={leaderboard.data.top} me={leaderboard.data.me} meInTop={leaderboard.data.meInTop} />
               )}
-              <div className="elbiyahe-newsletter-card">
-                <Sparkles size={22} />
-                <h4>Keep exploring LB!</h4>
-                <p>More destinations, delicacies, and events are waiting to be discovered.</p>
-                <Link href="/explore" className="btn outline">Explore Los Baños</Link>
-              </div>
+              <PassportPromoCard href="/explore" body="Explore more spots, collect stamps, and unlock rewards with your El-Biyahe! Passport." illustration={<StampBadge seed="passport" category="Nature" state="collected" size={108} />} />
             </aside>
           </div>
         )}
 
-        {user && data && (
-          <div className="elbiyahe-community-cta" style={{ flexDirection: "column", alignItems: "stretch", gap: 18 }}>
-            <div><h3>Why El-Biyahe! Passport?</h3></div>
-            <div className="elbiyahe-value-props">
-              <div><span className="step-icon"><MapPin size={20} /></span><div><b>Real Stamps, Real Rewards</b><p className="muted">Every spot is a real Los Baños location</p></div></div>
-              <div><span className="step-icon"><Trophy size={20} /></span><div><b>Track Your Level</b><p className="muted">Explorer → Local Insider → Completionist</p></div></div>
-              <div><span className="step-icon"><Users size={20} /></span><div><b>Support Local</b><p className="muted">Rewards from real local partners</p></div></div>
-              <div><span className="step-icon"><Star size={20} /></span><div><b>Compete &amp; Compare</b><p className="muted">See how you rank on the leaderboard</p></div></div>
-            </div>
-          </div>
-        )}
+        <section className="elbiyahe-passport-why"><div><h2 className="script-accent">Why El-Biyahe! Passport?</h2><p>More than travel. It’s a journey that gives back.</p></div><CommunityStrip items={[
+          { icon: <Leaf size={27} />, label: "Discover LB", detail: "Uncover local favorites and hidden gems." },
+          { icon: <Star size={27} />, label: "Earn Rewards", detail: "Collect stamps and unlock perks." },
+          { icon: <Users size={27} />, label: "Support Local", detail: "Every adventure helps our community grow." },
+          { icon: <QrCode size={27} />, label: "Make Memories", detail: "Keep your Los Baños story in one place." },
+        ]} /></section>
       </main>
 
       {scanOpen && (
