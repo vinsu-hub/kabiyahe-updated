@@ -1,0 +1,726 @@
+[
+  {
+    "key": "homeForestFalls",
+    "file": "/concept/home/forest-falls.webp",
+    "board": "home page.png",
+    "slot": "Forest Falls",
+    "prompt": "Warm golden-hour editorial travel photography of forest falls in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "homeHeroCollage",
+    "file": "/concept/home/hero-collage.webp",
+    "board": "home page.png",
+    "slot": "Hero Collage",
+    "prompt": "Warm golden-hour editorial travel photography of hero collage in Los Baños, Laguna, Philippines; natural color, photorealistic, wide composition with open negative space on the left; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 1600,
+    "height": 900,
+    "ai_generated": true
+  },
+  {
+    "key": "eventsAuditoriumVenue",
+    "file": "/concept/events/auditorium-venue.webp",
+    "board": "events page.png",
+    "slot": "Auditorium Venue",
+    "prompt": "Warm golden-hour editorial travel photography of auditorium venue in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "eventsBasketballFinals",
+    "file": "/concept/events/basketball-finals.webp",
+    "board": "events page.png",
+    "slot": "Basketball Finals",
+    "prompt": "Warm golden-hour editorial travel photography of basketball finals in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true,
+    "reused_on": [
+      "home page: happening now",
+      "events page: list row"
+    ]
+  },
+  {
+    "key": "eventsCulturalDance",
+    "file": "/concept/events/cultural-dance.webp",
+    "board": "events page.png",
+    "slot": "Cultural Dance",
+    "prompt": "Warm golden-hour editorial travel photography of cultural dance in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true,
+    "reused_on": [
+      "home page: happening now",
+      "events page: list row",
+      "explore: culture tile"
+    ]
+  },
+  {
+    "key": "eventsFoodFestival",
+    "file": "/concept/events/food-festival.webp",
+    "board": "events page.png",
+    "slot": "Food Festival",
+    "prompt": "Warm golden-hour editorial travel photography of food festival in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true,
+    "reused_on": [
+      "home page: happening now",
+      "events page: list row"
+    ]
+  },
+  {
+    "key": "eventsHero",
+    "file": "/concept/events/hero.webp",
+    "board": "events page.png",
+    "slot": "Hero",
+    "prompt": "Warm golden-hour editorial travel photography of hero in Los Baños, Laguna, Philippines; natural color, photorealistic, wide composition with open negative space on the left; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 1600,
+    "height": 900,
+    "ai_generated": true
+  },
+  {
+    "key": "eventsLiveMusicStage",
+    "file": "/concept/events/live-music-stage.webp",
+    "board": "events page.png",
+    "slot": "Live Music Stage",
+    "prompt": "Warm golden-hour editorial travel photography of live music stage in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "eventsMakilingTrailRun",
+    "file": "/concept/events/makiling-trail-run.webp",
+    "board": "events page.png",
+    "slot": "Makiling Trail Run",
+    "prompt": "Warm golden-hour editorial travel photography of makiling trail run in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true,
+    "reused_on": [
+      "home page: happening now",
+      "events page: list row"
+    ]
+  },
+  {
+    "key": "eventsMuseumVenue",
+    "file": "/concept/events/museum-venue.webp",
+    "board": "events page.png",
+    "slot": "Museum Venue",
+    "prompt": "Warm golden-hour editorial travel photography of museum venue in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "eventsPlazaVenue",
+    "file": "/concept/events/plaza-venue.webp",
+    "board": "events second view.png",
+    "slot": "Plaza Venue",
+    "prompt": "Warm golden-hour editorial travel photography of plaza venue in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "eventsStreetFestivalHero",
+    "file": "/concept/events/street-festival-hero.webp",
+    "board": "events second view.png",
+    "slot": "Street Festival Hero",
+    "prompt": "Warm golden-hour editorial travel photography of street festival hero in Los Baños, Laguna, Philippines; natural color, photorealistic, wide composition with open negative space on the left; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 1600,
+    "height": 900,
+    "ai_generated": true
+  },
+  {
+    "key": "eventsUplbChoir",
+    "file": "/concept/events/uplb-choir.webp",
+    "board": "events page.png",
+    "slot": "UPLB Choir",
+    "prompt": "Warm golden-hour editorial travel photography of uplb choir in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true,
+    "reused_on": [
+      "home page: happening now",
+      "events page: list row"
+    ]
+  },
+  {
+    "key": "exploreBakerHall",
+    "file": "/concept/explore/baker-hall.webp",
+    "board": "explore.png",
+    "slot": "Baker Hall",
+    "prompt": "Warm golden-hour editorial travel photography of baker hall in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true,
+    "reused_on": [
+      "home page: destination tile",
+      "plan: itinerary stop",
+      "events second view: passport stop"
+    ]
+  },
+  {
+    "key": "exploreFreedomPark",
+    "file": "/concept/explore/freedom-park.webp",
+    "board": "explore.png",
+    "slot": "Freedom Park",
+    "prompt": "Warm golden-hour editorial travel photography of freedom park in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true,
+    "reused_on": [
+      "plan: itinerary stop",
+      "events second view: passport stop"
+    ]
+  },
+  {
+    "key": "exploreHiddenFalls",
+    "file": "/concept/explore/hidden-falls.webp",
+    "board": "explore.png",
+    "slot": "Hidden Falls",
+    "prompt": "Warm golden-hour editorial travel photography of hidden falls in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true,
+    "reused_on": [
+      "home page: discovery feature",
+      "plan: itinerary stop",
+      "explore: nature tile"
+    ]
+  },
+  {
+    "key": "exploreJapaneseGarden",
+    "file": "/concept/explore/japanese-garden.webp",
+    "board": "explore.png",
+    "slot": "Japanese Garden",
+    "prompt": "Warm golden-hour editorial travel photography of japanese garden in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "exploreMakilingViewDeck",
+    "file": "/concept/explore/makiling-view-deck.webp",
+    "board": "explore.png",
+    "slot": "Makiling View Deck",
+    "prompt": "Warm golden-hour editorial travel photography of makiling view deck in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "exploreMountMakiling",
+    "file": "/concept/explore/mount-makiling.webp",
+    "board": "explore.png",
+    "slot": "Mount Makiling",
+    "prompt": "Warm golden-hour editorial travel photography of mount makiling in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true,
+    "reused_on": [
+      "home page: destination tile",
+      "plan: suggestion thumbnail",
+      "events second view: nearby attraction"
+    ]
+  },
+  {
+    "key": "exploreNightFoodMarket",
+    "file": "/concept/explore/night-food-market.webp",
+    "board": "explore.png",
+    "slot": "Night Food Market",
+    "prompt": "Warm golden-hour editorial travel photography of night food market in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "exploreUplbLandmark",
+    "file": "/concept/explore/uplb-landmark.webp",
+    "board": "explore.png",
+    "slot": "UPLB Landmark",
+    "prompt": "Warm golden-hour editorial travel photography of uplb landmark in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "exploreUplbMuseum",
+    "file": "/concept/explore/uplb-museum.webp",
+    "board": "explore.png",
+    "slot": "UPLB Museum",
+    "prompt": "Warm golden-hour editorial travel photography of uplb museum in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "planHero",
+    "file": "/concept/plan/hero.webp",
+    "board": "plan.png",
+    "slot": "Hero",
+    "prompt": "Warm golden-hour editorial travel photography of hero in Los Baños, Laguna, Philippines; natural color, photorealistic, wide composition with open negative space on the left; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 1600,
+    "height": 900,
+    "ai_generated": true
+  },
+  {
+    "key": "foodBananaCue",
+    "file": "/concept/food/banana-cue.webp",
+    "board": "delecacies.png",
+    "slot": "Banana Cue",
+    "prompt": "Warm golden-hour editorial travel photography of banana cue in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "foodBreakfast",
+    "file": "/concept/food/breakfast.webp",
+    "board": "delecacies.png",
+    "slot": "Breakfast",
+    "prompt": "Warm golden-hour editorial travel photography of breakfast in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "foodBukoPie",
+    "file": "/concept/food/buko-pie.webp",
+    "board": "delecacies.png",
+    "slot": "Buko Pie",
+    "prompt": "Warm golden-hour editorial travel photography of buko pie in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true,
+    "reused_on": [
+      "explore: food listing",
+      "plan: itinerary stop",
+      "events second view: nearby dining"
+    ]
+  },
+  {
+    "key": "foodBulalo",
+    "file": "/concept/food/bulalo.webp",
+    "board": "delecacies.png",
+    "slot": "Bulalo",
+    "prompt": "Warm golden-hour editorial travel photography of bulalo in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "foodCafeExterior",
+    "file": "/concept/food/cafe-exterior.webp",
+    "board": "delecacies.png",
+    "slot": "Cafe Exterior",
+    "prompt": "Warm golden-hour editorial travel photography of cafe exterior in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "foodCafePastry",
+    "file": "/concept/food/cafe-pastry.webp",
+    "board": "delecacies.png",
+    "slot": "Cafe Pastry",
+    "prompt": "Warm golden-hour editorial travel photography of cafe pastry in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "foodCoffeeLatte",
+    "file": "/concept/food/coffee-latte.webp",
+    "board": "delecacies.png",
+    "slot": "Coffee Latte",
+    "prompt": "Warm golden-hour editorial travel photography of coffee latte in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "foodFishRestaurant",
+    "file": "/concept/food/fish-restaurant.webp",
+    "board": "delecacies.png",
+    "slot": "Fish Restaurant",
+    "prompt": "Warm golden-hour editorial travel photography of fish restaurant in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "foodHaloHalo",
+    "file": "/concept/food/halo-halo.webp",
+    "board": "delecacies.png",
+    "slot": "Halo Halo",
+    "prompt": "Warm golden-hour editorial travel photography of halo halo in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true,
+    "reused_on": [
+      "explore: local food tile"
+    ]
+  },
+  {
+    "key": "foodIsaw",
+    "file": "/concept/food/isaw.webp",
+    "board": "delecacies.png",
+    "slot": "Isaw",
+    "prompt": "Warm golden-hour editorial travel photography of isaw in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "foodKwekKwek",
+    "file": "/concept/food/kwek-kwek.webp",
+    "board": "delecacies.png",
+    "slot": "Kwek Kwek",
+    "prompt": "Warm golden-hour editorial travel photography of kwek kwek in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "foodMilkTea",
+    "file": "/concept/food/milk-tea.webp",
+    "board": "delecacies.png",
+    "slot": "Milk Tea",
+    "prompt": "Warm golden-hour editorial travel photography of milk tea in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "foodNightMarket",
+    "file": "/concept/food/night-market.webp",
+    "board": "delecacies.png",
+    "slot": "Night Market",
+    "prompt": "Warm golden-hour editorial travel photography of night market in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "foodPancit",
+    "file": "/concept/food/pancit.webp",
+    "board": "delecacies.png",
+    "slot": "Pancit",
+    "prompt": "Warm golden-hour editorial travel photography of pancit in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "foodSilogHero",
+    "file": "/concept/food/silog-hero.webp",
+    "board": "delecacies.png",
+    "slot": "Silog Hero",
+    "prompt": "Warm golden-hour editorial travel photography of silog hero in Los Baños, Laguna, Philippines; natural color, photorealistic, wide composition with open negative space on the left; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 1600,
+    "height": 900,
+    "ai_generated": true
+  },
+  {
+    "key": "foodSumanLatik",
+    "file": "/concept/food/suman-latik.webp",
+    "board": "delecacies.png",
+    "slot": "Suman Latik",
+    "prompt": "Warm golden-hour editorial travel photography of suman latik in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "transpoJeepneyHero",
+    "file": "/concept/transpo/jeepney-hero.webp",
+    "board": "transpo.png",
+    "slot": "Jeepney Hero",
+    "prompt": "Warm golden-hour editorial travel photography of jeepney hero in Los Baños, Laguna, Philippines; natural color, photorealistic, wide composition with open negative space on the left; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 1600,
+    "height": 900,
+    "ai_generated": true,
+    "reused_on": [
+      "events second view: how to get here"
+    ]
+  },
+  {
+    "key": "transpoJeepneyRouteFour",
+    "file": "/concept/transpo/jeepney-route-four.webp",
+    "board": "transpo.png",
+    "slot": "Jeepney Route Four",
+    "prompt": "Warm golden-hour editorial travel photography of jeepney route four in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "transpoJeepneyRouteOne",
+    "file": "/concept/transpo/jeepney-route-one.webp",
+    "board": "transpo.png",
+    "slot": "Jeepney Route One",
+    "prompt": "Warm golden-hour editorial travel photography of jeepney route one in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "transpoJeepneyRouteThree",
+    "file": "/concept/transpo/jeepney-route-three.webp",
+    "board": "transpo.png",
+    "slot": "Jeepney Route Three",
+    "prompt": "Warm golden-hour editorial travel photography of jeepney route three in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "transpoJeepneyRouteTwo",
+    "file": "/concept/transpo/jeepney-route-two.webp",
+    "board": "transpo.png",
+    "slot": "Jeepney Route Two",
+    "prompt": "Warm golden-hour editorial travel photography of jeepney route two in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "transpoJeepneyStreet",
+    "file": "/concept/transpo/jeepney-street.webp",
+    "board": "transpo.png",
+    "slot": "Jeepney Street",
+    "prompt": "Warm golden-hour editorial travel photography of jeepney street in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "transpoTricycle",
+    "file": "/concept/transpo/tricycle.webp",
+    "board": "transpo.png",
+    "slot": "Tricycle",
+    "prompt": "Warm golden-hour editorial travel photography of tricycle in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "stayEatAirbnbLivingRoom",
+    "file": "/concept/stay-eat/airbnb-living-room.webp",
+    "board": "stay and eat.png",
+    "slot": "Airbnb Living Room",
+    "prompt": "Warm golden-hour editorial travel photography of airbnb living room in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "stayEatCozyCafe",
+    "file": "/concept/stay-eat/cozy-cafe.webp",
+    "board": "stay and eat.png",
+    "slot": "Cozy Cafe",
+    "prompt": "Warm golden-hour editorial travel photography of cozy cafe in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "stayEatGardenRestaurant",
+    "file": "/concept/stay-eat/garden-restaurant.webp",
+    "board": "stay and eat.png",
+    "slot": "Garden Restaurant",
+    "prompt": "Warm golden-hour editorial travel photography of garden restaurant in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true,
+    "reused_on": [
+      "plan: dining suggestion",
+      "events second view: stay nearby"
+    ]
+  },
+  {
+    "key": "stayEatGuestRoom",
+    "file": "/concept/stay-eat/guest-room.webp",
+    "board": "stay and eat.png",
+    "slot": "Guest Room",
+    "prompt": "Warm golden-hour editorial travel photography of guest room in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "stayEatHero",
+    "file": "/concept/stay-eat/hero.webp",
+    "board": "stay and eat.png",
+    "slot": "Hero",
+    "prompt": "Warm golden-hour editorial travel photography of hero in Los Baños, Laguna, Philippines; natural color, photorealistic, wide composition with open negative space on the left; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 1600,
+    "height": 900,
+    "ai_generated": true
+  },
+  {
+    "key": "stayEatHotelExterior",
+    "file": "/concept/stay-eat/hotel-exterior.webp",
+    "board": "stay and eat.png",
+    "slot": "Hotel Exterior",
+    "prompt": "Warm golden-hour editorial travel photography of hotel exterior in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "stayEatLakesideDining",
+    "file": "/concept/stay-eat/lakeside-dining.webp",
+    "board": "stay and eat.png",
+    "slot": "Lakeside Dining",
+    "prompt": "Warm golden-hour editorial travel photography of lakeside dining in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "stayEatResortPool",
+    "file": "/concept/stay-eat/resort-pool.webp",
+    "board": "stay and eat.png",
+    "slot": "Resort Pool",
+    "prompt": "Warm golden-hour editorial travel photography of resort pool in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "passportCoffeeReward",
+    "file": "/concept/passport/coffee-reward.webp",
+    "board": "passport.png",
+    "slot": "Coffee Reward",
+    "prompt": "Warm golden-hour editorial travel photography of coffee reward in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 400,
+    "height": 400,
+    "ai_generated": true
+  },
+  {
+    "key": "passportHero",
+    "file": "/concept/passport/hero.webp",
+    "board": "passport.png",
+    "slot": "Hero",
+    "prompt": "Warm golden-hour editorial travel photography of hero in Los Baños, Laguna, Philippines; natural color, photorealistic, wide composition with open negative space on the left; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 1600,
+    "height": 900,
+    "ai_generated": true,
+    "reused_on": [
+      "home page: passport promo backdrop"
+    ]
+  },
+  {
+    "key": "passportPieReward",
+    "file": "/concept/passport/pie-reward.webp",
+    "board": "passport.png",
+    "slot": "Pie Reward",
+    "prompt": "Warm golden-hour editorial travel photography of pie reward in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 400,
+    "height": 400,
+    "ai_generated": true
+  },
+  {
+    "key": "passportToteReward",
+    "file": "/concept/passport/tote-reward.webp",
+    "board": "passport.png",
+    "slot": "Tote Reward",
+    "prompt": "Warm golden-hour editorial travel photography of tote reward in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 400,
+    "height": 400,
+    "ai_generated": true
+  },
+  {
+    "key": "toursBotanicalGarden",
+    "file": "/concept/bus-tour/botanical-garden.webp",
+    "board": "bus tour.png",
+    "slot": "Botanical Garden",
+    "prompt": "Warm golden-hour editorial travel photography of botanical garden in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "toursBusHero",
+    "file": "/concept/bus-tour/bus-hero.webp",
+    "board": "bus tour.png",
+    "slot": "Bus Hero",
+    "prompt": "Warm golden-hour editorial travel photography of bus hero in Los Baños, Laguna, Philippines; natural color, photorealistic, wide composition with open negative space on the left; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 1600,
+    "height": 900,
+    "ai_generated": true
+  },
+  {
+    "key": "toursBusRoadside",
+    "file": "/concept/bus-tour/bus-roadside.webp",
+    "board": "bus tour.png",
+    "slot": "Bus Roadside",
+    "prompt": "Warm golden-hour editorial travel photography of bus roadside in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "toursFoodSpread",
+    "file": "/concept/bus-tour/food-spread.webp",
+    "board": "bus tour.png",
+    "slot": "Food Spread",
+    "prompt": "Warm golden-hour editorial travel photography of food spread in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true,
+    "reused_on": [
+      "bus tour: food category and tour card"
+    ]
+  },
+  {
+    "key": "toursHeritageChurch",
+    "file": "/concept/bus-tour/heritage-church.webp",
+    "board": "bus tour.png",
+    "slot": "Heritage Church",
+    "prompt": "Warm golden-hour editorial travel photography of heritage church in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "toursHotSprings",
+    "file": "/concept/bus-tour/hot-springs.webp",
+    "board": "bus tour.png",
+    "slot": "Hot Springs",
+    "prompt": "Warm golden-hour editorial travel photography of hot springs in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  },
+  {
+    "key": "toursLagunaLake",
+    "file": "/concept/bus-tour/laguna-lake.webp",
+    "board": "bus tour.png",
+    "slot": "Laguna Lake",
+    "prompt": "Warm golden-hour editorial travel photography of laguna lake in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true,
+    "reused_on": [
+      "bus tour: nature category and tour card"
+    ]
+  },
+  {
+    "key": "toursScienceCampus",
+    "file": "/concept/bus-tour/science-campus.webp",
+    "board": "bus tour.png",
+    "slot": "Science Campus",
+    "prompt": "Warm golden-hour editorial travel photography of science campus in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+    "width": 800,
+    "height": 600,
+    "ai_generated": true
+  }
+]
