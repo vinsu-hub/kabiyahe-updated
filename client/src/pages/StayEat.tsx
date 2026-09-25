@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
   ArrowLeft, ArrowRight, Atom, BadgeCheck, BedDouble, Bookmark, Bus, CalendarDays, Car, Check, ChevronLeft, ChevronRight,
-  Clock3, Compass, ExternalLink, Footprints, Gift, GraduationCap, Heart, Landmark, Leaf, List, Loader2, LocateFixed,
+  Clock3, Compass, ExternalLink, Footprints, Gift, GraduationCap, Grid2X2, Heart, Landmark, Leaf, List, Loader2, LocateFixed,
   MapPin, Navigation, QrCode, Search, Share2, ShoppingBag, SlidersHorizontal, Sparkles, Star, Store, Sun, Ticket,
   Trophy, User, Users, UsersRound, Utensils, X,
 } from "lucide-react";
@@ -24,6 +24,8 @@ import type {
   PassportMission, PassportReward, RideRoute, StampCategory,
 } from "@/lib/supabase/types";
 import { MapView, type LBPoint, type ZoneCircle } from "@/components/MapView";
+import { PageHero, FilterSidebar, RightRailCard, PassportPromoCard, CommunityStrip, StatTile } from "@/components/shell";
+import { conceptImages } from "@/lib/conceptImages";
 import { Rating } from "@/components/Rating";
 import {
   LB_CENTER, directionsUrl, distanceKm, fetchRoute, formatDistance, getPosition, prefersReducedMotion,
@@ -98,7 +100,7 @@ function HScrollRow({ children }: { children: React.ReactNode }) {
 
 /* ============================ STAY & EAT ============================ */
 
-const STAY_EAT_TABS = ["All", "Eat", "Stay"] as const;
+const STAY_EAT_TABS = ["All", "Restaurants", "Cafes", "Hotels", "Airbnb & Stays"] as const;
 
 
 const EAT_CATEGORIES = DELICACY_CATEGORIES;
@@ -174,44 +176,6 @@ function accommodationToVenue(a: AccommodationRow): Venue {
 
 
 
-function VenueCard({ v, distanceLabel, onReserve }: { v: Venue; distanceLabel?: string; onReserve?: (a: AccommodationRow) => void }) {
-  const [saved, setSaved] = useState(false);
-  return (
-    <article className="elbiyahe-tour-card elbiyahe-delicacy-card">
-      <div className="elbiyahe-tour-card-media">
-        <img src={v.heroImage || (v.kind === "eat" ? "/scenes/elbiyahe-food.svg" : "/scenes/elbiyahe-hero.svg")} alt={v.name} />
-        <span className={`elbiyahe-badge ${v.kind === "eat" ? "green" : "blue"}`}>{v.kind === "eat" ? "EAT" : "STAY"}</span>
-        {v.featured && <span className="elbiyahe-badge ochre sm">FEATURED</span>}
-        <button
-          className={`elbiyahe-card-bookmark ${saved ? "on" : ""}`}
-          aria-label={saved ? "Remove favorite" : "Favorite this spot"}
-          onClick={() => { setSaved(s => !s); notify(saved ? "Removed from favorites" : "Added to favorites."); }}
-        >
-          <Heart size={15} fill={saved ? "currentColor" : "none"} />
-        </button>
-      </div>
-      <div className="elbiyahe-tour-card-body">
-        <div className="elbiyahe-chip-row"><span className="tag">{v.categoryLabel}</span>{v.chips.slice(0, 2).map(c => <span key={c} className="tag">{c}</span>)}</div>
-        <h3>{v.name}</h3>
-        <p className="muted" style={{ alignItems: "flex-start" }}><MapPin size={13} style={{ flex: "none", marginTop: 2 }} /> <span>{v.place}{v.barangay ? `, Brgy. ${v.barangay}` : ""}</span></p>
-        {v.description && <p className="muted" style={{ fontSize: 12 }}>{v.description}</p>}
-        <div className="elbiyahe-tour-card-foot">
-          <b>{v.priceLabel}</b>
-          <Rating value={v.rating} count={v.reviewCount} />
-          {distanceLabel && <span className="muted"><MapPin size={12} /> {distanceLabel}</span>}
-        </div>
-        {v.kind === "stay" && onReserve && (
-          <button className="btn secondary sm" style={{ marginTop: 10, width: "100%" }} onClick={() => onReserve(v.raw as AccommodationRow)}>
-            <ExternalLink size={13} /> Book / Reserve
-          </button>
-        )}
-      </div>
-    </article>
-  );
-}
-
-
-
 export function StayEat({ Header, BottomNav, Footer, Button }: Shell) {
   const { data: delicacies } = useDelicacies();
   const { data: stays, isLoading, error } = useAccommodations();
@@ -228,6 +192,9 @@ export function StayEat({ Header, BottomNav, Footer, Button }: Shell) {
   const [priceTiers, setPriceTiers] = useState<Set<number>>(new Set());
   const [sort, setSort] = useState<"rating" | "name" | "nearest">("name");
   const [showFilters, setShowFilters] = useState(false);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [minRating, setMinRating] = useState(0);
+  const [visible, setVisible] = useState(8);
 
   const eatItems = useMemo(() => (delicacies ?? []).map(delicacyToVenue), [delicacies]);
   const stayItems = useMemo(() => (stays ?? []).map(accommodationToVenue), [stays]);
@@ -239,7 +206,11 @@ export function StayEat({ Header, BottomNav, Footer, Button }: Shell) {
     loc.coords && v.lat != null && v.lng != null ? distanceKm(loc.coords, { lat: v.lat, lng: v.lng }) : null;
 
   const matches = (v: Venue) => {
-    if (section !== "All" && v.kind !== (section === "Eat" ? "eat" : "stay")) return false;
+    if (section === "Restaurants" && (v.kind !== "eat" || /cafe|dessert|drink/i.test(v.categoryLabel))) return false;
+    if (section === "Cafes" && (v.kind !== "eat" || !/cafe|dessert|drink/i.test(v.categoryLabel))) return false;
+    if (section === "Hotels" && (v.kind !== "stay" || !/hotel|resort/i.test(v.categoryLabel))) return false;
+    if (section === "Airbnb & Stays" && (v.kind !== "stay" || /hotel|resort/i.test(v.categoryLabel))) return false;
+    if (minRating && (v.rating ?? 0) < minRating) return false;
     if (v.kind === "eat" && eatCategory !== "All" && v.categoryLabel !== eatCategory) return false;
     if (v.kind === "stay" && stayCategory !== "All" && v.categoryLabel !== stayCategory) return false;
     if (location !== "all" && v.barangay !== location) return false;
@@ -254,8 +225,8 @@ export function StayEat({ Header, BottomNav, Footer, Button }: Shell) {
     return a.name.localeCompare(b.name);
   };
 
-  const filtered = useMemo(() => [...allItems.filter(matches)].sort(sortFn), [allItems, section, eatCategory, stayCategory, query, location, priceTiers, sort, loc.coords]);
-  const isFiltering = section !== "All" || eatCategory !== "All" || stayCategory !== "All" || query.trim() !== "" || location !== "all" || priceTiers.size > 0;
+  const filtered = useMemo(() => [...allItems.filter(matches)].sort(sortFn), [allItems, section, eatCategory, stayCategory, query, location, priceTiers, sort, loc.coords, minRating]);
+  const isFiltering = section !== "All" || eatCategory !== "All" || stayCategory !== "All" || query.trim() !== "" || location !== "all" || priceTiers.size > 0 || minRating > 0;
 
   const rated = allItems.filter(v => v.rating != null);
   const avgRating = rated.length ? rated.reduce((s, v) => s + (v.rating as number), 0) / rated.length : null;
@@ -266,10 +237,10 @@ export function StayEat({ Header, BottomNav, Footer, Button }: Shell) {
     .map(v => ({ id: v.id, lat: v.lat as number, lng: v.lng as number, name: v.name, kind: v.kind === "eat" ? "Food" : "Hotels", sub: v.categoryLabel })),
     [allItems]);
 
-  const pickEat = (c: typeof eatCategory) => { setSection("Eat"); setEatCategory(c); setStayCategory("All"); };
-  const pickStay = (c: typeof stayCategory) => { setSection("Stay"); setStayCategory(c); setEatCategory("All"); };
-  const pickSection = (t: typeof section) => { setSection(t); if (t !== "Eat") setEatCategory("All"); if (t !== "Stay") setStayCategory("All"); };
-  const resetFilters = () => { setSection("All"); setEatCategory("All"); setStayCategory("All"); setQuery(""); setLocation("all"); setPriceTiers(new Set()); };
+  const pickEat = (c: typeof eatCategory) => { setSection("Restaurants"); setEatCategory(c); setStayCategory("All"); };
+  const pickStay = (c: typeof stayCategory) => { setSection("Airbnb & Stays"); setStayCategory(c); setEatCategory("All"); };
+  const pickSection = (t: typeof section) => { setSection(t); setEatCategory("All"); setStayCategory("All"); setVisible(8); };
+  const resetFilters = () => { setSection("All"); setEatCategory("All"); setStayCategory("All"); setQuery(""); setLocation("all"); setPriceTiers(new Set()); setMinRating(0); };
   const togglePrice = (t: number) => setPriceTiers(s => { const n = new Set(s); n.has(t) ? n.delete(t) : n.add(t); return n; });
 
   const onReserve = (a: AccommodationRow) => {
@@ -285,185 +256,27 @@ export function StayEat({ Header, BottomNav, Footer, Button }: Shell) {
     );
   };
 
-  return (
-    <>
-      <Header />
-      <main className="container elbiyahe-page">
-        <section className="elbiyahe-stay-hero">
-          <div>
-            <p className="eyebrow">DINE. STAY. EXPLORE.</p>
-            <h1>Stay &amp; <span className="script">Eat.</span></h1>
-            <p className="muted">Where to eat and where to stay around Los Baños — book or reserve directly with the venue.</p>
-            <div className="elbiyahe-stay-hero-stats">
-              <div className="elbiyahe-hero-stat-chip"><Utensils size={20} /> <div><b>{allItems.length}</b><span>Places to Stay &amp; Eat</span></div></div>
-              {avgRating != null && <div className="elbiyahe-hero-stat-chip"><Star size={18} fill="currentColor" /> <div><b>{avgRating.toFixed(1)}</b><span>Avg. rating</span></div></div>}
-            </div>
-          </div>
-          <div className="elbiyahe-stay-hero-media"><img src="/scenes/elbiyahe-hero.svg" alt="" /></div>
-        </section>
-
-        <div className="elbiyahe-section-pills">
-          {STAY_EAT_TABS.map(t => (
-            <button key={t} className={section === t ? "active" : ""} onClick={() => pickSection(t)}>{t}</button>
-          ))}
-        </div>
-
-        <div className="elbiyahe-events-layout">
-          <aside className={`filter-rail elbiyahe-events-filter-rail ${showFilters ? "open" : ""}`}>
-            <div className="rail-title"><h3>Find Stay &amp; Eat</h3><button className="link-accent" onClick={resetFilters}>Reset</button></div>
-            <div className="searchbox elbiyahe-searchbox">
-              <Search size={15} />
-              <input aria-label="Search stays or food" placeholder="Search stays or food…" value={query} onChange={ev => setQuery(ev.target.value)} />
-            </div>
-
-            <div className="rail-title spaced"><h3>Eat</h3></div>
-            <div className="elbiyahe-radio-group">
-              <label className="elbiyahe-radio"><input type="radio" name="eat-category" checked={eatCategory === "All"} onChange={() => pickEat("All")} />All Food <span className="elbiyahe-radio-count">{eatItems.length}</span></label>
-              {EAT_CATEGORIES.map(c => (
-                <label key={c} className="elbiyahe-radio"><input type="radio" name="eat-category" checked={eatCategory === c} onChange={() => pickEat(c)} />{c} <span className="elbiyahe-radio-count">{eatItems.filter(v => v.categoryLabel === c).length}</span></label>
-              ))}
-            </div>
-
-            <div className="rail-title spaced"><h3>Stay</h3></div>
-            <div className="elbiyahe-radio-group">
-              <label className="elbiyahe-radio"><input type="radio" name="stay-category" checked={stayCategory === "All"} onChange={() => pickStay("All")} />All Stays <span className="elbiyahe-radio-count">{stayItems.length}</span></label>
-              {STAY_CATEGORIES.map(c => (
-                <label key={c} className="elbiyahe-radio"><input type="radio" name="stay-category" checked={stayCategory === c} onChange={() => pickStay(c)} />{c} <span className="elbiyahe-radio-count">{stayItems.filter(v => v.categoryLabel === c).length}</span></label>
-              ))}
-            </div>
-
-            <div className="rail-title spaced"><h3>Filter By</h3></div>
-            <label className="elbiyahe-rail-select-wrap">
-              <MapPin size={14} />
-              <select className="elbiyahe-rail-select" value={location} onChange={ev => setLocation(ev.target.value)}>
-                <option value="all">All Locations</option>
-                {locations.map(b => <option key={b} value={b}>{b}</option>)}
-              </select>
-            </label>
-            <div className="elbiyahe-price-group">
-              {PRICE_TIERS.map(t => (
-                <button key={t} className={priceTiers.has(t) ? "active" : ""} onClick={() => togglePrice(t)}>{"₱".repeat(t)}</button>
-              ))}
-            </div>
-
-            <div className="rail-title spaced"><h3>Sort By</h3></div>
-            <select className="elbiyahe-rail-select" value={sort} onChange={ev => setSort(ev.target.value as typeof sort)}>
-              <option value="name">Name (A–Z)</option>
-              <option value="rating">Top Rated</option>
-              {loc.coords && <option value="nearest">Nearest</option>}
-            </select>
-            {!loc.coords && (
-              <button className="link-accent" style={{ margin: "0 8px 10px" }} onClick={() => loc.request()}>
-                <Navigation size={13} /> {loc.status === "prompting" ? "Locating…" : "Use my location"}
-              </button>
-            )}
-            <Button onClick={() => setShowFilters(false)}>Apply Filters</Button>
-          </aside>
-
-          <section className="elbiyahe-events-main">
-            {isLoading && <Loading />}
-            {error && <LoadError message={(error as Error).message} />}
-
-            {!isLoading && !error && (
-              <>
-                <div className="elbiyahe-events-main-head">
-                  <p className="elbiyahe-results-count">{isFiltering ? `${filtered.length} spot${filtered.length === 1 ? "" : "s"} found` : "Browse by category"}</p>
-                  <button className="btn secondary elbiyahe-filters-toggle" onClick={() => setShowFilters(v => !v)}><SlidersHorizontal size={15} /> Filters</button>
-                </div>
-
-                {isFiltering ? (
-                  <div className="elbiyahe-tour-grid">
-                    {filtered.map(v => {
-                      const km = withDistance(v);
-                      return <VenueCard v={v} key={v.id} distanceLabel={km != null ? formatDistance(km) : undefined} onReserve={onReserve} />;
-                    })}
-                  </div>
-                ) : (
-                  <>
-                    {eatItems.length > 0 && (
-                      <section className="elbiyahe-event-group">
-                        <div className="elbiyahe-row-head"><h2>EAT</h2><button className="link-accent" onClick={() => pickEat("All")}>See all <ArrowRight size={13} /></button></div>
-                        <HScrollRow>
-                          {eatItems.map(v => {
-                            const km = withDistance(v);
-                            return <VenueCard v={v} key={v.id} distanceLabel={km != null ? formatDistance(km) : undefined} />;
-                          })}
-                        </HScrollRow>
-                      </section>
-                    )}
-                    {stayItems.length > 0 && (
-                      <section className="elbiyahe-event-group">
-                        <div className="elbiyahe-row-head"><h2>STAY</h2><button className="link-accent" onClick={() => pickStay("All")}>See all <ArrowRight size={13} /></button></div>
-                        <HScrollRow>
-                          {stayItems.map(v => {
-                            const km = withDistance(v);
-                            return <VenueCard v={v} key={v.id} distanceLabel={km != null ? formatDistance(km) : undefined} onReserve={onReserve} />;
-                          })}
-                        </HScrollRow>
-                      </section>
-                    )}
-                  </>
-                )}
-
-                {isFiltering && filtered.length === 0 && (
-                  <div className="empty-state"><Bookmark size={26} /><h3>No stays or eats match those filters.</h3><p>Try another category or clear a filter.</p><Button variant="outline" onClick={resetFilters}>Clear filters</Button></div>
-                )}
-              </>
-            )}
-          </section>
-
-          <aside className="elbiyahe-widget-rail">
-            <div className="elbiyahe-stay-minimap">
-              <MapView points={mapPoints} center={LB_CENTER} zoom={13} interactive={false} height={200} ariaLabel="Map of stay and eat spots" />
-            </div>
-
-            <div className="elbiyahe-featured-card">
-              <span className="eyebrow">TOP RATED</span>
-              {topRated.length > 0 ? topRated.map(v => {
-                const km = withDistance(v);
-                return (
-                  <div className="elbiyahe-discover-row" key={v.id}>
-                    <img src={v.heroImage || (v.kind === "eat" ? "/scenes/elbiyahe-food.svg" : "/scenes/elbiyahe-hero.svg")} alt="" />
-                    <div>
-                      <b>{v.name}</b>
-                      <small>{v.kind === "eat" ? "Eat" : "Stay"} · {v.categoryLabel}{km != null ? ` · ${formatDistance(km)}` : ""}</small>
-                      <Rating value={v.rating} count={v.reviewCount} />
-                    </div>
-                  </div>
-                );
-              }) : <p className="muted" style={{ fontSize: 12 }}>Ratings coming soon.</p>}
-            </div>
-
-            <div className="elbiyahe-newsletter-card">
-              <QrCode size={22} />
-              <h4>Collect. Eat. Earn!</h4>
-              <p>Scan spots, collect stamps, and earn rewards with your LB Passport.</p>
-              <Link href="/passport" className="btn outline">Open Passport</Link>
-            </div>
-          </aside>
-        </div>
-
-        <div className="elbiyahe-trust-strip">
-          <div className="elbiyahe-trust-item">
-            <span className="elbiyahe-trust-icon"><BadgeCheck size={18} /></span>
-            <div><b>Sourced &amp; Verified Locally</b><p>Every listing is researched by our team, not scraped or guessed.</p></div>
-          </div>
-          <div className="elbiyahe-trust-item">
-            <span className="elbiyahe-trust-icon"><Users size={18} /></span>
-            <div><b>Community-Driven Picks</b><p>Got a favorite spot? Suggest it and help other travelers find it.</p></div>
-          </div>
-          <div className="elbiyahe-trust-item">
-            <span className="elbiyahe-trust-icon"><Compass size={18} /></span>
-            <div><b>Tourist Friendly</b><p>Curated for first-time visitors exploring Los Baños.</p></div>
-          </div>
-          <div className="elbiyahe-trust-item">
-            <span className="elbiyahe-trust-icon"><ExternalLink size={18} /></span>
-            <div><b>Direct Referral Booking</b><p>We connect you straight to the venue — no markup, no middleman payment.</p></div>
-          </div>
-        </div>
-      </main>
-      <Footer />
-      <BottomNav />
-    </>
-  );
+  const imageFor = (v: Venue) => {
+    const n = v.name.toLowerCase();
+    if (v.kind === "stay") return /hotel|resort/.test(v.categoryLabel.toLowerCase()) ? conceptImages.stayEatGuestRoom.src : conceptImages.stayEatAirbnbLivingRoom.src;
+    if (/cafe|coffee|bean/.test(`${n} ${v.categoryLabel}`.toLowerCase())) return conceptImages.foodCoffeeLatte.src;
+    if (/breakfast|silog/.test(n)) return conceptImages.foodBreakfast.src;
+    return conceptImages.stayEatGardenRestaurant.src;
+  };
+  const renderVenue = (v: Venue) => {
+    const km = withDistance(v);
+    return <article className="stay-v2-card" key={v.id}>
+      <div className="stay-v2-card-image"><img src={imageFor(v)} alt="" />{v.featured && <span>FEATURED</span>}</div>
+      <div className="stay-v2-card-body"><h3>{v.name}</h3><p>{v.categoryLabel}{v.chips[0] ? ` · ${v.chips[0]}` : ""}</p><div className="stay-v2-card-facts">{v.rating != null && <span>★ {v.rating.toFixed(1)} {v.reviewCount > 0 && `(${v.reviewCount})`}</span>}<span>{v.priceLabel}</span>{km != null && <span><MapPin size={11}/>{formatDistance(km)}</span>}</div>{v.description && <p className="stay-v2-description">{v.description}</p>}{v.kind === "stay" && <button onClick={() => onReserve(v.raw as AccommodationRow)}>Book / Reserve <ExternalLink size={12}/></button>}</div>
+    </article>;
+  };
+  return <><Header/><main className="stay-v2">
+    <div className="stay-v2-layout"><div className="stay-v2-primary">
+      <PageHero className="stay-v2-hero" title="Stay & Eat" subtitle="Where every stay feels like home, and every meal tells a story." body="Discover restaurants, hotels, and cozy stays in Los Baños made for locals and travelers." image={conceptImages.stayEatHero.src} imageAlt={conceptImages.stayEatHero.alt} rightCard={allItems.length > 0 ? <div className="stay-v2-stats"><StatTile value={eatItems.length} label="Places to Eat" icon={<Utensils size={20}/>} /><StatTile value={stayItems.length} label="Places to Stay" icon={<BedDouble size={20}/>} />{avgRating != null && <StatTile value={avgRating.toFixed(1)} label="Average Rating" icon={<Star size={20}/>} />}</div> : undefined}/>
+      <div className="stay-v2-toolbar"><div className="stay-v2-tabs">{STAY_EAT_TABS.map(t => <button key={t} className={section === t ? "active" : ""} onClick={() => pickSection(t)}>{t}</button>)}</div><div className="stay-v2-sort"><label>Sort by: <select value={sort} onChange={e => setSort(e.target.value as typeof sort)}><option value="name">Name</option><option value="rating">Top rated</option>{loc.coords && <option value="nearest">Nearest</option>}</select></label><div className="stay-v2-view"><button className={viewMode === "grid" ? "active" : ""} onClick={() => setViewMode("grid")} aria-label="Grid view"><Grid2X2 size={16}/> Grid</button><button className={viewMode === "list" ? "active" : ""} onClick={() => setViewMode("list")} aria-label="List view"><List size={16}/> List</button></div><button className="stay-v2-mobile-filter" onClick={() => setShowFilters(v => !v)}><SlidersHorizontal size={15}/> Filters</button></div></div>
+      <div className="stay-v2-content"><FilterSidebar title="Filter your search" className={showFilters ? "open" : ""}><button className="stay-v2-reset" onClick={resetFilters}>Reset</button><label className="stay-v2-search"><input aria-label="Search stays or food" placeholder="Search places..." value={query} onChange={e => setQuery(e.target.value)}/><Search size={15}/></label><h3>Category</h3><div className="stay-v2-options">{STAY_EAT_TABS.map(t => <label key={t}><input type="radio" name="stay-section" checked={section === t} onChange={() => pickSection(t)}/>{t}<span>{t === "All" ? allItems.length : allItems.filter(v => t === "Restaurants" ? v.kind === "eat" && !/cafe|dessert|drink/i.test(v.categoryLabel) : t === "Cafes" ? v.kind === "eat" && /cafe|dessert|drink/i.test(v.categoryLabel) : t === "Hotels" ? v.kind === "stay" && /hotel|resort/i.test(v.categoryLabel) : v.kind === "stay" && !/hotel|resort/i.test(v.categoryLabel)).length}</span></label>)}</div><h3>Cuisine</h3><select value={eatCategory} onChange={e => pickEat(e.target.value as typeof eatCategory)}><option value="All">All Cuisines</option>{EAT_CATEGORIES.map(c => <option key={c}>{c}</option>)}</select><h3>Price Range</h3><div className="stay-v2-prices">{PRICE_TIERS.map(t => <button key={t} className={priceTiers.has(t) ? "active" : ""} onClick={() => togglePrice(t)}>{"₱".repeat(t)}</button>)}</div><h3>Rating</h3><div className="stay-v2-prices">{[4,4.5,4.8].map(r => <button key={r} className={minRating === r ? "active" : ""} onClick={() => setMinRating(minRating === r ? 0 : r)}>★ {r}+</button>)}</div><h3>Location</h3><select value={location} onChange={e => setLocation(e.target.value)}><option value="all">All Locations</option>{locations.map(b => <option key={b} value={b}>{b}</option>)}</select><button className="stay-v2-apply" onClick={() => setShowFilters(false)}>Apply Filters</button></FilterSidebar>
+      <section className="stay-v2-results">{!isLoading && <h2>{filtered.length} {filtered.length === 1 ? "place" : "places"} found</h2>}{isLoading && <Loading/>}{error && <LoadError message={(error as Error).message}/>} {!isLoading && !error && (filtered.length ? <><div className={`stay-v2-grid ${viewMode}`}>{filtered.slice(0,visible).map(renderVenue)}</div>{visible < filtered.length && <button className="stay-v2-more" onClick={() => setVisible(v => v + 8)}>Load More Places</button>}</> : <div className="empty-state"><h3>No stays or eats match those filters.</h3><p>Try another category or clear a filter.</p><button onClick={resetFilters}>Clear filters</button></div>)}</section></div>
+    </div><aside className="stay-v2-rail"><RightRailCard title="Explore on Map" seeAllHref="/explore"><div className="stay-v2-map"><MapView points={mapPoints} center={LB_CENTER} zoom={13} interactive={false} height={205} ariaLabel="Map of stay and eat spots"/></div><div className="stay-v2-map-key"><span>Nearby</span><span>Restaurants</span><span>Cafes</span><span>Stays</span></div></RightRailCard><PassportPromoCard body="Earn Passport stamps when you dine, stay, and explore partner spots in LB!"/><RightRailCard title="Top Rated">{isLoading ? <p className="stay-v2-no-ratings">Loading ratings…</p> : topRated.length ? topRated.slice(0,3).map((v,i) => <div className="stay-v2-top" key={v.id}><img src={imageFor(v)} alt=""/><b>{i+1}</b><span>{v.name}<small>★ {v.rating?.toFixed(1)} ({v.reviewCount})</small></span></div>) : <p className="stay-v2-no-ratings">Ratings will appear here as reviews come in.</p>}</RightRailCard></aside></div>
+    <CommunityStrip items={[{icon:<BadgeCheck/>,label:"Local listings",detail:"Discover places around Los Baños"},{icon:<Users/>,label:"Community driven",detail:"Explore local favorites"},{icon:<Compass/>,label:"Tourist friendly",detail:"Find your next stop"},{icon:<ExternalLink/>,label:"Book & contact",detail:"Connect directly with venues"}]}/>
+  </main><Footer/><BottomNav/></>;
 }
