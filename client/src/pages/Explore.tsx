@@ -1,3 +1,4 @@
+import "@/styles/pages/explore.css";
 /* El-Biyahe! — Come Curious. Los Baños field-companion web app. */
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@/lib/supabase/AuthProvider";

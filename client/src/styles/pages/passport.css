@@ -13,7 +13,7 @@
 .elbiyahe-passport-card{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px}
 .elbiyahe-passport-card-id{display:flex;align-items:center;gap:14px}
 .elbiyahe-passport-card-id div{display:flex;flex-direction:column;gap:4px}
-.elbiyahe-passport-card-id b{font:700 17px 'Space Grotesk',sans-serif;color:var(--forest)}
+.elbiyahe-passport-card-id b{font:700 17px 'Poppins',sans-serif;color:var(--forest)}
 .elbiyahe-passport-card-progress{display:flex;align-items:center;gap:16px;flex:1;min-width:220px;max-width:320px}
 .elbiyahe-passport-card-xp{flex:1}
 .elbiyahe-passport-card-xp .progress{margin-bottom:6px}
@@ -25,7 +25,7 @@
 
 .elbiyahe-passport-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .elbiyahe-passport-stats-grid>div{background:#eef3ec;border-radius:12px;padding:14px;text-align:center}
-.elbiyahe-passport-stats-grid b{display:block;font:800 22px 'Space Grotesk',sans-serif;color:var(--forest)}
+.elbiyahe-passport-stats-grid b{display:block;font:800 22px 'Poppins',sans-serif;color:var(--forest)}
 .elbiyahe-passport-stats-grid span{font-size:11px;color:var(--muted);font-weight:600}
 @media(max-width:700px){.elbiyahe-passport-stats-grid{grid-template-columns:repeat(2,1fr)}}
 

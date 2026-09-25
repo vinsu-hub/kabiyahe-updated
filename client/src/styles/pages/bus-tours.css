@@ -12,7 +12,7 @@
 .elbiyahe-tours-hero-card::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(4,40,28,.95) 0%,rgba(4,40,28,.8) 38%,rgba(4,40,28,.12) 100%)}
 .elbiyahe-tours-hero-card>*{position:relative;z-index:1}
 .elbiyahe-tours-hero-card .eyebrow{color:var(--ochre)}
-.elbiyahe-tours-hero-card h1{font:700 38px/1.08 'Space Grotesk',sans-serif;color:#fff;margin:8px 0 10px}
+.elbiyahe-tours-hero-card h1{font:700 38px/1.08 'Poppins',sans-serif;color:#fff;margin:8px 0 10px}
 .elbiyahe-tours-hero-accent{position:relative;display:inline-block}
 .elbiyahe-tours-hero-accent::after{content:'';position:absolute;left:-2px;right:-2px;bottom:-2px;height:5px;border-radius:3px;background:var(--ochre);transform:skewX(-12deg)}
 .elbiyahe-tours-hero-card p{color:#e6efe9;line-height:1.5;max-width:42ch;font-size:14px}
@@ -35,7 +35,7 @@
 .elbiyahe-tours-filterbar{display:flex;flex-wrap:wrap;align-items:center;gap:16px 20px;background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px 20px;margin-bottom:26px}
 .elbiyahe-tours-filter-intro{display:flex;align-items:center;gap:10px;flex:none;max-width:188px}
 .elbiyahe-tours-filter-intro-icon{flex:none;width:34px;height:34px;border-radius:10px;background:#eef3ec;color:var(--forest);display:grid;place-items:center}
-.elbiyahe-tours-filter-intro b{display:block;font:800 11px 'Space Grotesk',sans-serif;letter-spacing:.05em;text-transform:uppercase;color:var(--forest)}
+.elbiyahe-tours-filter-intro b{display:block;font:800 11px 'Poppins',sans-serif;letter-spacing:.05em;text-transform:uppercase;color:var(--forest)}
 .elbiyahe-tours-filter-intro small{color:var(--muted);font-size:10.5px;line-height:1.3}
 .elbiyahe-tours-filter-groups{flex:1;min-width:0;display:flex;flex-wrap:nowrap;justify-content:center;gap:12px 20px}
 @media(max-width:1200px){.elbiyahe-tours-filter-groups{flex-wrap:wrap;justify-content:flex-start}}
@@ -51,7 +51,7 @@
 /* 3 — popular tours + planner */
 .elbiyahe-tours-body{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:24px;align-items:start;scroll-margin-top:90px}
 .elbiyahe-tours-main{min-width:0}
-.elbiyahe-tours-main .elbiyahe-row-head h2{font:700 20px 'Space Grotesk',sans-serif;letter-spacing:.02em;text-transform:uppercase;color:var(--forest)}
+.elbiyahe-tours-main .elbiyahe-row-head h2{font:700 20px 'Poppins',sans-serif;letter-spacing:.02em;text-transform:uppercase;color:var(--forest)}
 .elbiyahe-tours-main .elbiyahe-tour-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
 .elbiyahe-tour-card.is-rich{display:flex;flex-direction:column}
 .elbiyahe-tour-card.is-rich .elbiyahe-tour-card-media{height:150px}
@@ -93,7 +93,7 @@
 .elbiyahe-tours-mood-icon{position:relative;z-index:1;flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 .elbiyahe-tours-mood-copy{position:relative;z-index:1;min-width:0;display:grid;gap:2px}
 .elbiyahe-tours-mood-copy small{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ochre)}
-.elbiyahe-tours-mood-copy b{font:700 16px 'Space Grotesk',sans-serif}
+.elbiyahe-tours-mood-copy b{font:700 16px 'Poppins',sans-serif}
 .elbiyahe-tours-mood-copy span{font-size:11px;color:#e6efe9;line-height:1.35}
 
 /* 5 — banner row */
@@ -103,12 +103,12 @@
 .elbiyahe-tours-weekend::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,rgba(4,40,28,.94),rgba(4,40,28,.6))}
 .elbiyahe-tours-weekend>*{position:relative;z-index:1}
 .elbiyahe-tours-weekend .eyebrow,.elbiyahe-tours-passport .eyebrow{color:var(--ochre)}
-.elbiyahe-tours-weekend h3{font:700 22px 'Space Grotesk',sans-serif;color:#fff;margin:6px 0}
+.elbiyahe-tours-weekend h3{font:700 22px 'Poppins',sans-serif;color:#fff;margin:6px 0}
 .elbiyahe-tours-weekend p{color:#e6efe9;font-size:13px;line-height:1.5}
 .elbiyahe-tours-weekend-price{font-weight:700;margin:10px 0}
 .elbiyahe-tours-weekend .btn.soft,.elbiyahe-tours-passport .btn.soft{display:inline-flex;width:auto;margin:4px 0 0;background:#fff;color:var(--forest)}
 .elbiyahe-tours-ease{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px}
-.elbiyahe-tours-ease>h3{font:800 13px 'Space Grotesk',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--forest);margin:0 0 16px}
+.elbiyahe-tours-ease>h3{font:800 13px 'Poppins',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--forest);margin:0 0 16px}
 .elbiyahe-tours-ease-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 16px}
 .elbiyahe-tours-ease-item{display:grid;gap:3px}
 .elbiyahe-tours-ease-icon{width:34px;height:34px;border-radius:9px;background:#eef3ec;color:var(--forest);display:grid;place-items:center;margin-bottom:4px}

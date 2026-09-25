@@ -24,12 +24,12 @@
 .elbiyahe-page{padding:26px 0 70px}
 .elbiyahe-detail{padding:22px 0 90px;max-width:860px}
 .elbiyahe-page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:18px;flex-wrap:wrap}
-.elbiyahe-page-head h1,.elbiyahe-events-hero-intro h1{font:700 40px/1.05 'Space Grotesk',sans-serif;color:var(--forest);margin:6px 0 4px}
+.elbiyahe-page-head h1,.elbiyahe-events-hero-intro h1{font:700 40px/1.05 'Poppins',sans-serif;color:var(--forest);margin:6px 0 4px}
 .elbiyahe-events-hero-intro .eyebrow{display:block}
 .elbiyahe-events-hero-intro .script{margin-top:0}
-.elbiyahe-page h2{font:700 22px 'Space Grotesk',sans-serif;color:var(--forest);margin:22px 0 12px}
-.elbiyahe-detail h1{font:700 32px/1.12 'Space Grotesk',sans-serif;color:var(--forest);margin:10px 0 6px}
-.elbiyahe-detail h2{font:700 20px 'Space Grotesk',sans-serif;color:var(--forest);margin:26px 0 12px}
+.elbiyahe-page h2{font:700 22px 'Poppins',sans-serif;color:var(--forest);margin:22px 0 12px}
+.elbiyahe-detail h1{font:700 32px/1.12 'Poppins',sans-serif;color:var(--forest);margin:10px 0 6px}
+.elbiyahe-detail h2{font:700 20px 'Poppins',sans-serif;color:var(--forest);margin:26px 0 12px}
 
 .elbiyahe-view-toggle,.filter-pills{display:flex;gap:8px;flex-wrap:wrap}
 .elbiyahe-view-toggle button,.filter-pills button{min-height:36px;padding:0 14px;border-radius:999px;background:#eef3ec;font-weight:600;display:inline-flex;align-items:center;gap:6px;font-size:13px}
@@ -134,7 +134,7 @@
 
 .elbiyahe-passport-header{display:flex;gap:18px;align-items:center;background:var(--forest);border-radius:18px;padding:18px;color:var(--cream)}
 .elbiyahe-passport-header img{width:110px;height:110px;border-radius:12px;object-fit:cover}
-.elbiyahe-passport-header h1{color:#fff;font:700 26px 'Space Grotesk',sans-serif;margin:8px 0 4px}
+.elbiyahe-passport-header h1{color:#fff;font:700 26px 'Poppins',sans-serif;margin:8px 0 4px}
 .elbiyahe-passport-header .muted{color:#cfe3d8}
 .elbiyahe-passport-header .progress{margin-top:8px;background:rgba(255,255,255,.25)}
 .elbiyahe-passport-header .progress span{background:var(--ochre)}
@@ -189,7 +189,7 @@
 
 /* Transpo-style hero */
 .elbiyahe-transpo-hero{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:center;background:var(--forest);color:var(--cream);border-radius:18px;padding:28px;margin-bottom:22px}
-.elbiyahe-transpo-hero h1{color:#fff;font:700 32px/1.15 'Space Grotesk',sans-serif;margin:6px 0}
+.elbiyahe-transpo-hero h1{color:#fff;font:700 32px/1.15 'Poppins',sans-serif;margin:6px 0}
 .elbiyahe-transpo-hero .searchbox{background:#fff}
 .elbiyahe-transpo-hero-media{position:relative;border-radius:14px;overflow:hidden;height:220px;background:var(--forest-2)}
 .elbiyahe-transpo-hero-media img{width:100%;height:100%;object-fit:cover}
@@ -237,7 +237,7 @@
 .elbiyahe-hero-section h1{font-weight:700}
 .elbiyahe-hero-section .script{color:#c9971f}
 .elbiyahe-season-banner{display:flex;justify-content:space-between;align-items:center;gap:18px;background:var(--maroon);color:#fff;border-radius:18px;padding:20px 24px;margin:24px auto;flex-wrap:wrap}
-.elbiyahe-season-banner h2{color:#fff;font:700 22px 'Space Grotesk',sans-serif;margin:6px 0}
+.elbiyahe-season-banner h2{color:#fff;font:700 22px 'Poppins',sans-serif;margin:6px 0}
 .elbiyahe-season-banner .eyebrow{color:var(--ochre)}
 .elbiyahe-season-banner p{opacity:.9;margin:0;max-width:520px}
 .elbiyahe-happening-strip{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,1fr);gap:14px;overflow-x:auto;padding-bottom:6px}
@@ -253,7 +253,7 @@
 .elbiyahe-quick-icon{width:46px;height:46px;border-radius:12px;background:#eef3ec;display:grid;place-items:center;color:var(--forest)}
 .elbiyahe-quick-item small{position:absolute;top:8px;right:8px;font-size:9px;font-weight:800;letter-spacing:.05em;color:var(--muted);text-transform:uppercase}
 .elbiyahe-newsletter{display:flex;justify-content:space-between;align-items:center;gap:20px;background:var(--forest);color:var(--cream);border-radius:18px;padding:24px;margin:28px auto 0;flex-wrap:wrap}
-.elbiyahe-newsletter h2{color:#fff;font:700 22px 'Space Grotesk',sans-serif;margin:6px 0}
+.elbiyahe-newsletter h2{color:#fff;font:700 22px 'Poppins',sans-serif;margin:6px 0}
 .elbiyahe-newsletter .eyebrow{color:var(--ochre)}
 .elbiyahe-newsletter p{opacity:.85;margin:0}
 .elbiyahe-newsletter form{display:flex;gap:8px}
@@ -292,12 +292,12 @@
 .lbmap-label-pin:hover,.lbmap-label-pin:focus-visible{transform:scale(1.08);outline:none}
 .lbmap-fallback-link{position:absolute;right:10px;bottom:10px;z-index:2;background:rgba(255,253,248,.94);border:1px solid var(--line);border-radius:9px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--forest)}
 .maplibregl-popup.lbmap-popup .maplibregl-popup-content{border-radius:12px;padding:12px 14px;border:1px solid var(--line);box-shadow:var(--shadow);font-family:inherit}
-.lbmap-popup strong{display:block;color:var(--forest);font:700 14px 'Space Grotesk',sans-serif}
+.lbmap-popup strong{display:block;color:var(--forest);font:700 14px 'Poppins',sans-serif}
 .lbmap-popup-sub{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 .lbmap-popup-actions{display:flex;gap:12px;margin-top:8px}
 .lbmap-popup-actions a{display:inline-flex;align-items:center;gap:4px;font-size:12px}
 .elbiyahe-location-section{margin-top:26px}
-.elbiyahe-location-section h2{font:700 20px 'Space Grotesk',sans-serif;color:var(--forest);margin:0 0 12px}
+.elbiyahe-location-section h2{font:700 20px 'Poppins',sans-serif;color:var(--forest);margin:0 0 12px}
 .elbiyahe-location-section .btn{margin-top:10px}
 .elbiyahe-nearby-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .elbiyahe-nearby-head button{display:inline-flex;align-items:center;gap:4px;font-size:12px}

@@ -11,7 +11,7 @@
 .elbiyahe-season-callout{background:var(--forest);color:var(--cream);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:6px}
 .elbiyahe-season-callout .eyebrow{color:var(--ochre)}
 .elbiyahe-season-callout-title{display:flex;align-items:baseline;gap:8px;margin:2px 0}
-.elbiyahe-season-callout-title b{font:800 30px 'Space Grotesk',sans-serif}
+.elbiyahe-season-callout-title b{font:800 30px 'Poppins',sans-serif}
 .elbiyahe-season-callout-title span{font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:.03em}
 .elbiyahe-season-callout p{opacity:.85;margin:0 0 10px;font-size:13px}
 .elbiyahe-season-callout .btn{border-color:rgba(255,255,255,.5);color:#fff;margin-top:auto}
@@ -58,7 +58,7 @@
 .elbiyahe-featured-card .btn{width:100%;margin-top:6px}
 
 .elbiyahe-newsletter-card{background:var(--forest);color:var(--cream);display:flex;flex-direction:column;gap:8px}
-.elbiyahe-newsletter-card h4{color:#fff;margin:0;font:700 16px 'Space Grotesk',sans-serif}
+.elbiyahe-newsletter-card h4{color:#fff;margin:0;font:700 16px 'Poppins',sans-serif}
 .elbiyahe-newsletter-card p{margin:0;opacity:.85;font-size:12px}
 .elbiyahe-newsletter-card input{min-height:40px;border-radius:10px;border:0;padding:0 12px;background:#fff;color:#1c1c1c}
 .elbiyahe-newsletter-card .btn{width:100%}

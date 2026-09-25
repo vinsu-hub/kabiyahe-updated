@@ -4,6 +4,7 @@ import { RequireAdmin } from "@/pages/admin/AdminShell";
 import { AdminAccommodations, AdminDashboard, AdminDelicacies, AdminDestinations, AdminEvents, AdminParkingSpots, AdminPassport, AdminTours } from "@/pages/admin/AdminPages";
 import { BusTours, Delicacies, EventDetail, EventsList, HeritageWalk, Parking, Passport, RideGuide, StayEat, TourDetail } from "@/pages/ElbiyaheFeatures";
 import { Home } from "@/pages/Home";
+import { PlanPage } from "@/pages/Plan";
 import { Explore } from "@/pages/Explore";
 import { DestinationDetail } from "@/pages/DestinationDetail";
 import { Account } from "@/pages/Account";
@@ -12,6 +13,7 @@ import { Header, BottomNav, Footer, Button, Tag, ScrollToTop, NoticeHost } from 
 const elbiShell = { Header, BottomNav, Footer, Button, Tag };
 function Router(){return <Switch>
   <Route path="/" component={Home}/>
+  <Route path="/plan" component={PlanPage}/>
   <Route path="/events" component={()=><EventsList {...elbiShell}/>}/>
   <Route path="/events/:id" component={({params}:any)=><EventDetail {...elbiShell} id={params?.id}/>}/>
   <Route path="/tours" component={()=><BusTours {...elbiShell}/>}/>

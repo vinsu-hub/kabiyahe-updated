@@ -100,7 +100,7 @@ export function Home() {
       <img className="hero-image hero-scroll-image" src={IMG.hero} alt="Mt. Makiling, Los Baños"/>
       <div className="hero-overlay"/>
       <div className="hero-copy">
-        <p className="eyebrow">LOS BAÑOS, LAGUNA</p><h1>What's happening in LB?<br/>Come Curious.</h1><div className="script">Los Baños is calling.</div><div className="accent-rule"/><p>Your field companion for discovering the many sides of Los Baños —<br/>events, places, flavors, and stories worth collecting.</p>
+        <p className="eyebrow">LOS BAÑOS, LAGUNA</p><h1>Explore Los Baños.<br/>Come Curious.</h1><div className="script script-accent">Los Baños is calling.</div><div className="accent-rule"/><p>Your field companion for discovering the many sides of Los Baños —<br/>events, places, flavors, and stories worth collecting.</p>
         <div className="hero-actions"><Button href="/events"><CalendarDays size={17}/> Explore Events</Button><Button href="/explore" variant="secondary"><Compass size={17}/> Discover LB</Button></div>
       </div>
     </section>

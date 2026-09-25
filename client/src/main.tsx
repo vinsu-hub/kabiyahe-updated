@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRoot } from "react-dom/client";
 import { AuthProvider } from "@/lib/supabase/AuthProvider";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import "./styles/theme.css";
 import "./index.css";
 import "./elbiyahe.css";
 import "./admin.css";
