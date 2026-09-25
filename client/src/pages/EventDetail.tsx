@@ -1,260 +1,56 @@
-/* El-Biyahe! priority feature tabs — Events, Bus Tours, Passport, Ride Guide, and a
-   shared Coming Soon placeholder. Data comes from Supabase via
-   @/lib/supabase/queries. Shared shell (Header/BottomNav/Footer/Button/Tag) is
-   passed in from App.tsx. */
-import { useEffect, useMemo, useRef, useState } from "react";
+import "@/styles/pages/events.css";
+import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import {
-  ArrowLeft, ArrowRight, Atom, BadgeCheck, BedDouble, Bookmark, Bus, CalendarDays, Car, Check, ChevronLeft, ChevronRight,
-  Clock3, Compass, ExternalLink, Footprints, Gift, GraduationCap, Heart, Landmark, Leaf, List, Loader2, LocateFixed,
-  MapPin, Navigation, QrCode, Search, Share2, ShoppingBag, SlidersHorizontal, Sparkles, Star, Store, Sun, Ticket,
-  Trophy, User, Users, UsersRound, Utensils, X,
-} from "lucide-react";
+import { ArrowRight, BadgeCheck, BedDouble, Bookmark, Bus, CalendarDays, Car, Check, Clock3, Compass, Copy, Footprints, Heart, MapPin, Navigation, Share2, Utensils, Users } from "lucide-react";
 import { useAuth } from "@/lib/supabase/AuthProvider";
-import {
-  useAccommodations, useClaimMission, useCurrentSeason, useDelicacies, useEvent, useEvents, useLeaderboard,
-  useMyRsvp, useParkingSpots, usePassport, usePassportMissions, useReserveAccommodation, useReserveTour,
-  useRideGuide, useScanPassport, useSeasons, useSubmitDelicacySuggestion, useToggleRsvp, useTour, useTours,
-  useHeritageWalk,
-} from "@/lib/supabase/queries";
-import type { TourListItem } from "@/lib/supabase/queries";
-import type {
-  AccommodationRow, DelicacyRow, EventRow, HeritageWalkStop, LeaderboardRow, ParkingSpotRow, PassportLocationPublic,
-  PassportMission, PassportReward, RideRoute, StampCategory,
-} from "@/lib/supabase/types";
-import { MapView, type LBPoint, type ZoneCircle } from "@/components/MapView";
-import { Rating } from "@/components/Rating";
-import {
-  LB_CENTER, directionsUrl, distanceKm, fetchRoute, formatDistance, getPosition, prefersReducedMotion,
-  type RouteResult, useUserLocation,
-} from "@/lib/geo";
-import QRCode from "qrcode";
+import { useEvent, useMyRsvp, usePassport, useSeasons, useToggleRsvp } from "@/lib/supabase/queries";
+import type { EventRow } from "@/lib/supabase/types";
+import { MapView } from "@/components/MapView";
+import { CommunityStrip, RightRailCard, SkylineBand } from "@/components/shell";
+import { StampBadge } from "@/pages/Passport";
+import { conceptImages } from "@/lib/conceptImages";
+import { directionsUrl, distanceKm, formatDistance } from "@/lib/geo";
 
-
-interface Shell {
-  Header: React.ComponentType;
-  BottomNav: React.ComponentType;
-  Footer: React.ComponentType;
-  Button: React.ComponentType<any>;
-  Tag: React.ComponentType<any>;
-}
-
-
-
-const notify = (message: string) =>
-  window.dispatchEvent(new CustomEvent("elbiyahe:notice", { detail: message }));
-
-
-
-function useSeasonName() {
-  const { data } = useSeasons();
-  return (key: string | null | undefined) =>
-    (key && data?.find(s => s.key === key)?.name.replace(/^El-Biyahe!\s*/, "")) || "";
-}
-
-
-
-/** Category/slug-aware fallback art so every event doesn't render the same generic scene. */
-function fallbackScene(e: Pick<EventRow, "slug" | "category">): string {
-  const bySlug: Record<string, string> = {
-    "los-banos-heritage-walk": "elbiyahe-heritage",
-    "sunset-at-the-park": "elbiyahe-sunset",
-    "flower-and-garden-show": "elbiyahe-lake",
-    "mt-makiling-trail-activities": "elbiyahe-falls",
-    "uplb-loyalty-day": "elbiyahe-campus",
-    "uplb-feb-fair": "elbiyahe-campus",
-    "syensaya": "elbiyahe-campus",
-  };
-  const byCategory: Record<string, string> = {
-    Culture: "elbiyahe-heritage",
-    Food: "elbiyahe-food",
-    Sports: "elbiyahe-falls",
-    Arts: "elbiyahe-market",
-    Community: "elbiyahe-market",
-  };
-  const name = bySlug[e.slug] ?? byCategory[e.category] ?? "elbiyahe-hero";
-  return `/scenes/${name}.svg`;
-}
-
-
-
-export function Loading() {
-  return (
-    <div className="elbiyahe-loading" role="status">
-      <Loader2 size={22} className="elbiyahe-spin" /> Loading…
-    </div>
-  );
-}
-
-
-export function LoadError({ message }: { message?: string }) {
-  return (
-    <div className="empty-state">
-      <QrCode size={24} />
-      <h3>Couldn't load this yet.</h3>
-      <p>{message || "Check your connection and try again."}</p>
-    </div>
-  );
-}
-
-
-
-export function EventDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shell & { id?: string }) {
+interface Shell { Header: React.ComponentType; BottomNav: React.ComponentType; Footer: React.ComponentType; Button: React.ComponentType<any>; Tag: React.ComponentType<any> }
+const notify = (message: string) => window.dispatchEvent(new CustomEvent("elbiyahe:notice", { detail: message }));
+const imageFor = (e: EventRow) => { const s = `${e.slug} ${e.title} ${e.category}`.toLowerCase(); if (/food/.test(s)) return conceptImages.eventsFoodFestival.src; if (/basket|sport/.test(s)) return conceptImages.eventsBasketballFinals.src; if (/choir|concert/.test(s)) return conceptImages.eventsUplbChoir.src; if (/trail|run/.test(s)) return conceptImages.eventsMakilingTrailRun.src; if (/street|music|festival/.test(s)) return conceptImages.eventsStreetFestivalHero.src; return conceptImages.eventsCulturalDance.src; };
+const visitTiles = [
+  { title: "Eat Nearby", description: "Find local food spots near the event.", href: "/stay-eat", image: conceptImages.foodSilogHero, icon: Utensils },
+  { title: "Stay Nearby", description: "Find a place to stay close by.", href: "/stay-eat", image: conceptImages.stayEatHotelExterior, icon: BedDouble },
+  { title: "How to Get Here", description: "Explore jeepney, tricycle and driving options.", href: "/ride-guide", image: conceptImages.transpoJeepneyStreet, icon: Bus },
+  { title: "Things to Do Nearby", description: "Explore more of Los Baños.", href: "/explore", image: conceptImages.exploreMountMakiling, icon: MapPin },
+];
+export function EventDetail({ Header, BottomNav, Footer, Button, id }: Shell & { id?: string }) {
   const { data: e, isLoading, error } = useEvent(id);
-  const seasonName = useSeasonName();
+  const { data: seasons } = useSeasons();
   const { user } = useAuth();
   const [, navigate] = useLocation();
   const { data: rsvped } = useMyRsvp(e?.id);
   const toggleRsvp = useToggleRsvp(e?.id);
   const { data: passport } = usePassport();
   const [tab, setTab] = useState<"About" | "Schedule" | "Organizers" | "Updates">("About");
+  const [travelTab, setTravelTab] = useState<"Jeepney" | "Tricycle" | "Driving" | "Parking">("Jeepney");
   const [saved, setSaved] = useState(false);
-
-  if (isLoading) return <><Header /><main className="container elbiyahe-detail"><Loading /></main><Footer /><BottomNav /></>;
-  if (error || !e) return <><Header /><main className="container elbiyahe-detail"><LoadError message={(error as Error)?.message} /></main><Footer /><BottomNav /></>;
-
-  const past = e.status === "recap";
-  const anytime = e.status === "anytime";
-  const schedule = [...(e.event_schedule_items ?? [])].sort((a, b) => a.sort - b.sort);
+  if (isLoading) return <><Header/><main className="container events-detail"><div className="elbiyahe-loading" role="status">Loading…</div></main><Footer/><BottomNav/></>;
+  if (error || !e) return <><Header/><main className="container events-detail"><div className="empty-state"><h3>Couldn't load this event.</h3><p>{(error as Error)?.message || "This event may no longer be available."}</p></div></main><Footer/><BottomNav/></>;
+  const past = e.status === "recap"; const anytime = e.status === "anytime";
+  const schedule = [...(e.event_schedule_items ?? [])].sort((a,b)=>a.sort-b.sort);
   const updates = e.event_updates ?? [];
-  const nearbyPassport = e.lat != null && e.lng != null
-    ? (passport?.locations ?? [])
-        .filter(l => l.lat != null && l.lng != null)
-        .map(l => ({ loc: l, km: distanceKm({ lat: e.lat!, lng: e.lng! }, { lat: l.lat!, lng: l.lng! }) }))
-        .filter(x => x.km <= 5)
-        .sort((a, b) => a.km - b.km)
-        .slice(0, 3)
-    : [];
+  const seasonName = seasons?.find(s=>s.key===e.season_key)?.name.replace(/^El-Biyahe!\s*/, "");
+  const nearbyPassport = e.lat != null && e.lng != null ? (passport?.locations ?? []).filter(l=>l.lat!=null&&l.lng!=null).map(l=>({loc:l,km:distanceKm({lat:e.lat!,lng:e.lng!},{lat:l.lat!,lng:l.lng!})})).filter(x=>x.km<=5).sort((a,b)=>a.km-b.km).slice(0,5) : [];
+  const onRsvp = () => { if (!user) { navigate(`/login?next=/events/${e.slug}`); return; } toggleRsvp.mutate(!rsvped,{onSuccess:going=>notify(going ? "You're going! RSVP saved." : "RSVP cancelled"),onError:err=>notify(err.message)}); };
+  const eventUrl = typeof window !== "undefined" ? window.location.href : "";
+  const shareLink = async () => { try { await navigator.clipboard.writeText(eventUrl); notify("Event link copied to clipboard."); } catch { notify("Couldn't copy the link. Please copy it from your address bar."); } };
+  const shareTo = (site: "facebook"|"messenger"|"whatsapp"|"x") => { const u=encodeURIComponent(eventUrl); const title=encodeURIComponent(e.title); const target = site==="facebook" ? `https://www.facebook.com/sharer/sharer.php?u=${u}` : site==="messenger" ? `https://www.facebook.com/sharer/sharer.php?u=${u}` : site==="whatsapp" ? `https://api.whatsapp.com/send?text=${title}%20${u}` : `https://twitter.com/intent/tweet?text=${title}&url=${u}`; window.open(target,"_blank","noopener,noreferrer"); };
+  const addToCalendar = () => { if (!e.starts_at) { notify("Calendar date is not available for this event."); return; } const start = new Date(e.starts_at).toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,""); const end = new Date(e.ends_at ?? e.starts_at).toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,""); window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(e.title)}&dates=${start}/${end}&details=${encodeURIComponent(e.description??"")}&location=${encodeURIComponent(e.venue_name??"Los Baños")}` ,"_blank","noopener,noreferrer"); };
+  return <><Header/><main className="container events-detail"><nav className="events-breadcrumb" aria-label="Breadcrumb"><Link href="/">Home</Link><span>›</span><Link href="/events">Events</Link><span>›</span><span>{e.title}</span></nav><div className="events-detail-layout"><div className="events-detail-main"><section className="events-detail-hero"><img src={imageFor(e)} alt={e.title}/><div className="events-detail-shade"/><div className="events-detail-hero-actions"><button onClick={()=>{setSaved(!saved);notify(saved?"Removed from saved":"Saved for later");}}><Bookmark size={17} fill={saved?"currentColor":"none"}/> {saved?"Saved":"Save Event"}</button><button onClick={shareLink}><Share2 size={17}/> Share</button></div><div className="events-detail-hero-copy"><span className="events-detail-category">{e.category}{seasonName ? ` · ${seasonName}` : ""}</span><h1>{e.title}</h1>{e.description && <p>{e.description}</p>}<div className="events-detail-hero-buttons">{!past&&!anytime&&<button className="events-green-button" disabled={toggleRsvp.isPending} onClick={onRsvp}><CalendarDays size={18}/>{rsvped?"You're going":"RSVP Now"}</button>}<button onClick={shareLink}><Share2 size={18}/>Share Event</button></div></div></section>
+    <section className="events-about events-panel"><div><h2>About This Event</h2><div className="events-tabs" role="tablist" aria-label="Event information">{(["About","Schedule","Organizers","Updates"] as const).map(t=><button role="tab" aria-selected={tab===t} className={tab===t?"active":""} key={t} onClick={()=>setTab(t)}>{t}</button>)}</div><div className="events-tab-body">{tab==="About"&&<p>{e.description||"More details will be announced soon."}</p>}{tab==="Schedule"&&(schedule.length?<ol className="events-schedule">{schedule.map(s=><li key={s.id}><strong>{s.time_label}</strong><span>{s.item}</span>{s.state&&<small>{s.state}</small>}</li>)}</ol>:<p>Full schedule to be announced.</p>)}{tab==="Organizers"&&<p><BadgeCheck size={17}/> {e.organizer||"Organizer details to be announced."}</p>}{tab==="Updates"&&(updates.length?updates.map(u=><div key={u.id}><strong>{u.ago_label}</strong><p>{u.body}</p></div>):<p>No updates yet. Check back closer to the date.</p>)}</div><div className="events-highlight-chips"><span><Compass size={17}/>{e.category}</span><span><Clock3 size={17}/>{e.time_label}</span><span><MapPin size={17}/>{e.venue_name}</span></div></div></section>
 
-  const onRsvp = () => {
-    if (!user) { navigate(`/login?next=/events/${e.slug}`); return; }
-    toggleRsvp.mutate(!rsvped, {
-      onSuccess: going => notify(going ? "You're going! RSVP saved." : "RSVP cancelled"),
-      onError: err => notify(err.message),
-    });
-  };
-
-  return (
-    <>
-      <Header />
-      <main className="container elbiyahe-detail">
-        <Link href="/events" className="back-link"><ArrowLeft size={16} /> Back to Events</Link>
-
-        <section className="elbiyahe-detail-hero">
-          <img src={e.hero_image || fallbackScene(e)} alt={e.title} />
-          {e.status === "live" && <span className="elbiyahe-badge live">LIVE NOW</span>}
-          {past && <span className="elbiyahe-badge grey">EVENT RECAP</span>}
-          <div className="elbiyahe-detail-hero-actions">
-            <button aria-label="Save event" className={saved ? "on" : ""} onClick={() => { setSaved(v => !v); notify(saved ? "Removed from saved" : "Saved for later"); }}>
-              <Heart size={17} fill={saved ? "currentColor" : "none"} />
-            </button>
-            <button aria-label="Share event" onClick={() => notify("Event link copied to clipboard.")}><Share2 size={17} /></button>
-          </div>
-        </section>
-
-        <div className="elbiyahe-chip-row">
-          <Tag>{e.category}</Tag>
-          {e.season_key && <Tag tone="ochre">{seasonName(e.season_key)}</Tag>}
-        </div>
-        <h1>{e.title}</h1>
-        <div className="elbiyahe-detail-facts">
-          <span><CalendarDays size={15} /> {e.date_label} · {e.time_label}</span>
-          <span><MapPin size={15} /> {e.venue_name}{e.barangay ? `, Brgy. ${e.barangay}` : ""}</span>
-          {!anytime && <span><Users size={15} /> {e.attendee_count.toLocaleString()} going</span>}
-        </div>
-
-        {!past && !anytime && (
-          <div className="elbiyahe-rsvp-row">
-            <button className={`elbiyahe-rsvp ${rsvped ? "done" : ""}`} disabled={toggleRsvp.isPending} onClick={onRsvp}>
-              {rsvped ? <><Check size={17} /> You're going</> : "RSVP to this event"}
-            </button>
-            <button className="elbiyahe-bookmark" aria-label="Bookmark event" onClick={() => notify("Event bookmarked.")}><Bookmark size={17} /></button>
-          </div>
-        )}
-        {anytime && (
-          <div className="elbiyahe-rsvp-row">
-            <button className="elbiyahe-bookmark wide" onClick={() => notify("Event bookmarked.")}><Bookmark size={17} /> Save for later</button>
-          </div>
-        )}
-
-        <div className="elbiyahe-tabs">
-          {(["About", "Schedule", "Organizers", "Updates"] as const).map(t => (
-            <button key={t} className={tab === t ? "active" : ""} onClick={() => setTab(t)}>{t}</button>
-          ))}
-        </div>
-
-        <div className="elbiyahe-tab-body">
-          {tab === "About" && <p>{e.description}</p>}
-          {tab === "Schedule" && (
-            schedule.length ? (
-              <ol className="elbiyahe-schedule">
-                {schedule.map(s => (
-                  <li key={s.id} className={s.state ?? ""}>
-                    <span className="elbiyahe-schedule-time">{s.time_label}</span>
-                    <span>{s.item}</span>
-                    {s.state === "live" && <span className="elbiyahe-badge live sm">LIVE</span>}
-                    {s.state === "done" && <span className="elbiyahe-badge grey sm">DONE</span>}
-                  </li>
-                ))}
-              </ol>
-            ) : <p className="muted">Full schedule to be announced.</p>
-          )}
-          {tab === "Organizers" && <div className="elbiyahe-organizer"><BadgeCheck size={18} /> <span>{e.organizer}</span></div>}
-          {tab === "Updates" && (
-            updates.length ? updates.map(u => (
-              <div key={u.id} className="elbiyahe-update"><b>{u.ago_label}</b><p>{u.body}</p></div>
-            )) : <p className="muted">No updates yet. Check back closer to the date.</p>
-          )}
-        </div>
-
-        {e.lat != null && e.lng != null && (
-          <section className="elbiyahe-location-section">
-            <h2>Getting there</h2>
-            <MapView points={[{ id: e.id, lat: e.lat, lng: e.lng, name: e.venue_name ?? e.title, kind: "Event", sub: e.date_label ?? undefined }]} interactive={false} height={220} ariaLabel={`Map showing ${e.venue_name ?? e.title}`} />
-            <Button onClick={() => window.open(directionsUrl(e.lat!, e.lng!), "_blank", "noopener")}><Navigation size={15} /> Get directions</Button>
-          </section>
-        )}
-
-        {e.slug === "los-banos-heritage-walk" && (
-          <section className="elbiyahe-location-section">
-            <h2>The full trail</h2>
-            <p className="muted">All 17 stops, grouped by era, with a map, route line, and directions to each site.</p>
-            <Button href="/heritage-walk"><Footprints size={15} /> See the full 17-stop trail</Button>
-          </section>
-        )}
-
-        <section className="elbiyahe-complete-visit">
-          <h2>Complete Your Visit</h2>
-          <div className="elbiyahe-cv-grid">
-            <Link href="/stay-eat" className="elbiyahe-cv-item"><Utensils size={18} /> Eat Nearby</Link>
-            <Link href="/stay-eat" className="elbiyahe-cv-item"><Bookmark size={18} /> Stay Nearby</Link>
-            <Link href="/ride-guide" className="elbiyahe-cv-item"><Navigation size={18} /> How to Get Here</Link>
-            <Link href="/explore" className="elbiyahe-cv-item"><Compass size={18} /> Explore Nearby</Link>
-          </div>
-        </section>
-
-        {nearbyPassport.length > 0 ? (
-          <section className="elbiyahe-location-section">
-            <h2>Nearby Passport Spots</h2>
-            <div className="elbiyahe-nearby-passport-grid">
-              {nearbyPassport.map(({ loc, km }) => (
-                <Link href="/passport" key={loc.id} className="elbiyahe-nearby-passport-card">
-                  <QrCode size={16} />
-                  <div><b>{loc.name}</b><small>{loc.category} · {formatDistance(km)} away</small></div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        ) : (
-          <Link href="/passport" className="elbiyahe-passport-teaser">
-            <QrCode size={20} />
-            <span><b>Passport Spots</b><small>Collect stamps around Los Baños in your Digital LB Passport</small></span>
-            <ChevronRight size={18} />
-          </Link>
-        )}
-      </main>
-      <Footer />
-      <BottomNav />
-    </>
-  );
+    {e.slug==="los-banos-heritage-walk"&&<section className="events-panel"><h2>The full trail</h2><p>All 17 stops, grouped by era, with a map and directions to each site.</p><Button href="/heritage-walk"><Footprints size={15}/> See the full 17-stop trail</Button></section>}
+    <section className="events-panel events-complete"><h2>Complete Your Visit</h2><div className="events-visit-grid">{visitTiles.map(tile=><Link key={tile.title} href={tile.href} className="events-visit-tile"><div className="events-visit-image"><img src={tile.image.src} alt={tile.image.alt}/><span><tile.icon size={20}/></span></div><div><h3>{tile.title}</h3><p>{tile.description}</p><strong>Explore options <ArrowRight size={15}/></strong></div></Link>)}</div><Link className="events-plan-link" href="/plan">Plan your day around this <ArrowRight size={16}/></Link></section>
+    <section className="events-panel events-passport"><div className="events-section-head"><h2>Nearby Passport Stops</h2><Link href="/passport">View all stops <ArrowRight size={15}/></Link></div>{nearbyPassport.length?<div className="events-passport-grid">{nearbyPassport.map(({loc,km})=><Link href="/passport" key={loc.id} className="events-passport-stop"><StampBadge seed={loc.slug} category={loc.category} state="locked" size={68}/><div><h3>{loc.name}</h3><small>{loc.category}</small><span><MapPin size={12}/>{formatDistance(km)}</span></div></Link>)}</div>:<p>There are no Passport stops within 5 km of this event. <Link href="/passport">Explore all Passport stops</Link>.</p>}</section>
+    {e.lat!=null&&e.lng!=null&&<section className="events-panel events-location"><h2>Event Location</h2><MapView points={[{id:e.id,lat:e.lat,lng:e.lng,name:e.venue_name??e.title,kind:"Event",sub:e.date_label??undefined}]} interactive={false} height={220} ariaLabel={`Map showing ${e.venue_name??e.title}`}/><Button onClick={()=>window.open(directionsUrl(e.lat!,e.lng!),"_blank","noopener")}><Navigation size={15}/> Get directions</Button></section>}
+    </div><aside className="events-detail-rail"><RightRailCard title="Event Details" className="events-detail-facts"><p><CalendarDays size={17}/><span>{e.date_label}</span></p><p><Clock3 size={17}/><span>{e.time_label}</span></p><p><MapPin size={17}/><span>{e.venue_name}{e.barangay?`, Brgy. ${e.barangay}`:""}<small>Los Baños, Laguna</small></span></p>{e.organizer&&<p><Users size={17}/><span>Organized by<small>{e.organizer}</small></span></p>}{e.attendee_count>0&&<p><Users size={17}/><span>{e.attendee_count.toLocaleString()} going</span></p>}{!past&&!anytime&&<button className="events-green-button" disabled={toggleRsvp.isPending} onClick={onRsvp}><CalendarDays size={16}/>{rsvped?"You're going":"RSVP Now"}</button>}<button className="events-outline-button" onClick={addToCalendar}><CalendarDays size={16}/>Add to Calendar</button></RightRailCard>
+    <RightRailCard title="How to Get Here" seeAllHref="/ride-guide" className="events-travel"><div className="events-travel-tabs">{(["Jeepney","Tricycle","Driving","Parking"] as const).map(t=><button className={travelTab===t?"active":""} onClick={()=>setTravelTab(t)} key={t}>{t}</button>)}</div><div className="events-travel-content">{travelTab==="Jeepney"&&<><Bus size={27}/><p>Find jeepney routes to {e.venue_name||"the venue"} in the Ride Guide.</p></>}{travelTab==="Tricycle"&&<><Bus size={27}/><p>Check local tricycle options for the last part of your trip.</p></>}{travelTab==="Driving"&&<><Car size={27}/><p>Open directions to the event venue.</p>{e.lat!=null&&e.lng!=null&&<a href={directionsUrl(e.lat,e.lng)} target="_blank" rel="noreferrer">Open directions <ArrowRight size={14}/></a>}</>}{travelTab==="Parking"&&<><Car size={27}/><p>See available parking information before you travel.</p><Link href="/parking">View parking <ArrowRight size={14}/></Link></>}</div><Link href="/ride-guide" className="events-outline-button">View Ride Guide <ArrowRight size={15}/></Link></RightRailCard>
+    <RightRailCard title="Share & Invite Friends" className="events-share"><p>Invite friends to explore this event together.</p><div className="events-share-grid"><button onClick={shareLink}><Copy size={21}/>Share Link</button><button onClick={()=>shareTo("facebook")}><strong>f</strong>Facebook</button><button onClick={()=>shareTo("messenger")}><Share2 size={21}/>Messenger</button><button onClick={()=>shareTo("whatsapp")}><strong>◉</strong>WhatsApp</button><button onClick={()=>shareTo("x")}><strong>𝕏</strong>X</button></div><SkylineBand/></RightRailCard></aside></div><CommunityStrip items={[{icon:<Users/>,label:"Community Driven",detail:"Built with love for Los Baños."},{icon:<Heart/>,label:"Locally Rooted",detail:"Supporting local businesses and talents."},{icon:<Compass/>,label:"Sustainable & Responsible",detail:"Preserving what makes Los Baños special."}]}/></main><Footer/><BottomNav/></>;
 }
