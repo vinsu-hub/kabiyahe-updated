@@ -8,11 +8,11 @@
 .search-row{display:flex;align-items:center;gap:10px}
 .searchbox{height:44px;width:380px;border:1px solid var(--line);border-radius:12px;background:var(--paper);display:flex;align-items:center;gap:9px;padding:0 13px}
 .searchbox input{border:0;outline:0;background:transparent;width:100%}
-.empty-state h3{font:400 22px 'Space Grotesk';color:var(--forest);margin:0 0 6px}
-.modal-head h2{font:400 24px 'Space Grotesk';color:var(--forest);margin:0}
-.detail-copy h2{font:400 24px 'Space Grotesk';color:var(--forest);margin:19px 0 8px}
-.elbiyahe-page h2{font:700 22px 'Space Grotesk',sans-serif;color:var(--forest);margin:22px 0 12px}
-.elbiyahe-transpo-hero h1{color:#fff;font:700 32px/1.15 'Space Grotesk',sans-serif;margin:6px 0}
+.empty-state h3{font:400 22px 'Poppins';color:var(--forest);margin:0 0 6px}
+.modal-head h2{font:400 24px 'Poppins';color:var(--forest);margin:0}
+.detail-copy h2{font:400 24px 'Poppins';color:var(--forest);margin:19px 0 8px}
+.elbiyahe-page h2{font:700 22px 'Poppins',sans-serif;color:var(--forest);margin:22px 0 12px}
+.elbiyahe-transpo-hero h1{color:#fff;font:700 32px/1.15 'Poppins',sans-serif;margin:6px 0}
 .elbiyahe-events-layout{display:grid;grid-template-columns:240px 1fr 300px;gap:24px;align-items:start}
 .elbiyahe-events-main{min-width:0}
 .elbiyahe-events-filter-rail{border-radius:14px;border:1px solid var(--line)}
@@ -33,15 +33,15 @@
 .elbiyahe-featured-card h3{margin:2px 0 4px;font-size:17px}
 .elbiyahe-featured-card .btn{width:100%;margin-top:6px}
 .elbiyahe-newsletter-card{background:var(--forest);color:var(--cream);display:flex;flex-direction:column;gap:8px}
-.elbiyahe-newsletter-card h4{color:#fff;margin:0;font:700 16px 'Space Grotesk',sans-serif}
+.elbiyahe-newsletter-card h4{color:#fff;margin:0;font:700 16px 'Poppins',sans-serif}
 .elbiyahe-newsletter-card p{margin:0;opacity:.85;font-size:12px}
 .elbiyahe-newsletter-card input{min-height:40px;border-radius:10px;border:0;padding:0 12px;background:#fff;color:#1c1c1c}
 .elbiyahe-newsletter-card .btn{width:100%}
 @media(max-width:1150px){.elbiyahe-events-layout{display:block}}
 @media(max-width:1150px){.elbiyahe-widget-rail{margin-top:20px}}
 @media(max-width:1150px){.elbiyahe-filters-toggle{display:inline-flex}}
-.elbiyahe-delicacies-hero h1{color:#fff;font:700 34px/1.1 'Space Grotesk',sans-serif;margin:6px 0}
-.elbiyahe-hero-stat-chip b{display:block;font:800 18px 'Space Grotesk',sans-serif}
+.elbiyahe-delicacies-hero h1{color:#fff;font:700 34px/1.1 'Poppins',sans-serif;margin:6px 0}
+.elbiyahe-hero-stat-chip b{display:block;font:800 18px 'Poppins',sans-serif}
 
 /* QA fixes: transpo/parking hero (the button sat forest-on-forest, input text inherited cream on white, mobile clipped) */
 .elbiyahe-transpo-hero>*{min-width:0}
