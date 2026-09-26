@@ -11,6 +11,7 @@
     "check": "tsc --noEmit",
     "format": "prettier --write .",
     "test": "vitest run",
+    "db:restore": "node scripts/restore-db.mjs",
     "db:push": "supabase db push --db-url \"$SUPABASE_DB_URL\"",
     "db:seed": "node --env-file=.env.local scripts/seed.mjs"
   },

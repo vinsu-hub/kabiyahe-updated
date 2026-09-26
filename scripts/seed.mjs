@@ -17,10 +17,10 @@ const scene = (n) => `/scenes/elbiyahe-${n}.svg`;
    mid-September, which is Makiling Enchanted's lead-in phase — Bañamos (Sep 17) and
    UPLB Loyalty Day (Oct) run into the December finale. */
 const seasons = [
-  { key: "banada", quarter: "Q1", name: "El-Biyahe! Bañada", months: "February", pillars: "Art · Heritage · Culture", blurb: "Celebrate art, heritage, and culture across Los Baños.", is_current: false, sort: 1 },
-  { key: "sol-open", quarter: "Q2", name: "El-Biyahe! Sol Open", months: "April", pillars: "Nature · Sport · Wellness", blurb: "Get outdoors — nature, sport, and wellness around Mt. Makiling.", is_current: false, sort: 2 },
-  { key: "sibol", quarter: "Q3", name: "El-Biyahe! Sibol Weekend Market", months: "July", pillars: "Ideas · Innovation · Enterprise", blurb: "Discover local ideas, innovation, and enterprise in Los Baños.", is_current: false, sort: 3 },
-  { key: "makiling-enchanted", quarter: "Q4", name: "El-Biyahe! Makiling Enchanted", months: "September – December", pillars: "Community · Tradition · Celebration", blurb: "Honoring heritage, sustaining traditions, rekindling the Los Baños spirit.", is_current: true, sort: 4 },
+  { key: "banada", quarter: "Q1", name: "ELBI BAÑADA", months: "February", pillars: "Art · Heritage · Culture", blurb: "Celebrate art, heritage, and culture across Los Baños.", is_current: false, sort: 1 },
+  { key: "sol-open", quarter: "Q2", name: "ELBI SOL OPEN", months: "April", pillars: "Nature · Sport · Wellness", blurb: "Get outdoors — nature, sport, and wellness around Mt. Makiling.", is_current: false, sort: 2 },
+  { key: "sibol", quarter: "Q3", name: "ELBI SIBOL WEEKEND MARKET", months: "July", pillars: "Ideas · Innovation · Enterprise", blurb: "Discover local ideas, innovation, and enterprise in Los Baños.", is_current: false, sort: 3 },
+  { key: "makiling-enchanted", quarter: "Q4", name: "ELBI MAKILING ENCHANTED", months: "September – December", pillars: "Community · Tradition · Celebration", blurb: "Honoring heritage, sustaining traditions, rekindling the Los Baños spirit.", is_current: true, sort: 4 },
 ];
 die("seasons", (await db.from("seasons").upsert(seasons, { onConflict: "key" })).error);
 console.log(`✓ seasons (${seasons.length})`);
@@ -109,7 +109,7 @@ const events = [
     description: "A ceremony every February 23 at Baker Hall commemorating the heroic 1945 raid that rescued over 2,000 Allied prisoners of war interned on the UPLB campus.",
     schedule: [], updates: [] },
   { slug: "mt-makiling-trail-activities", title: "Mt. Makiling Trail Activities", category: "Sports", season_key: "sol-open", status: "season",
-    date_label: "El-Biyahe! Sol Open · April", time_label: "Best in the cool dry months", venue_name: "Mt. Makiling Forest Reserve", barangay: "Bagong Silang",
+    date_label: "ELBI SOL OPEN · April", time_label: "Best in the cool dry months", venue_name: "Mt. Makiling Forest Reserve", barangay: "Bagong Silang",
     lat: 14.1350, lng: 121.2000, attendee_count: 0, hero_image: scene("falls"),
     starts_at: "2026-04-01T00:00:00+08:00", ends_at: "2026-04-30T23:59:00+08:00",
     organizer: "Makiling Center for Mountain Ecosystems (UPLB)",
