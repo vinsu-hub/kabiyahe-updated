@@ -1,4 +1,7 @@
 import { DataUnavailable } from "@/components/shell/DataUnavailable";
+import "@/styles/pages/heritage-walk.css";
+import { PageHero } from "@/components/shell";
+import { conceptImages } from "@/lib/conceptImages";
 /* El-Biyahe! priority feature tabs — Events, Bus Tours, Passport, Ride Guide, and a
    shared Coming Soon placeholder. Data comes from Supabase via
    @/lib/supabase/queries. Shared shell (Header/BottomNav/Footer/Button/Tag) is
@@ -84,22 +87,13 @@ export function HeritageWalk({ Header, BottomNav, Footer }: Shell) {
     <>
       <Header />
       <main className="container elbiyahe-page elbiyahe-heritage">
-        <div className="elbiyahe-page-head">
-          <div>
-            <p className="eyebrow">SELF-GUIDED · ~2.5 KM ON FOOT</p>
-            <h1>Los Baños Heritage Walk</h1>
-            <p className="muted">
-              For over 400 years, Los Baños has been a sanctuary for rest and rejuvenation. This
-              17-stop walk traces the places that shaped the town — from the 1613 Immaculate
-              Conception Parish and the ruins of Agua Santa Resort to the old train station,
-              Baker Hall, and the hot springs that gave "The Baths" its name. Start anywhere along
-              the route; most stops sit within the poblacion, with a few on the UPLB campus.
-            </p>
-          </div>
-        </div>
+        <Link href="/explore" className="back-link"><ArrowLeft size={16} /> Back to Explore</Link>
+        <PageHero className="heritage-walk-hero" eyebrow="SELF-GUIDED · ~2.5 KM ON FOOT" title="Los Baños Heritage Walk" body={'For over 400 years, Los Baños has been a sanctuary for rest and rejuvenation. This 17-stop walk traces the places that shaped the town — from the 1613 Immaculate Conception Parish and the ruins of Agua Santa Resort to the old train station, Baker Hall, and the hot springs that gave “The Baths” its name. Start anywhere along the route; most stops sit within the poblacion, with a few on the UPLB campus.'} image={conceptImages.toursHeritageChurch.src} imageAlt={conceptImages.toursHeritageChurch.alt} />
 
         {isLoading && <Loading />}
         {error && <DataUnavailable onRetry={refetch} />}
+
+        {!isLoading && !error && stops?.length === 0 && <div className="empty-state"><Footprints size={26}/><h2>Trail stops are unavailable right now.</h2><p>Please check back for the map and directions.</p></div>}
 
         {stops && stops.length > 0 && (
           <>
@@ -134,18 +128,17 @@ export function HeritageWalk({ Header, BottomNav, Footer }: Shell) {
                 </ol>
               </section>
             ))}
-
-            <section className="elbiyahe-location-section">
-              <h2>Make it a trip</h2>
-              <div className="elbiyahe-cv-grid">
-                <Link href="/passport" className="elbiyahe-cv-item"><QrCode size={18} /> Collect Passport stamps</Link>
-                <Link href="/ride-guide" className="elbiyahe-cv-item"><Navigation size={18} /> How to get around</Link>
-                <Link href="/delicacies" className="elbiyahe-cv-item"><Utensils size={18} /> Eat along the way</Link>
-                <Link href="/explore" className="elbiyahe-cv-item"><Compass size={18} /> More of Los Baños</Link>
-              </div>
-            </section>
           </>
         )}
+        <section className="elbiyahe-location-section">
+          <h2>Make it a trip</h2>
+          <div className="elbiyahe-cv-grid">
+            <Link href="/passport" className="elbiyahe-cv-item"><QrCode size={18} /> Collect Passport stamps</Link>
+            <Link href="/ride-guide" className="elbiyahe-cv-item"><Navigation size={18} /> How to get around</Link>
+            <Link href="/delicacies" className="elbiyahe-cv-item"><Utensils size={18} /> Eat along the way</Link>
+            <Link href="/explore" className="elbiyahe-cv-item"><Compass size={18} /> More of Los Baños</Link>
+          </div>
+        </section>
       </main>
       <Footer />
       <BottomNav />

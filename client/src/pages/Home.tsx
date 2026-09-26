@@ -1,7 +1,7 @@
 import { DataUnavailable } from "@/components/shell/DataUnavailable";
 import { useState, type ReactElement } from "react";
 import { Link } from "wouter";
-import { ArrowRight, Bus, CalendarDays, MapPin, Ticket, Utensils, BedDouble, MapPinned } from "lucide-react";
+import { ArrowRight, Bus, CalendarDays, MapPin, Ticket, Utensils, BedDouble, MapPinned, Car } from "lucide-react";
 import { useCurrentSeason, useDestinations, useEvents, useSeasons, useTours } from "@/lib/supabase/queries";
 import { Header, Footer, BottomNav, Button, PageHero, PassportPromoCard, StatTile, SkylineBand, notify } from "@/components/shell";
 import { conceptImages } from "@/lib/conceptImages";
@@ -22,6 +22,8 @@ const quickLinks = [
   { label: "Delicacies", href: "/delicacies", icon: Utensils }, { label: "Ride Guide", href: "/ride-guide", icon: Bus },
   { label: "Stay & Eat", href: "/stay-eat", icon: BedDouble }, { label: "Plan Your Day", href: "/plan", icon: CalendarDays },
   { label: "Passport", href: "/passport", icon: Ticket },
+  { label: "Parking", href: "/parking", icon: Car },
+  { label: "Bus Tours", href: "/tours", icon: Bus },
 ];
 
 export function Home() {
