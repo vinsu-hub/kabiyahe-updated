@@ -1,5 +1,5 @@
 /* React-Query hooks over Supabase for the El-Biyahe! feature tabs. */
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery as useReactQuery, useQueryClient, type UseQueryOptions } from "@tanstack/react-query";
 import { supabase } from "./client";
 import { useAuth } from "./AuthProvider";
 import type {
@@ -7,6 +7,41 @@ import type {
   ParkingSpotRow, PassportLocationPublic, PassportMission, PassportReward, RideRoute, RideTip, ScanResult, Season,
   TourPackageDetail, TourPackageRow,
 } from "./types";
+
+/** Missing configuration is permanent until deployment; do not retry it. */
+export class ListingsConfigurationError extends Error {}
+
+export const listingRetry = (failureCount: number, error: Error) =>
+  !(error instanceof ListingsConfigurationError) && failureCount < 2;
+export const listingRetryDelay = (attempt: number) => Math.min(500 * 2 ** attempt, 1000);
+
+/** A stalled request must settle too: three 2s attempts plus backoff fit within 10s. */
+function useQuery<T>(options: UseQueryOptions<T>) {
+  const queryFn = options.queryFn;
+  return useReactQuery({
+    ...options,
+    retry: listingRetry,
+    retryDelay: listingRetryDelay,
+    networkMode: "always",
+    queryFn: async context => {
+      if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY) {
+        throw new ListingsConfigurationError("Listings are not configured.");
+      }
+      if (typeof queryFn !== "function") throw new Error("Missing listing query.");
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      try {
+        return await Promise.race([
+          queryFn(context),
+          new Promise<never>((_, reject) => {
+            timer = setTimeout(() => reject(new Error("Listings request timed out.")), 2000);
+          }),
+        ]);
+      } finally {
+        clearTimeout(timer);
+      }
+    },
+  });
+}
 
 const throwIf = <T>({ data, error }: { data: T; error: { message: string } | null }): T => {
   if (error) throw new Error(error.message);

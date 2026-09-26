@@ -1,3 +1,4 @@
+import { DataUnavailable } from "@/components/shell/DataUnavailable";
 import "@/styles/pages/events.css";
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
@@ -21,7 +22,7 @@ const visitTiles = [
   { title: "Things to Do Nearby", description: "Explore more of Los Baños.", href: "/explore", image: conceptImages.exploreMountMakiling, icon: MapPin },
 ];
 export function EventDetail({ Header, BottomNav, Footer, Button, id }: Shell & { id?: string }) {
-  const { data: e, isLoading, error } = useEvent(id);
+  const { data: e, isLoading, error, refetch } = useEvent(id);
   const { data: seasons } = useSeasons();
   const { user } = useAuth();
   const [, navigate] = useLocation();
@@ -32,7 +33,8 @@ export function EventDetail({ Header, BottomNav, Footer, Button, id }: Shell & {
   const [travelTab, setTravelTab] = useState<"Jeepney" | "Tricycle" | "Driving" | "Parking">("Jeepney");
   const [saved, setSaved] = useState(false);
   if (isLoading) return <><Header/><main className="container events-detail"><div className="elbiyahe-loading" role="status">Loading…</div></main><Footer/><BottomNav/></>;
-  if (error || !e) return <><Header/><main className="container events-detail"><div className="empty-state"><h3>Couldn't load this event.</h3><p>{(error as Error)?.message || "This event may no longer be available."}</p></div></main><Footer/><BottomNav/></>;
+  if (error) return <><Header/><main className="container events-detail"><DataUnavailable onRetry={refetch}/></main><Footer/><BottomNav/></>;
+  if (!e) return <><Header/><main className="container events-detail"><div className="empty-state"><h3>Couldn't load this event.</h3><p>This event may no longer be available.</p></div></main><Footer/><BottomNav/></>;
   const past = e.status === "recap"; const anytime = e.status === "anytime";
   const schedule = [...(e.event_schedule_items ?? [])].sort((a,b)=>a.sort-b.sort);
   const updates = e.event_updates ?? [];
