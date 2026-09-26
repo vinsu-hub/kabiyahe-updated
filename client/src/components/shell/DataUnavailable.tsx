@@ -9,7 +9,7 @@ export function DataUnavailable({ onRetry }: { onRetry: () => unknown | Promise<
     setRetrying(true);
     try { await onRetry(); } finally { setRetrying(false); }
   }
-  return <div className="empty-state" role="status" data-testid="data-unavailable">
+  return <div className="empty-state data-unavailable" role="status" data-testid="data-unavailable">
     <RefreshCw size={26} aria-hidden="true" />
     <h3>We can't reach our listings right now.</h3>
     <p>Please try again in a moment.</p>
