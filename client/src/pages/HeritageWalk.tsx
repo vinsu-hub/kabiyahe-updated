@@ -1,3 +1,4 @@
+import { DataUnavailable } from "@/components/shell/DataUnavailable";
 /* El-Biyahe! priority feature tabs — Events, Bus Tours, Passport, Ride Guide, and a
    shared Coming Soon placeholder. Data comes from Supabase via
    @/lib/supabase/queries. Shared shell (Header/BottomNav/Footer/Button/Tag) is
@@ -65,7 +66,7 @@ export function LoadError({ message }: { message?: string }) {
 /* ======================= HERITAGE WALK ======================= */
 
 export function HeritageWalk({ Header, BottomNav, Footer }: Shell) {
-  const { data: stops, isLoading, error } = useHeritageWalk();
+  const { data: stops, isLoading, error, refetch } = useHeritageWalk();
   const eras = useMemo(() => {
     const groups: { era: string; list: HeritageWalkStop[] }[] = [];
     for (const s of stops ?? []) {
@@ -98,7 +99,7 @@ export function HeritageWalk({ Header, BottomNav, Footer }: Shell) {
         </div>
 
         {isLoading && <Loading />}
-        {error && <LoadError message={(error as Error).message} />}
+        {error && <DataUnavailable onRetry={refetch} />}
 
         {stops && stops.length > 0 && (
           <>
