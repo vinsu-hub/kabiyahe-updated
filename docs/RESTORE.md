@@ -65,6 +65,6 @@ The runner executes each seed in an isolated process and catches HTTP/network fa
 
 ## Season content audit
 
-The four season names used the application brand prefix instead of the client season brand. `scripts/seed.mjs` now uses ELBI BAÑADA, ELBI SOL OPEN, ELBI SIBOL WEEKEND MARKET, and ELBI MAKILING ENCHANTED. All four pillar triplets already matched; no pillar changes were needed. Stable keys and event associations are retained.
+Season names keep the El-Biyahe! brand prefix (El-Biyahe! Bañada, Sol Open, Sibol Weekend Market, Makiling Enchanted). That is the deliberate rebrand from the old ELBi G! name, not a mismatch with the brief. All four pillar triplets already matched the brief; no changes were needed.
 
 The existing Q1 → Q4 order follows the supplied season listing. The supplied summary does not explicitly establish quarter dates: the Q4 season's seeded September–December span and September lead-in overlap Q3, and its current-season flag is fixed. These are ambiguous and remain unchanged pending client confirmation. Existing blurbs paraphrase the positioning; the seed has no global tagline field. No confidential brief passages were copied into this repository.
