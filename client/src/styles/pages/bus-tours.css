@@ -150,3 +150,9 @@
   .elbiyahe-tours-passport{padding-right:22px}
   .elbiyahe-tours-passport-art{position:static;display:block;width:120px;margin:12px 0 0}
 }
+/* Tablet/mobile: stack the intro above the question groups (the row layout stranded the intro bottom-left at 768px) */
+@media(max-width:900px){
+  .elbiyahe-tours-filterbar{flex-direction:column;align-items:stretch}
+  .elbiyahe-tours-filter-intro{max-width:none}
+  .elbiyahe-tours-filter-groups{justify-content:flex-start}
+}
