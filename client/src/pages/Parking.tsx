@@ -1,3 +1,4 @@
+import { DataUnavailable } from "@/components/shell/DataUnavailable";
 import { conceptImages } from "@/lib/conceptImages";
 /* El-Biyahe! priority feature tabs — Events, Bus Tours, Passport, Ride Guide, and a
    shared Coming Soon placeholder. Data comes from Supabase via
@@ -211,7 +212,7 @@ function ParkingFeedbackModal({ onClose }: { onClose: () => void }) {
 
 
 export function Parking({ Header, BottomNav, Footer, Button }: Shell) {
-  const { data, isLoading, error } = useParkingSpots();
+  const { data, isLoading, error, refetch } = useParkingSpots();
   const [filter, setFilter] = useState<(typeof PARKING_FILTERS)[number]>("All");
   const [sort, setSort] = useState<(typeof PARKING_SORTS)[number]>("Recommended");
   const [query, setQuery] = useState("");
@@ -337,7 +338,7 @@ export function Parking({ Header, BottomNav, Footer, Button }: Shell) {
         </div>
 
         {isLoading && <Loading />}
-        {error && <LoadError message={(error as Error).message} />}
+        {error && <DataUnavailable onRetry={refetch} />}
 
         {mapPoints.length > 0 && (
           <div style={{ position: "relative", marginTop: 12 }}>
