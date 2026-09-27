@@ -1,3 +1,4 @@
+import { DataUnavailable } from "@/components/shell/DataUnavailable";
 import { SkylineMotif } from "@/components/shell/SkylineMotif";
 import { PageHero, RightRailCard, PassportPromoCard, CommunityStrip, StatTile } from "@/components/shell";
 import { conceptImages } from "@/lib/conceptImages";
@@ -382,7 +383,7 @@ function LeaderboardPanel({ top, me, meInTop }: { top: LeaderboardRow[]; me: (Le
 export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
   const { user, profile } = useAuth();
   const [, navigate] = useLocation();
-  const { data, isLoading, error } = usePassport();
+  const { data, isLoading, error, refetch } = usePassport();
   const missionsQuery = usePassportMissions();
   const leaderboard = useLeaderboard();
   const claimMission = useClaimMission();
@@ -447,8 +448,8 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
       <main className="container elbiyahe-page">
         <PageHero className="elbiyahe-passport-hero" title="Your Los Baños Passport" subtitle="Explore. Collect. Earn." body="Explore Los Baños, collect stamps, and earn rewards from local partners." image={conceptImages.passportHero.src} imageAlt={conceptImages.passportHero.alt} actions={<button className="elbiyahe-scan-btn" onClick={() => (user ? setScanOpen(true) : navigate("/login?next=/passport"))}><QrCode size={19} /> Scan Passport</button>} rightCard={<div className="elbiyahe-hero-seal"><WaxSealMark size={120} /><span>COME CURIOUS · EL-BIYAHE!</span></div>} />
 
-        {isLoading && user && <Loading />}
-        {error && user && <LoadError message={(error as Error).message} />}
+        {isLoading && <Loading />}
+        {error && <DataUnavailable onRetry={refetch} />}
 
         {last && (
           <div className="elbiyahe-stamp-success">
@@ -502,7 +503,8 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
 
               <MyStampsGrid locations={data.locations} scannedLocationIds={data.scannedLocationIds} />
 
-              {!missionsQuery.isLoading && (
+              {missionsQuery.isError && <DataUnavailable onRetry={missionsQuery.refetch}/>}
+              {!missionsQuery.isLoading && !missionsQuery.isError && (
                 <PassportMissionsList
                   missions={missionsQuery.data?.missions ?? []}
                   progressByMissionId={missionsQuery.data?.progressByMissionId ?? {}}
@@ -518,6 +520,7 @@ export function Passport({ Header, BottomNav, Footer, Button }: Shell) {
 
             <aside className="side">
               <RedeemRewardsPanel rewards={data.rewards} stampsCollected={collected} />
+              {leaderboard.isError && <DataUnavailable onRetry={leaderboard.refetch}/>}
               {!leaderboard.isLoading && leaderboard.data && (
                 <LeaderboardPanel top={leaderboard.data.top} me={leaderboard.data.me} meInTop={leaderboard.data.meInTop} />
               )}

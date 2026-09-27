@@ -14,3 +14,8 @@
 @media(max-width:700px){.shell-footer .footer-inner{padding:30px 0 20px}.shell-footer .footer-brand{max-width:none}.shell-footer .footer-links{grid-template-columns:repeat(2,minmax(0,1fr))}.shell-footer .footer-logo img{width:155px}}
 @media(min-width:1101px){.shell-search-pill{min-width:90px;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center}}
 .shell-page-hero .btn.secondary{color:var(--forest)}
+
+/* DataUnavailable: centre the icon with the text and give the Retry button breathing room */
+.data-unavailable{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.data-unavailable>svg{color:var(--forest)}
+.data-unavailable p{margin:0 0 10px}

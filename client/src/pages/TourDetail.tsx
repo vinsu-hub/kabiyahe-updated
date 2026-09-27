@@ -1,3 +1,4 @@
+import { DataUnavailable } from "@/components/shell/DataUnavailable";
 import "@/styles/pages/bus-tours.css";
 /* El-Biyahe! priority feature tabs — Events, Bus Tours, Passport, Ride Guide, and a
    shared Coming Soon placeholder. Data comes from Supabase via
@@ -90,14 +91,15 @@ function Stars({ value }: { value: number }) {
 
 
 export function TourDetail({ Header, BottomNav, Footer, Button, Tag, id }: Shell & { id?: string }) {
-  const { data: t, isLoading, error } = useTour(id);
+  const { data: t, isLoading, error, refetch } = useTour(id);
   const seasonName = useSeasonName();
   const { user } = useAuth();
   const [, navigate] = useLocation();
   const reserve = useReserveTour();
 
   if (isLoading) return <><Header /><main className="container elbiyahe-detail"><Loading /></main><Footer /><BottomNav /></>;
-  if (error || !t) return <><Header /><main className="container elbiyahe-detail"><LoadError message={(error as Error)?.message} /></main><Footer /><BottomNav /></>;
+  if (error) return <><Header/><main className="container elbiyahe-detail"><DataUnavailable onRetry={refetch}/></main><Footer/><BottomNav/></>;
+  if (!t) return <><Header /><main className="container elbiyahe-detail"><div className="empty-state"><h3>This tour is no longer available.</h3></div></main><Footer /><BottomNav /></>;
 
   const stops = [...(t.tour_itinerary_stops ?? [])].sort((a, b) => a.sort - b.sort);
   const reviews = t.tour_reviews ?? [];

@@ -1,3 +1,4 @@
+import { DataUnavailable } from "@/components/shell/DataUnavailable";
 import "@/styles/pages/delicacies.css";
 import { conceptImages } from "@/lib/conceptImages";
 import { PassportPromoCard } from "@/components/shell";
@@ -177,7 +178,7 @@ function SuggestionModal({ onClose }: { onClose: () => void }) {
 
 
 export function Delicacies({ Header, BottomNav, Footer, Button }: Shell) {
-  const { data, isLoading, error } = useDelicacies();
+  const { data, isLoading, error, refetch } = useDelicacies();
   const loc = useUserLocation();
   const [category, setCategory] = useState<"All" | (typeof DELICACY_CATEGORIES)[number]>("All");
   const [query, setQuery] = useState("");
@@ -293,7 +294,7 @@ export function Delicacies({ Header, BottomNav, Footer, Button }: Shell) {
 
           <section className="elbiyahe-events-main">
             {isLoading && <Loading />}
-            {error && <LoadError message={(error as Error).message} />}
+            {error && <DataUnavailable onRetry={refetch} />}
 
             {!isLoading && !error && (
               <>

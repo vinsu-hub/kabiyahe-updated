@@ -3,3 +3,5 @@ export { Header, Footer, BottomNav, Button, Tag, SectionTitle, SaveButton, Desti
 /** Public page building blocks. Each accepts real caller supplied content. */
 export { PageHero, FilterSidebar, RightRailCard, PassportPromoCard, CommunityStrip, SkylineBand, ListingCard, StatTile, ChipGroup } from "./primitives";
 export { SkylineMotif } from "./SkylineMotif";
+
+export { DataUnavailable } from "./DataUnavailable";

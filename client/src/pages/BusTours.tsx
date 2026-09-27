@@ -1,3 +1,4 @@
+import { DataUnavailable } from "@/components/shell/DataUnavailable";
 import "@/styles/pages/bus-tours.css";
 /* El-Biyahe! priority feature tabs — Events, Bus Tours, Passport, Ride Guide, and a
    shared Coming Soon placeholder. Data comes from Supabase via
@@ -188,7 +189,7 @@ function TourCard({ t, saved, onToggleSave }: {
 
 
 export function BusTours({ Header, BottomNav, Footer, Button }: Shell) {
-  const { data: tours, isLoading, error } = useTours();
+  const { data: tours, isLoading, error, refetch } = useTours();
   const [theme, setTheme] = useState<TourTheme | null>(null);
   const [audience, setAudience] = useState<string | null>(null);
   const [duration, setDuration] = useState<string | null>(null);
@@ -298,7 +299,7 @@ export function BusTours({ Header, BottomNav, Footer, Button }: Shell) {
                 : list.length > 4 && <button type="button" className="link-accent" onClick={() => setShowAll(v => !v)}>{showAll ? "Show less" : "See all tours"} <ArrowRight size={13} /></button>}
             </div>
             {isLoading && <Loading />}
-            {error && <LoadError message={(error as Error).message} />}
+            {error && <DataUnavailable onRetry={refetch} />}
             {!isLoading && !error && (
               list.length > 0 ? (
                 <div className="elbiyahe-tour-grid">

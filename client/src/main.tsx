@@ -8,10 +8,11 @@ import "./elbiyahe.css";
 import "./styles/shared-rails.css";
 import "./admin.css";
 import App from "./App";
+import { listingRetry, listingRetryDelay } from "@/lib/supabase/queries";
 
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: { retry: 1, refetchOnWindowFocus: false, staleTime: 30_000 },
+    queries: { retry: listingRetry, retryDelay: listingRetryDelay, refetchOnWindowFocus: false, staleTime: 30_000 },
   },
 });
 

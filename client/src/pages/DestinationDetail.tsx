@@ -1,3 +1,4 @@
+import { DataUnavailable } from "@/components/shell/DataUnavailable";
 /* El-Biyahe! — Come Curious. Los Baños field-companion web app. */
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@/lib/supabase/AuthProvider";
@@ -50,10 +51,11 @@ const PHOTO_CREDITS: Record<string, string> = {
 
 
 export function DestinationDetail({id}:{id?:string}) {
-  const { data: d, isLoading, error } = useDestination(id);
+  const { data: d, isLoading, error, refetch } = useDestination(id);
   const [photo,setPhoto]=useState(0);
   if (isLoading) return <><Header/><main className="container detail-page"><Loading/></main><BottomNav/></>;
-  if (error || !d) return <><Header/><main className="container detail-page"><div className="empty-state"><Compass size={24}/><h3>Couldn't find that destination.</h3><Button href="/explore">Back to Explore</Button></div></main><BottomNav/></>;
+  if (error) return <><Header/><main className="container detail-page"><DataUnavailable onRetry={refetch}/></main><BottomNav/></>;
+  if (!d) return <><Header/><main className="container detail-page"><div className="empty-state"><Compass size={24}/><h3>Couldn't find that destination.</h3><Button href="/explore">Back to Explore</Button></div></main><BottomNav/></>;
   const gallery = d.gallery.length ? d.gallery : [d.hero_image || IMG.hero];
   return <><Header/><main className="container detail-page"><Link href="/explore" className="back-link"><ArrowLeft size={16}/> Back to Explore</Link><section className="detail-hero"><img src={gallery[photo]} alt={d.name}/><div className="detail-hero-copy"><div><Tag>{d.type}</Tag>{d.placeholder?<Tag tone="ochre">Placeholder listing</Tag>:d.verified?<Tag tone="ochre">Research-backed</Tag>:<Tag tone="ochre">Curated place</Tag>}</div><h1>{d.name}</h1><p className="muted"><MapPin size={16}/> {d.place} {d.rating != null && <><span>·</span> <Rating value={d.rating} count={d.review_count}/></>}</p></div><SaveButton label="Save destination"/><button className="share-image" aria-label="Share destination" onClick={()=>notify("Destination link copied to clipboard.")}><Share2 size={18}/></button></section><div className="gallery-strip">{gallery.map((image,i)=><button className={i===photo?"active":""} onClick={()=>setPhoto(i)} key={image}><img src={image} alt={`${d.name} view ${i+1}`}/></button>)}</div>{PHOTO_CREDITS[gallery[photo]]&&<p className="muted" style={{fontSize:12,marginTop:6}}>Photo: {PHOTO_CREDITS[gallery[photo]]}</p>}<div className="detail-layout"><section className="detail-copy"><h2>About</h2><p>{d.description} Experience a place where local stories, fresh air, and a slower pace make room for the moments you remember long after the trip.</p><h2>Details</h2><div className="detail-facts"><span><b>Address</b>{d.place}</span><span><b>Opening hours</b>{d.placeholder?"To be verified":"Check venue before visiting"}</span><span><b>Price range</b>{"₱".repeat(d.price_tier)} · {d.placeholder?"Preview only":"Indicative"}</span><span><b>Recommended duration</b>2–3 hours</span></div><h2>Good for</h2><div>{d.tags.map(t=><Tag key={t}>{t}</Tag>)}</div><div className="location-card">{d.lat != null && d.lng != null
   ? <><MapView points={[{ id: d.id, lat: d.lat, lng: d.lng, name: d.name, kind: d.type, sub: d.place ?? undefined }]} interactive={false} height={220} ariaLabel={`Map showing ${d.name}`}/><Button variant="outline" onClick={() => window.open(directionsUrl(d.lat!, d.lng!), "_blank", "noopener")}><Navigation size={15}/> Get directions</Button></>

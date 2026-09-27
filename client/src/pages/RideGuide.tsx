@@ -1,3 +1,4 @@
+import { DataUnavailable } from "@/components/shell/DataUnavailable";
 import { conceptImages } from "@/lib/conceptImages";
 import { PassportPromoCard } from "@/components/shell";
 /* El-Biyahe! priority feature tabs — Events, Bus Tours, Passport, Ride Guide, and a
@@ -156,7 +157,7 @@ function RideFeedbackModal({ onClose }: { onClose: () => void }) {
 
 
 export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
-  const { data, isLoading, error } = useRideGuide();
+  const { data, isLoading, error, refetch } = useRideGuide();
   const [from, setFrom] = useState("UPLB Freedom Park");
   const [to, setTo] = useState("Los Baños Town Proper");
   const [result, setResult] = useState<string | null>(null);
@@ -260,7 +261,7 @@ export function RideGuide({ Header, BottomNav, Footer, Button }: Shell) {
         </div>
 
         {isLoading && <Loading />}
-        {error && <LoadError message={(error as Error).message} />}
+        {error && <DataUnavailable onRetry={refetch} />}
 
         {data && (
           <div className="detail-layout">
