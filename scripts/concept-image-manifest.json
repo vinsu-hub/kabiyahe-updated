@@ -722,5 +722,208 @@
     "width": 800,
     "height": 600,
     "ai_generated": true
-  }
+  },
+{
+  "key": "foodLayeredCake",
+  "file": "/concept/food/layered-cake.webp",
+  "width": 800,
+  "height": 600,
+  "prompt": "Editorial photograph of homemade Filipino layered chocolate cake slice on a ceramic plate, warm window light, wooden table, Los Baños; no text, logos, signage, watermarks or people.",
+  "board": "Food & listing photos",
+  "slot": "Homemade layered chocolate cake slice",
+  "ai_generated": true
+},
+{
+  "key": "foodDairyProducts",
+  "file": "/concept/food/dairy-products.webp",
+  "width": 800,
+  "height": 600,
+  "prompt": "Editorial travel/food photography, fresh carabao milk in unlabelled glass bottles, pastillas sweets and plain yogurt cups on a wooden table, Los Baños Laguna, 4:3, warm natural light, authentic Filipino context, natural textures. No text, signage, logos, watermarks, or identifiable people.",
+  "board": "Food & listing photos",
+  "slot": "fresh carabao milk in unlabelled glass bottles, pastillas sweets and plain yogurt cups on a wooden table",
+  "ai_generated": true
+},
+{
+  "key": "foodMarketSpread",
+  "file": "/concept/food/market-spread.webp",
+  "width": 800,
+  "height": 600,
+  "prompt": "Editorial travel/food photography, a bustling Filipino market food stall spread, trays of cooked local dishes and fresh produce; focus on food, empty of people, Los Baños Laguna, 4:3, warm natural light, authentic Filipino context, natural textures. No text, signage, logos, watermarks, or identifiable people.",
+  "board": "Food & listing photos",
+  "slot": "a bustling Filipino market food stall spread, trays of cooked local dishes and fresh produce; focus on food, empty of people",
+  "ai_generated": true
+},
+{
+  "key": "foodRiceworldCoffee",
+  "file": "/concept/food/riceworld-coffee.webp",
+  "width": 800,
+  "height": 600,
+  "prompt": "Editorial travel/food photography, a coffee cup beside rice-field photography books with blank unreadable covers, a cozy reading nook and green rice fields outside, Los Baños Laguna, 4:3, warm natural light, authentic Filipino context, natural textures. No text, signage, logos, watermarks, or identifiable people.",
+  "board": "Food & listing photos",
+  "slot": "a coffee cup beside rice-field photography books with blank unreadable covers, a cozy reading nook and green rice fields outside",
+  "ai_generated": true
+},
+{
+  "key": "foodIcedCoffee",
+  "file": "/concept/food/iced-coffee.webp",
+  "width": 800,
+  "height": 600,
+  "prompt": "Editorial travel/food photography, two iced coffee drinks with condensation in a stylish tropical cafe, focus on drinks, Los Baños Laguna, 4:3, warm natural light, authentic Filipino context, natural textures. No text, signage, logos, watermarks, or identifiable people.",
+  "board": "Food & listing photos",
+  "slot": "two iced coffee drinks with condensation in a stylish tropical cafe, focus on drinks",
+  "ai_generated": true
+},
+{
+  "key": "foodBakeshopBread",
+  "file": "/concept/food/bakeshop-bread.webp",
+  "width": 800,
+  "height": 600,
+  "prompt": "Editorial travel/food photography, Filipino bakeshop breads, golden pandesal and buttery ensaymada with grated cheese, Los Baños Laguna, 4:3, warm natural light, authentic Filipino context, natural textures. No text, signage, logos, watermarks, or identifiable people.",
+  "board": "Food & listing photos",
+  "slot": "Filipino bakeshop breads, golden pandesal and buttery ensaymada with grated cheese",
+  "ai_generated": true
+},
+{
+  "key": "foodSourdough",
+  "file": "/concept/food/sourdough.webp",
+  "width": 800,
+  "height": 600,
+  "prompt": "Editorial travel/food photography, artisan sourdough loaves, crisp scored crusts and one cut loaf with airy crumb, Los Baños Laguna, 4:3, warm natural light, authentic Filipino context, natural textures. No text, signage, logos, watermarks, or identifiable people.",
+  "board": "Food & listing photos",
+  "slot": "artisan sourdough loaves, crisp scored crusts and one cut loaf with airy crumb",
+  "ai_generated": true
+},
+{
+  "key": "foodVegetarianBowl",
+  "file": "/concept/food/vegetarian-bowl.webp",
+  "width": 800,
+  "height": 600,
+  "prompt": "Editorial travel/food photography, a colorful vegetarian Filipino rice bowl with grilled eggplant, squash, greens and tofu, Los Baños Laguna, 4:3, warm natural light, authentic Filipino context, natural textures. No text, signage, logos, watermarks, or identifiable people.",
+  "board": "Food & listing photos",
+  "slot": "a colorful vegetarian Filipino rice bowl with grilled eggplant, squash, greens and tofu",
+  "ai_generated": true
+},
+{
+  "key": "foodLunchSpread",
+  "file": "/concept/food/lunch-spread.webp",
+  "width": 800,
+  "height": 600,
+  "prompt": "Editorial travel/food photography, home-style Filipino lunch spread of chicken adobo, sinigang soup and steamed rice, Los Baños Laguna, 4:3, warm natural light, authentic Filipino context, natural textures. No text, signage, logos, watermarks, or identifiable people.",
+  "board": "Food & listing photos",
+  "slot": "home-style Filipino lunch spread of chicken adobo, sinigang soup and steamed rice",
+  "ai_generated": true
+},
+{
+  "key": "foodPulutan",
+  "file": "/concept/food/pulutan.webp",
+  "width": 800,
+  "height": 600,
+  "prompt": "Editorial travel/food photography, grilled Filipino pulutan platter with skewers and cold drinks on an outdoor table at night, warm ambient light, Los Baños Laguna, 4:3, warm natural light, authentic Filipino context, natural textures. No text, signage, logos, watermarks, or identifiable people.",
+  "board": "Food & listing photos",
+  "slot": "grilled Filipino pulutan platter with skewers and cold drinks on an outdoor table at night, warm ambient light",
+  "ai_generated": true
+},
+{
+  "key": "stayEatRestaurantInterior",
+  "file": "/concept/stay-eat/restaurant-interior.webp",
+  "width": 800,
+  "height": 600,
+  "prompt": "Editorial travel/food photography, welcoming Filipino restaurant interior with wood tables, woven chairs and tropical plants, no people, Los Baños Laguna, 4:3, warm natural light, authentic Filipino context, natural textures. No text, signage, logos, watermarks, or identifiable people.",
+  "board": "Food & listing photos",
+  "slot": "welcoming Filipino restaurant interior with wood tables, woven chairs and tropical plants, no people",
+  "ai_generated": true
+},
+{
+  "key": "foodBukoPie",
+  "file": "/concept/food/buko-pie.webp",
+  "prompt": "Warm golden-hour editorial travel photography of buko pie in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+  "width": 800,
+  "height": 600,
+  "ai_generated": true,
+  "reused_on": [
+    "delicacy: letys-buko-pie"
+  ]
+},
+{
+  "key": "foodHaloHalo",
+  "file": "/concept/food/halo-halo.webp",
+  "prompt": "Warm golden-hour editorial travel photography of halo halo in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+  "width": 800,
+  "height": 600,
+  "ai_generated": true,
+  "reused_on": [
+    "delicacy: bens-halo-halo-ice-cream"
+  ]
+},
+{
+  "key": "foodMilkTea",
+  "file": "/concept/food/milk-tea.webp",
+  "prompt": "Warm golden-hour editorial travel photography of milk tea in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+  "width": 800,
+  "height": 600,
+  "ai_generated": true,
+  "reused_on": [
+    "delicacy: nham-cha-thai-milk-tea"
+  ]
+},
+{
+  "key": "foodCafePastry",
+  "file": "/concept/food/cafe-pastry.webp",
+  "prompt": "Warm golden-hour editorial travel photography of cafe pastry in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+  "width": 800,
+  "height": 600,
+  "ai_generated": true,
+  "reused_on": [
+    "delicacy: cafe-lucca"
+  ]
+},
+{
+  "key": "stayEatCozyCafe",
+  "file": "/concept/stay-eat/cozy-cafe.webp",
+  "prompt": "Warm golden-hour editorial travel photography of cozy cafe in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+  "width": 800,
+  "height": 600,
+  "ai_generated": true,
+  "reused_on": [
+    "Stay & Eat cafe category fallback"
+  ]
+},
+{
+  "key": "stayEatGuestRoom",
+  "file": "/concept/stay-eat/guest-room.webp",
+  "prompt": "Warm golden-hour editorial travel photography of guest room in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+  "width": 800,
+  "height": 600,
+  "ai_generated": true,
+  "reused_on": [
+    "Stay & Eat hotel category fallback"
+  ]
+},
+{
+  "key": "stayEatAirbnbLivingRoom",
+  "file": "/concept/stay-eat/airbnb-living-room.webp",
+  "prompt": "Warm golden-hour editorial travel photography of airbnb living room in Los Baños, Laguna, Philippines; natural color, photorealistic, horizontal card composition; no readable text, brand logos, watermarks, or identifiable real people.",
+  "width": 800,
+  "height": 600,
+  "ai_generated": true,
+  "reused_on": [
+    "Stay & Eat homestay category fallback"
+  ]
+},
+{
+  "key": "shareMakilingLandscape",
+  "file": "/og/makiling-golden-hour.webp",
+  "prompt": "Golden-hour Los Baños Laguna with Mount Makiling in the right half, tropical foreground and lake, spacious uncluttered softly lit negative space in the left half; editorial photography, no text, signage, logos, watermarks or identifiable people.",
+  "width": 1200,
+  "height": 630,
+  "ai_generated": true
+},
+{
+  "key": "shareOpenGraph",
+  "file": "/og/elbiyahe-og.jpg",
+  "prompt": "AI landscape from shareMakilingLandscape; supplied El-Biyahe horizontal logo and Come Curious tagline composited with Sharp, cream gradient for legibility; text is deterministic SVG.",
+  "width": 1200,
+  "height": 630,
+  "ai_generated": true
+}
 ]

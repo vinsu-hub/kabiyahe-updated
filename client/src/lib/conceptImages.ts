@@ -82,6 +82,19 @@ export const conceptImages = {
   toursHotSprings: { src: "/concept/bus-tour/hot-springs.webp", alt: "Editorial photograph of hot springs in Los Baños, Laguna", width: 800, height: 600 },
   toursLagunaLake: { src: "/concept/bus-tour/laguna-lake.webp", alt: "Editorial photograph of laguna lake in Los Baños, Laguna", width: 800, height: 600 },
   toursScienceCampus: { src: "/concept/bus-tour/science-campus.webp", alt: "Editorial photograph of science campus in Los Baños, Laguna", width: 800, height: 600 },
+  foodLayeredCake: { src: "/concept/food/layered-cake.webp", alt: "Homemade layered chocolate cake slice", width: 800, height: 600 },
+  foodDairyProducts: { src: "/concept/food/dairy-products.webp", alt: "fresh carabao milk in unlabelled glass bottles, pastillas sweets and plain yogurt cups on a wooden table", width: 800, height: 600 },
+  foodMarketSpread: { src: "/concept/food/market-spread.webp", alt: "a bustling Filipino market food stall spread, trays of cooked local dishes and fresh produce; focus on food, empty of people", width: 800, height: 600 },
+  foodRiceworldCoffee: { src: "/concept/food/riceworld-coffee.webp", alt: "a coffee cup beside rice-field photography books with blank unreadable covers, a cozy reading nook and green rice fields outside", width: 800, height: 600 },
+  foodIcedCoffee: { src: "/concept/food/iced-coffee.webp", alt: "two iced coffee drinks with condensation in a stylish tropical cafe, focus on drinks", width: 800, height: 600 },
+  foodBakeshopBread: { src: "/concept/food/bakeshop-bread.webp", alt: "Filipino bakeshop breads, golden pandesal and buttery ensaymada with grated cheese", width: 800, height: 600 },
+  foodSourdough: { src: "/concept/food/sourdough.webp", alt: "artisan sourdough loaves, crisp scored crusts and one cut loaf with airy crumb", width: 800, height: 600 },
+  foodVegetarianBowl: { src: "/concept/food/vegetarian-bowl.webp", alt: "a colorful vegetarian Filipino rice bowl with grilled eggplant, squash, greens and tofu", width: 800, height: 600 },
+  foodLunchSpread: { src: "/concept/food/lunch-spread.webp", alt: "home-style Filipino lunch spread of chicken adobo, sinigang soup and steamed rice", width: 800, height: 600 },
+  foodPulutan: { src: "/concept/food/pulutan.webp", alt: "grilled Filipino pulutan platter with skewers and cold drinks on an outdoor table at night, warm ambient light", width: 800, height: 600 },
+  stayEatRestaurantInterior: { src: "/concept/stay-eat/restaurant-interior.webp", alt: "welcoming Filipino restaurant interior with wood tables, woven chairs and tropical plants, no people", width: 800, height: 600 },
+  shareMakilingLandscape: { src: "/og/makiling-golden-hour.webp", alt: "Golden-hour Mount Makiling and Los Baños", width: 1200, height: 630 },
+  shareOpenGraph: { src: "/og/elbiyahe-og.jpg", alt: "El-Biyahe! — Come Curious in Los Baños", width: 1200, height: 630 },
 } as const;
 
 export type ConceptImageKey = keyof typeof conceptImages;
