@@ -111,7 +111,7 @@ function RouteCard({ r }: { r: RideRoute }) {
   return (
     <article className="elbiyahe-tour-card elbiyahe-route-card">
       <div className="elbiyahe-tour-card-media">
-        <img src={r.image || conceptImages.transpoJeepneyStreet.src} alt="" />
+        <img src={r.image && !r.image.startsWith("/scenes/") ? r.image : (r.kind === "tricycle_zone" ? conceptImages.transpoTricycle.src : [conceptImages.transpoJeepneyRouteOne, conceptImages.transpoJeepneyRouteTwo, conceptImages.transpoJeepneyRouteThree, conceptImages.transpoJeepneyRouteFour][r.sort - 1]?.src || conceptImages.transpoJeepneyStreet.src)} alt="" />
         <span className="elbiyahe-badge">ROUTE {r.sort}</span>
       </div>
       <div className="elbiyahe-tour-card-body">

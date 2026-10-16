@@ -1,6 +1,7 @@
 import { DataUnavailable } from "@/components/shell/DataUnavailable";
 import "@/styles/pages/heritage-walk.css";
 import { PageHero } from "@/components/shell";
+import { heritageStampFor } from "@/lib/heritageStamps";
 import { conceptImages } from "@/lib/conceptImages";
 /* El-Biyahe! priority feature tabs — Events, Bus Tours, Passport, Ride Guide, and a
    shared Coming Soon placeholder. Data comes from Supabase via
@@ -113,6 +114,7 @@ export function HeritageWalk({ Header, BottomNav, Footer }: Shell) {
                   {list.map(s => (
                     <li key={s.id}>
                       <span className="elbiyahe-heritage-num">{s.sort}</span>
+                      <img className="elbiyahe-heritage-stamp" src={heritageStampFor(s.name).src} alt="" width={64} height={64} loading="lazy" />
                       <div>
                         <b>{s.name}</b>
                         {s.is_passport_spot && <span className="tag ochre">Passport stamp</span>}

@@ -925,5 +925,205 @@
   "width": 1200,
   "height": 630,
   "ai_generated": true
-}
+},
+  {
+    "key": "heritageParish",
+    "file": "/concept/heritage/immaculate-conception-parish.webp",
+    "board": "passport.png",
+    "slot": "Immaculate Conception Parish",
+    "prompt": "Circular vintage passport stamp of Immaculate Conception Parish in Los Baños, Laguna; Elbi Forest #07543F linework on Warm Cream #F7F1E3; double border, distressed rubber-stamp texture, stylised landmark, no text, lettering, logos, watermarks or identifiable people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "heritageAguaSanta",
+    "file": "/concept/heritage/agua-santa-resort.webp",
+    "board": "passport.png",
+    "slot": "Ruins of Agua Santa Resort",
+    "prompt": "Circular vintage passport stamp of Ruins of Agua Santa Resort in Los Baños, Laguna; Elbi Forest #07543F linework on Warm Cream #F7F1E3; double border, distressed rubber-stamp texture, stylised landmark, no text, lettering, logos, watermarks or identifiable people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "heritagePadreBautista",
+    "file": "/concept/heritage/padre-pedro-bautista.webp",
+    "board": "passport.png",
+    "slot": "Statue of Padre Pedro Bautista",
+    "prompt": "Circular vintage passport stamp of Statue of Padre Pedro Bautista in Los Baños, Laguna; Elbi Forest #07543F linework on Warm Cream #F7F1E3; double border, distressed rubber-stamp texture, stylised landmark, no text, lettering, logos, watermarks or identifiable people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "heritageUplbFoundation",
+    "file": "/concept/heritage/uplb-foundation-site.webp",
+    "board": "passport.png",
+    "slot": "UPLB Foundation Site",
+    "prompt": "Circular vintage passport stamp of UPLB Foundation Site in Los Baños, Laguna; Elbi Forest #07543F linework on Warm Cream #F7F1E3; double border, distressed rubber-stamp texture, stylised landmark, no text, lettering, logos, watermarks or identifiable people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "heritageNewMunicipalHall",
+    "file": "/concept/heritage/new-municipal-hall.webp",
+    "board": "passport.png",
+    "slot": "New Los Baños Municipal Hall",
+    "prompt": "Circular vintage passport stamp of New Los Baños Municipal Hall in Los Baños, Laguna; Elbi Forest #07543F linework on Warm Cream #F7F1E3; double border, distressed rubber-stamp texture, stylised landmark, no text, lettering, logos, watermarks or identifiable people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "heritageFirstMunicipalHall",
+    "file": "/concept/heritage/first-municipal-hall-ruins.webp",
+    "board": "passport.png",
+    "slot": "Ruins of the First Los Baños Municipal Hall",
+    "prompt": "Circular vintage passport stamp of Ruins of the First Los Baños Municipal Hall in Los Baños, Laguna; Elbi Forest #07543F linework on Warm Cream #F7F1E3; double border, distressed rubber-stamp texture, stylised landmark, no text, lettering, logos, watermarks or identifiable people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "heritageOldMunicipalHall",
+    "file": "/concept/heritage/old-municipal-hall.webp",
+    "board": "passport.png",
+    "slot": "Old Municipal Hall",
+    "prompt": "Circular vintage passport stamp of Old Municipal Hall in Los Baños, Laguna; Elbi Forest #07543F linework on Warm Cream #F7F1E3; double border, distressed rubber-stamp texture, stylised landmark, no text, lettering, logos, watermarks or identifiable people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "heritageVillegasHouses",
+    "file": "/concept/heritage/villegas-street-houses.webp",
+    "board": "passport.png",
+    "slot": "Old Houses along Villegas Street",
+    "prompt": "Circular vintage passport stamp of Old Houses along Villegas Street in Los Baños, Laguna; Elbi Forest #07543F linework on Warm Cream #F7F1E3; double border, distressed rubber-stamp texture, stylised landmark, no text, lettering, logos, watermarks or identifiable people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "heritageBambangStation",
+    "file": "/concept/heritage/bambang-station.webp",
+    "board": "passport.png",
+    "slot": "Old Los Baños Train Station (Bambang Station)",
+    "prompt": "Circular vintage passport stamp of Old Los Baños Train Station (Bambang Station) in Los Baños, Laguna; Elbi Forest #07543F linework on Warm Cream #F7F1E3; double border, distressed rubber-stamp texture, stylised landmark, no text, lettering, logos, watermarks or identifiable people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "heritagePublicMarket",
+    "file": "/concept/heritage/poblacion-public-market.webp",
+    "board": "passport.png",
+    "slot": "Poblacion Public Market",
+    "prompt": "Circular vintage passport stamp of Poblacion Public Market in Los Baños, Laguna; Elbi Forest #07543F linework on Warm Cream #F7F1E3; double border, distressed rubber-stamp texture, stylised landmark, no text, lettering, logos, watermarks or identifiable people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "heritagePacianoRizal",
+    "file": "/concept/heritage/paciano-rizal-shrine.webp",
+    "board": "passport.png",
+    "slot": "Gen. Paciano Rizal Shrine",
+    "prompt": "Circular vintage passport stamp of Gen. Paciano Rizal Shrine in Los Baños, Laguna; Elbi Forest #07543F linework on Warm Cream #F7F1E3; double border, distressed rubber-stamp texture, stylised landmark, no text, lettering, logos, watermarks or identifiable people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "heritageBakerHall",
+    "file": "/concept/heritage/baker-hall.webp",
+    "board": "passport.png",
+    "slot": "Baker Hall",
+    "prompt": "Circular vintage passport stamp of Baker Hall in Los Baños, Laguna; Elbi Forest #07543F linework on Warm Cream #F7F1E3; double border, distressed rubber-stamp texture, stylised landmark, no text, lettering, logos, watermarks or identifiable people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "heritageWartimeShrine",
+    "file": "/concept/heritage/yamashita-homma-shrine.webp",
+    "board": "passport.png",
+    "slot": "Gen. Yamashita / Gen. Homma Shrine",
+    "prompt": "Circular vintage passport stamp of Gen. Yamashita / Gen. Homma Shrine in Los Baños, Laguna; Elbi Forest #07543F linework on Warm Cream #F7F1E3; double border, distressed rubber-stamp texture, stylised landmark, no text, lettering, logos, watermarks or identifiable people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "heritageRaidMemorial",
+    "file": "/concept/heritage/raid-commemoration-site.webp",
+    "board": "passport.png",
+    "slot": "Los Baños Raid Commemoration Site",
+    "prompt": "Circular vintage passport stamp of Los Baños Raid Commemoration Site in Los Baños, Laguna; Elbi Forest #07543F linework on Warm Cream #F7F1E3; double border, distressed rubber-stamp texture, stylised landmark, no text, lettering, logos, watermarks or identifiable people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "heritageOldPantalan",
+    "file": "/concept/heritage/old-pantalan.webp",
+    "board": "passport.png",
+    "slot": "Old Pantalan",
+    "prompt": "Circular vintage passport stamp of Old Pantalan in Los Baños, Laguna; Elbi Forest #07543F linework on Warm Cream #F7F1E3; double border, distressed rubber-stamp texture, stylised landmark, no text, lettering, logos, watermarks or identifiable people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "heritageMuseum",
+    "file": "/concept/heritage/los-banos-museum.webp",
+    "board": "passport.png",
+    "slot": "Los Baños Museum",
+    "prompt": "Circular vintage passport stamp of Los Baños Museum in Los Baños, Laguna; Elbi Forest #07543F linework on Warm Cream #F7F1E3; double border, distressed rubber-stamp texture, stylised landmark, no text, lettering, logos, watermarks or identifiable people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "heritageHealthSpa",
+    "file": "/concept/heritage/caesar-perez-health-spa.webp",
+    "board": "passport.png",
+    "slot": "Caesar Perez Memorial Therapeutic Massage Center & Health Spa",
+    "prompt": "Circular vintage passport stamp of Caesar Perez Memorial Therapeutic Massage Center & Health Spa in Los Baños, Laguna; Elbi Forest #07543F linework on Warm Cream #F7F1E3; double border, distressed rubber-stamp texture, stylised landmark, no text, lettering, logos, watermarks or identifiable people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "heritageGeneric",
+    "file": "/concept/heritage/generic.webp",
+    "board": "passport.png",
+    "slot": "Generic heritage fallback",
+    "prompt": "Circular vintage passport stamp of a Philippine heritage house and tropical leaf; Elbi Forest single-colour linework, warm cream background, double border and distressed ink; no text, logos or people.",
+    "width": 320,
+    "height": 320,
+    "ai_generated": true
+  },
+  {
+    "key": "stateOffline",
+    "file": "/concept/states/offline.webp",
+    "board": "application states",
+    "slot": "Offline",
+    "prompt": "Friendly flat spot illustration of a jeepney parked beneath a tree, small cloud and dotted path; cream background, Elbi Forest, Makiling Green, Makiling Gold and Biyahe Coral palette; no text, logos, watermark or people.",
+    "width": 400,
+    "height": 400,
+    "ai_generated": true
+  },
+  {
+    "key": "stateEmpty",
+    "file": "/concept/states/empty.webp",
+    "board": "application states",
+    "slot": "Empty",
+    "prompt": "Friendly flat spot illustration of an open map with magnifying glass and sprig of leaves; cream background, Elbi Forest, Makiling Green, Makiling Gold and Biyahe Coral palette; no text, logos, watermark or people.",
+    "width": 400,
+    "height": 400,
+    "ai_generated": true
+  }
 ]
