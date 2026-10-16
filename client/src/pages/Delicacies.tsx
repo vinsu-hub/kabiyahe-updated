@@ -1,3 +1,4 @@
+import { delicacyImage } from "@/lib/delicacyImage";
 import { DataUnavailable } from "@/components/shell/DataUnavailable";
 import "@/styles/pages/delicacies.css";
 import { conceptImages } from "@/lib/conceptImages";
@@ -116,7 +117,7 @@ function DelicacyCard({ d, distanceLabel }: { d: DelicacyRow; distanceLabel?: st
   return (
     <article className="elbiyahe-tour-card elbiyahe-delicacy-card">
       <div className="elbiyahe-tour-card-media">
-        <img src={d.hero_image || conceptImages.foodBukoPie.src} alt={d.name} />
+        <img src={delicacyImage(d)} alt={d.name} />
         {d.featured && <span className="elbiyahe-badge ochre">FEATURED</span>}
         <button
           className={`elbiyahe-card-bookmark ${saved ? "on" : ""}`}
@@ -347,7 +348,7 @@ export function Delicacies({ Header, BottomNav, Footer, Button }: Shell) {
                 const km = withDistance(d);
                 return (
                   <div className="elbiyahe-discover-row" key={d.id}>
-                    <img src={d.hero_image || conceptImages.foodBukoPie.src} alt="" />
+                    <img src={delicacyImage(d)} alt="" />
                     <div>
                       <b>{d.name}</b>
                       <small>{d.category}{km != null ? ` · ${formatDistance(km)}` : ""}</small>
