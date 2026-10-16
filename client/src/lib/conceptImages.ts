@@ -82,6 +82,28 @@ export const conceptImages = {
   toursHotSprings: { src: "/concept/bus-tour/hot-springs.webp", alt: "Editorial photograph of hot springs in Los Baños, Laguna", width: 800, height: 600 },
   toursLagunaLake: { src: "/concept/bus-tour/laguna-lake.webp", alt: "Editorial photograph of laguna lake in Los Baños, Laguna", width: 800, height: 600 },
   toursScienceCampus: { src: "/concept/bus-tour/science-campus.webp", alt: "Editorial photograph of science campus in Los Baños, Laguna", width: 800, height: 600 },
+
+  // I2: heritage stamps and friendly application states
+  heritageParish: { src: "/concept/heritage/immaculate-conception-parish.webp", alt: "Illustrated heritage stamp of Immaculate Conception Parish", width: 320, height: 320 },
+  heritageAguaSanta: { src: "/concept/heritage/agua-santa-resort.webp", alt: "Illustrated heritage stamp of Ruins of Agua Santa Resort", width: 320, height: 320 },
+  heritagePadreBautista: { src: "/concept/heritage/padre-pedro-bautista.webp", alt: "Illustrated heritage stamp of Statue of Padre Pedro Bautista", width: 320, height: 320 },
+  heritageUplbFoundation: { src: "/concept/heritage/uplb-foundation-site.webp", alt: "Illustrated heritage stamp of UPLB Foundation Site", width: 320, height: 320 },
+  heritageNewMunicipalHall: { src: "/concept/heritage/new-municipal-hall.webp", alt: "Illustrated heritage stamp of New Los Ba\u00f1os Municipal Hall", width: 320, height: 320 },
+  heritageFirstMunicipalHall: { src: "/concept/heritage/first-municipal-hall-ruins.webp", alt: "Illustrated heritage stamp of Ruins of the First Los Ba\u00f1os Municipal Hall", width: 320, height: 320 },
+  heritageOldMunicipalHall: { src: "/concept/heritage/old-municipal-hall.webp", alt: "Illustrated heritage stamp of Old Municipal Hall", width: 320, height: 320 },
+  heritageVillegasHouses: { src: "/concept/heritage/villegas-street-houses.webp", alt: "Illustrated heritage stamp of Old Houses along Villegas Street", width: 320, height: 320 },
+  heritageBambangStation: { src: "/concept/heritage/bambang-station.webp", alt: "Illustrated heritage stamp of Old Los Ba\u00f1os Train Station (Bambang Station)", width: 320, height: 320 },
+  heritagePublicMarket: { src: "/concept/heritage/poblacion-public-market.webp", alt: "Illustrated heritage stamp of Poblacion Public Market", width: 320, height: 320 },
+  heritagePacianoRizal: { src: "/concept/heritage/paciano-rizal-shrine.webp", alt: "Illustrated heritage stamp of Gen. Paciano Rizal Shrine", width: 320, height: 320 },
+  heritageBakerHall: { src: "/concept/heritage/baker-hall.webp", alt: "Illustrated heritage stamp of Baker Hall", width: 320, height: 320 },
+  heritageWartimeShrine: { src: "/concept/heritage/yamashita-homma-shrine.webp", alt: "Illustrated heritage stamp of Gen. Yamashita / Gen. Homma Shrine", width: 320, height: 320 },
+  heritageRaidMemorial: { src: "/concept/heritage/raid-commemoration-site.webp", alt: "Illustrated heritage stamp of Los Ba\u00f1os Raid Commemoration Site", width: 320, height: 320 },
+  heritageOldPantalan: { src: "/concept/heritage/old-pantalan.webp", alt: "Illustrated heritage stamp of Old Pantalan", width: 320, height: 320 },
+  heritageMuseum: { src: "/concept/heritage/los-banos-museum.webp", alt: "Illustrated heritage stamp of Los Ba\u00f1os Museum", width: 320, height: 320 },
+  heritageHealthSpa: { src: "/concept/heritage/caesar-perez-health-spa.webp", alt: "Illustrated heritage stamp of Caesar Perez Memorial Therapeutic Massage Center & Health Spa", width: 320, height: 320 },
+  heritageGeneric: { src: "/concept/heritage/generic.webp", alt: "Illustrated heritage stamp", width: 320, height: 320 },
+  stateOffline: { src: "/concept/states/offline.webp", alt: "Jeepney resting beneath a tree", width: 400, height: 400 },
+  stateEmpty: { src: "/concept/states/empty.webp", alt: "Open map with a magnifying glass and leaves", width: 400, height: 400 },
 } as const;
 
 export type ConceptImageKey = keyof typeof conceptImages;
