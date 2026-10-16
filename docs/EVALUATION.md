@@ -46,3 +46,34 @@ Sources:
 ## 4. Images being generated (Orca run `run_13b98cc8a108`, Codex)
 - **I1:** 14 delicacy photos, 4 Stay & Eat category fallbacks, and an OG share image (logo composited, not AI text), plus meta tags.
 - **I2:** 17 Heritage Walk stamp illustrations, "offline" and "empty" state illustrations, and Ride Guide route image mapping (existing photos).
+
+## 5. Final UI/UX craft review (Emil Kowalski design-engineering lens, 2026-10-16)
+
+**What's already right:**
+- No `transition: all`.
+- No `ease-in` on UI.
+- Nothing animates in from `scale(0)`.
+- There's a strong custom `--ease-out: cubic-bezier(.23,1,.32,1)`.
+- Modals enter from `scale(.97)` + opacity in 180ms, with a centred origin.
+- The profile menu uses `transform-origin: top right`.
+- `.btn` has `:active` press feedback.
+- `prefers-reduced-motion` is respected.
+
+| Before | After | Why |
+| --- | --- | --- |
+| `main { animation: page-reveal 480ms }` (12px rise) on **every route change** | Opacity-only, 150ms, or no animation | Navigation happens tens of times per session. A 480ms rise makes every page feel slow, and it's over the 300ms UI ceiling. |
+| Card image hover zoom `transition: transform 600ms` | `transform 250ms var(--ease-out)` | Hover is frequent. 600ms feels laggy and keeps zooming after the pointer has left. |
+| 27 `:hover { transform }` rules (cards, `.btn`, pins, chips) applied unconditionally | Wrap them in `@media (hover: hover) and (pointer: fine)` | On phones a tap triggers hover, so cards jump and stay lifted after you tap them. |
+| No `:active` state on the new shell controls: search pill, bell `.icon-btn`, `ChipGroup`, Explore chips, Stay & Eat tabs, Events list/map toggle, listing-card heart, rail arrows | `transform: scale(.97)` on `:active`, with `transition: transform 160ms var(--ease-out)` | Only the legacy `.btn` "hears" a press. The new UI feels dead to touch by comparison. |
+| `.btn { transition: transform .16s }` (default `ease`) | `transform 160ms var(--ease-out)` | The default curve is too weak. Use the project's own strong ease-out token so all presses feel the same. |
+| Toast: `@keyframes notice-in`, no exit, and every `notify()` starts a new 2.6s `setTimeout` that is never cleared | Transition with `@starting-style`, a 150ms fade exit, one cleared timer per toast, and a pause while the tab is hidden | Rapid saves restart the keyframe, and an older timer hides a newer toast early. Toasts vanish instantly instead of leaving. (Sonner principles 4 and 5.) |
+| Mobile drawer `drawer-in`: `opacity .3 → 1`, `translateX(26px)`, unmounts instantly | Enter from `translateX(100%)` with `cubic-bezier(.32,.72,0,1)` in about 300ms; exit 200ms back to `translateX(100%)` | A side drawer should come from its edge. A half-opacity jump plus an instant close looks broken. |
+| Home hero image `hero-image-in 900ms` | About 400ms, opacity + `scale(1.02 → 1)` | It's the first thing visitors see. 900ms delays the main image and feels slow on every visit to Home. |
+| Hero CTAs `rise-in 420ms`, both at once | 300ms with a 50ms stagger between buttons | Stays under the ceiling, and the stagger reads as more deliberate than both appearing together. |
+| Map pins `pin-pop 500ms`, replayed on every filter change; pin hover `scale(1.14)` ungated | 200ms, only on first mount; hover gated to fine pointers | Filtering is frequent. Pins popping again on every keystroke is noisy. |
+| Reduced motion: global `animation:none; transition:none` | Keep 150ms opacity fades and remove only movement | Reduced motion should mean gentler, not none. Fades still help people follow state changes. |
+| Header search pill and bell look interactive but only show toasts | Wire them up, or remove them until they work | These decoy controls undermine trust in every other control. |
+| Delicacies: 8 stacked category rails, very long page | Local Favorites + Street Food rails, with "See all" per category (as on the board) | Too much choice on one screen. The board's 2-rail layout scans faster. |
+| Events: almost every event is "Community" | Recategorise the seed (Culture, Arts, Education, Environment…) | A filter that doesn't narrow anything is a broken control in disguise. |
+
+**Priority:** 1. press states + hover gating (one CSS pass); 2. page-reveal and image-hover timings; 3. toast host rewrite; 4. drawer; 5. the decoy controls and content fixes.
